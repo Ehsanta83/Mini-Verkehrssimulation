@@ -1,4 +1,6 @@
 # Mini-Verkehrssimulation
-Eine Kreuzung in Java
+A crossroads simulation in Java
 
-Street tile set: http://opengameart.org/content/road-tile-textures
+using LibGDX tutorial series: http://www.gamefromscratch.com/page/LibGDX-Tutorial-series.aspx  
+Roads tile set: http://opengameart.org/content/road-tile-textures
+Car model: http://opengameart.org/content/red-car-top-down
