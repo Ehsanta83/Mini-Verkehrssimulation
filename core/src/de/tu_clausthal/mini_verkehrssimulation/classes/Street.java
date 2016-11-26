@@ -33,4 +33,12 @@ public class Street {
 		this.blocks = blocks;
 	}
 	
+	public void turnTrafficLightToRed(){
+		this.trafficLight.setStatus(TrafficLightStatus.RED);
+	}
+	
+	public void turnTrafficLightToGreen(){
+		this.trafficLight.setStatus(TrafficLightStatus.GREEN);
+	}
+	
 }
