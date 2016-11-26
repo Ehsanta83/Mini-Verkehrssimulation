@@ -1,5 +1,6 @@
-/* using http://www.gamefromscratch.com/page/LibGDX-Tutorial-series.aspx */
-
+/**
+ * 
+ */
 package de.tu_clausthal.mini_verkehrssimulation;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -26,6 +27,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * @author Ehsan Tatasadi
+ *
+ */
 public class Simulation extends ApplicationAdapter{
 	int countOfCars = 5;
 	

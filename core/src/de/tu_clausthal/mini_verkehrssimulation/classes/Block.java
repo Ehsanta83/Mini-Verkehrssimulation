@@ -1,0 +1,21 @@
+/**
+ * 
+ */
+package de.tu_clausthal.mini_verkehrssimulation.classes;
+
+/**
+ * @author Ehsan Tatasadi
+ *
+ */
+public class Block {
+	private boolean isOccupied;
+
+	public boolean getIsOccupied() {
+		return isOccupied;
+	}
+
+	public void setIsOccupied(boolean isOccupied) {
+		this.isOccupied = isOccupied;
+	}
+	
+}
