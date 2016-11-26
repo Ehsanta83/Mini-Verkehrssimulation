@@ -3,6 +3,8 @@
  */
 package de.tu_clausthal.mini_verkehrssimulation;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.tu_clausthal.mini_verkehrssimulation.classes.Car;
 import de.tu_clausthal.mini_verkehrssimulation.classes.Street;
 import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
 
@@ -37,17 +40,17 @@ import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
 public class Simulation extends ApplicationAdapter{
 	int countOfCars = 5;
 	int trafficLightDuration = 15;
-	
 	TiledMap roadsTiledMap;
 	OrthographicCamera camera;
 	TiledMapRenderer roadsTiledMapRenderer;
 	SpriteBatch sb;
     Texture carTexture;
-    Sprite carSprite;
     Street streetEast, streetSouth, streetWest, streetNorth;
     ShapeRenderer trafficLightEastShapeRenderer, trafficLightSouthShapeRenderer, trafficLightWestShapeRenderer, trafficLightNorthShapeRenderer;
     long startTime;
-
+    Car[] cars;
+    Sprite carSprite;
+    
 	@Override
 	public void create () {
 		float w = Gdx.graphics.getWidth();
@@ -72,17 +75,12 @@ public class Simulation extends ApplicationAdapter{
 		trafficLightWestShapeRenderer = new ShapeRenderer();
 		trafficLightNorthShapeRenderer = new ShapeRenderer();
 		
-		
-		
 		sb = new SpriteBatch();
 		carTexture = new Texture(Gdx.files.internal("car.png"));
-		carSprite = new Sprite(carTexture);
-
-		// going left to right
-		carSprite.setPosition(-carSprite.getWidth(), Gdx.graphics.getHeight() / 2 - 24); 
-		// going up to down
-		//carSprite.setPosition(Gdx.graphics.getWidth()/2 - 64, Gdx.graphics.getHeight());
-		//carSprite.setRotation(-90);
+		cars = new Car[countOfCars];
+		for(int i=0; i < countOfCars; i++){
+			cars[i] = createRandomCar();
+		}
 	}
 	
 	@Override
@@ -140,8 +138,18 @@ public class Simulation extends ApplicationAdapter{
 		
 		
 		sb.begin();
-		carSprite.translateX(1);
-		carSprite.draw(sb);
+		for(Car car: cars){
+			if(car.getStartStreet().equals(streetEast)){
+				car.getSprite().translateX(-1);
+			}else if(car.getStartStreet().equals(streetSouth)){
+				car.getSprite().translateY(1);
+			}else if(car.getStartStreet().equals(streetWest)){
+				car.getSprite().translateX(1);
+			}else if(car.getStartStreet().equals(streetNorth)){
+				car.getSprite().translateY(-1);
+			}
+			car.getSprite().draw(sb);
+		}
         sb.end();
 		
 	}
@@ -151,5 +159,52 @@ public class Simulation extends ApplicationAdapter{
 		streetSouth.turnTrafficLightToRed();
 		streetWest.turnTrafficLightToRed();
 		streetNorth.turnTrafficLightToRed();
+	}
+	
+	private Car createRandomCar(){
+		Sprite carSprite = new Sprite(carTexture);
+		int velocity = ThreadLocalRandom.current().nextInt(1, 6);
+		int random = ThreadLocalRandom.current().nextInt(1, 5);
+		int[] position = new int[2];
+		Street startStreet = null;
+		Street[] possibleNextStreets = new Street[3];
+		Street nextStreet;
+		switch(random){
+		case 1:
+			position[0] = -32;
+			position[1] = Gdx.graphics.getHeight() / 2 - 24;
+			carSprite.setPosition(position[0], position[1]);
+			startStreet = streetWest;
+			possibleNextStreets = new Street[]{streetNorth, streetEast, streetSouth}; 
+			break;
+		case 2:			
+			position[0] = Gdx.graphics.getWidth()/2 - 32;
+			position[1] = Gdx.graphics.getHeight() + 8;
+			carSprite.setPosition(position[0], position[1]);
+			carSprite.setRotation(-90);
+			startStreet = streetNorth;
+			possibleNextStreets = new Street[]{streetEast, streetSouth, streetWest}; 
+			break;
+		case 3:
+			position[0] = Gdx.graphics.getWidth();
+			position[1] = Gdx.graphics.getHeight() / 2 + 8;
+			carSprite.setPosition(position[0], position[1]);
+			startStreet = streetEast;
+			carSprite.setRotation(180);
+			possibleNextStreets = new Street[]{streetSouth, streetWest, streetNorth}; 
+			break;
+		case 4:
+			position[0] = Gdx.graphics.getWidth()/2;
+			position[1] = -24;
+			carSprite.setPosition(position[0], position[1]);
+			carSprite.setRotation(90);
+			startStreet = streetSouth;
+			possibleNextStreets = new Street[]{streetWest, streetNorth, streetEast}; 
+			break;
+		}
+		random = ThreadLocalRandom.current().nextInt(0, 3);
+		nextStreet = possibleNextStreets[random];
+		Car car = new Car(carSprite, velocity, position, startStreet, nextStreet);
+		return car;
 	}
 }

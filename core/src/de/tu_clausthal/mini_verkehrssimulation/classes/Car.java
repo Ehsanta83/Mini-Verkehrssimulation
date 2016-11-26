@@ -3,6 +3,8 @@
  */
 package de.tu_clausthal.mini_verkehrssimulation.classes;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 /**
  * @author Ehsan Tatasadi
  *
@@ -10,15 +12,26 @@ package de.tu_clausthal.mini_verkehrssimulation.classes;
 public class Car {
 	private int velocity;
 	private int[] position;
-	private Street from;
-	private Street to;
+	private Street startStreet;
+	private Street nextStreet;
+	private Sprite sprite;
 	
-	public Car(int velocity, int[] position, Street from, Street to) {
+	public Car(Sprite sprite, int velocity, int[] position, Street startStreet, Street nextStreet) {
 		super();
+		this.sprite = sprite;
 		this.velocity = velocity;
 		this.position = position;
-		this.from = from;
-		this.to = to;
+		this.startStreet = startStreet;
+		this.nextStreet = nextStreet;
+	}
+
+	public Sprite getSprite() {
+		return sprite;
+	}
+
+
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 
 	public int getVelocity() {
@@ -37,19 +50,21 @@ public class Car {
 		this.position = position;
 	}
 
-	public Street getFrom() {
-		return from;
+	public Street getStartStreet() {
+		return startStreet;
 	}
 
-	public void setFrom(Street from) {
-		this.from = from;
+	public void setStartStreet(Street startStreet) {
+		this.startStreet = startStreet;
 	}
 
-	public Street getTo() {
-		return to;
+	public Street getNextStreet() {
+		return nextStreet;
 	}
 
-	public void setTo(Street to) {
-		this.to = to;
+	public void setNextStreet(Street nextStreet) {
+		this.nextStreet = nextStreet;
 	}
+
+	
 }
