@@ -15,6 +15,7 @@ public class Car {
 	private Street startStreet;
 	private Street nextStreet;
 	private Sprite sprite;
+	private int blockIndex;
 	
 	public Car(Sprite sprite, int velocity, int[] position, Street startStreet, Street nextStreet) {
 		super();
@@ -23,6 +24,7 @@ public class Car {
 		this.position = position;
 		this.startStreet = startStreet;
 		this.nextStreet = nextStreet;
+		this.blockIndex = -1;
 	}
 
 	public Sprite getSprite() {
@@ -66,5 +68,12 @@ public class Car {
 		this.nextStreet = nextStreet;
 	}
 
+	public int getBlockIndex() {
+		return blockIndex;
+	}
+
+	public void setBlockIndex(int blockIndex) {
+		this.blockIndex = blockIndex;
+	}
 	
 }

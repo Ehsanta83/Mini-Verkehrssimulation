@@ -10,6 +10,9 @@ package de.tu_clausthal.mini_verkehrssimulation.classes;
 public class Block {
 	private boolean isOccupied;
 
+	public Block(){
+		this.isOccupied = false;
+	}
 	public boolean getIsOccupied() {
 		return isOccupied;
 	}

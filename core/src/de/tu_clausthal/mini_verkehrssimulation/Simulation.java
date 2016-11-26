@@ -139,14 +139,61 @@ public class Simulation extends ApplicationAdapter{
 		
 		sb.begin();
 		for(Car car: cars){
+			int velocity = car.getVelocity();
+			int[] position = car.getPosition();
+			int x = position[0];
+			int y = position[1];
+			int blockIndex = car.getBlockIndex();
+			int randomNum = ThreadLocalRandom.current().nextInt(1, 4); // get a random number between 1,2,3
+			//1. rule in Nagel-Schreckenberg-Modell
+			if(velocity < 5) velocity ++;
+			int[] newPosition = position;
 			if(car.getStartStreet().equals(streetEast)){
-				car.getSprite().translateX(-1);
+				car.getSprite().translateX(-car.getVelocity());
+				newPosition[0] = newPosition[0] - car.getVelocity();
+				car.setPosition(newPosition);
 			}else if(car.getStartStreet().equals(streetSouth)){
-				car.getSprite().translateY(1);
+				car.getSprite().translateY(car.getVelocity());
+				newPosition[1] = newPosition[1] + car.getVelocity();
+				car.setPosition(newPosition);
 			}else if(car.getStartStreet().equals(streetWest)){
-				car.getSprite().translateX(1);
+				int nextOccupiedBlockIndex = -1;
+				if(x < 432){
+					nextOccupiedBlockIndex = streetWest.getNextOccupiedBlockIndexInFirstLineFromIndex(blockIndex);
+				}else if(x >= 592){
+					//later change streetEast to next street
+					nextOccupiedBlockIndex = streetEast.getNextOccupiedBlockIndexInSecondLineFromIndex(blockIndex);
+				}
+				//2. rule in Nagel-Schreckenberg-Modell
+				if(nextOccupiedBlockIndex != -1 && velocity > nextOccupiedBlockIndex) {
+					if(blockIndex == -1){
+						velocity = nextOccupiedBlockIndex;
+					}else{
+						velocity = nextOccupiedBlockIndex - blockIndex - 1;
+					}
+				}
+				//3. rule in Nagel-Schreckenberg-Modell
+				if(randomNum == 1 && velocity >= 1) velocity--;
+				//4. rule in Nagel-Schreckenberg-Modell
+				car.setVelocity(velocity);
+				if(velocity > 0){
+					car.getSprite().translateX(velocity);
+					newPosition[0] = newPosition[0] + velocity;
+					int newX = newPosition[0];
+					if(newX < 432){
+						int newBlockIndex = (int) newX / 48;
+						if(newBlockIndex > blockIndex){
+							if(blockIndex > -1)	streetWest.emptyBlockInFirstLine(blockIndex);
+							streetWest.occupyBlockInFirstLine(newBlockIndex);
+							car.setBlockIndex(newBlockIndex);
+						}
+					}
+					car.setPosition(newPosition);
+				}
 			}else if(car.getStartStreet().equals(streetNorth)){
-				car.getSprite().translateY(-1);
+				car.getSprite().translateY(-car.getVelocity());
+				newPosition[1] = newPosition[1] - car.getVelocity();
+				car.setPosition(newPosition);
 			}
 			car.getSprite().draw(sb);
 		}
@@ -164,7 +211,8 @@ public class Simulation extends ApplicationAdapter{
 	private Car createRandomCar(){
 		Sprite carSprite = new Sprite(carTexture);
 		int velocity = ThreadLocalRandom.current().nextInt(1, 6);
-		int random = ThreadLocalRandom.current().nextInt(1, 5);
+		//int random = ThreadLocalRandom.current().nextInt(1, 5);
+		int random = 1; // all cars come from west
 		int[] position = new int[2];
 		Street startStreet = null;
 		Street[] possibleNextStreets = new Street[3];
@@ -178,7 +226,7 @@ public class Simulation extends ApplicationAdapter{
 			possibleNextStreets = new Street[]{streetNorth, streetEast, streetSouth}; 
 			break;
 		case 2:			
-			position[0] = Gdx.graphics.getWidth()/2 - 32;
+			position[0] = Gdx.graphics.getWidth()/ 2 - 32;
 			position[1] = Gdx.graphics.getHeight() + 8;
 			carSprite.setPosition(position[0], position[1]);
 			carSprite.setRotation(-90);
