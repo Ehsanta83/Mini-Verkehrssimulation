@@ -10,9 +10,11 @@ package de.tu_clausthal.mini_verkehrssimulation.classes;
 public class Street {
 	private TrafficLight trafficLight;
 	private Block[] firstLineBlocks, secondLineBlocks;
+	private int index;
 	
-	public Street() {
+	public Street(int index) {
 		super();
+		this.index = index;
 		this.trafficLight = new TrafficLight(TrafficLightStatus.RED);
 		firstLineBlocks = new Block[]{new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()};
 		secondLineBlocks = new Block[]{new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()};
@@ -26,6 +28,14 @@ public class Street {
 		this.trafficLight = trafficLight;
 	}
 	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setName(int index) {
+		this.index = index;
+	}
+
 	public void turnTrafficLightToRed(){
 		this.trafficLight.setStatus(TrafficLightStatus.RED);
 	}
