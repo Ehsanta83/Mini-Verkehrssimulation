@@ -39,7 +39,7 @@ import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
  */
 public class Simulation extends ApplicationAdapter{
 	int countOfCars = 5;
-	int trafficLightDuration = 15;
+	int trafficLightDuration = 5;
 	TiledMap roadsTiledMap;
 	OrthographicCamera camera;
 	TiledMapRenderer roadsTiledMapRenderer;
@@ -138,15 +138,15 @@ public class Simulation extends ApplicationAdapter{
 		
 		
 		sb.begin();
-		for(Car car: cars){
+		for(int i=0; i< cars.length; i++){
+			Car car = cars[i];
 			int velocity = car.getVelocity();
 			int[] position = car.getPosition();
 			int x = position[0];
 			int y = position[1];
 			int blockIndex = car.getBlockIndex();
-			int randomNum = ThreadLocalRandom.current().nextInt(1, 4); // get a random number between 1,2,3
-			//1. rule in Nagel-Schreckenberg-Modell
-			if(velocity < 5) velocity ++;
+			int randomNum = ThreadLocalRandom.current().nextInt(1, 4); // get a random number between 1,2,3 for 3. rule in Nagel-Schreckenberg-Modell
+			
 			int[] newPosition = position;
 			if(car.getStartStreet().equals(streetEast)){
 				car.getSprite().translateX(-car.getVelocity());
@@ -157,25 +157,39 @@ public class Simulation extends ApplicationAdapter{
 				newPosition[1] = newPosition[1] + car.getVelocity();
 				car.setPosition(newPosition);
 			}else if(car.getStartStreet().equals(streetWest)){
-				int nextOccupiedBlockIndex = -1;
-				if(x < 432){
-					nextOccupiedBlockIndex = streetWest.getNextOccupiedBlockIndexInFirstLineFromIndex(blockIndex);
-				}else if(x >= 592){
-					//later change streetEast to next street
-					nextOccupiedBlockIndex = streetEast.getNextOccupiedBlockIndexInSecondLineFromIndex(blockIndex);
-				}
-				//2. rule in Nagel-Schreckenberg-Modell
-				if(nextOccupiedBlockIndex != -1 && velocity > nextOccupiedBlockIndex) {
-					if(blockIndex == -1){
-						velocity = nextOccupiedBlockIndex;
-					}else{
-						velocity = nextOccupiedBlockIndex - blockIndex - 1;
+				if(x >= 432 && x <512){
+					
+				}else{
+					int nextOccupiedBlockIndex = -1;
+					if(x < 432){
+						nextOccupiedBlockIndex = streetWest.getNextOccupiedBlockIndexInFirstLineFromIndex(blockIndex);
+					}else if(x >= 512){
+						//later change streetEast to next street
+						nextOccupiedBlockIndex = streetEast.getNextOccupiedBlockIndexInSecondLineFromIndex(blockIndex);
 					}
+					//1. rule in Nagel-Schreckenberg-Modell
+					if(velocity < 5) velocity ++;
+					//2. rule in Nagel-Schreckenberg-Modell
+					if(nextOccupiedBlockIndex != -1) {
+						if(blockIndex == -1 && nextOccupiedBlockIndex <= 5){
+							velocity = nextOccupiedBlockIndex;
+						}else{ 
+							if(velocity > nextOccupiedBlockIndex - blockIndex - 1){
+								velocity = nextOccupiedBlockIndex - blockIndex - 1;
+							}
+						}
+					}
+					//3. rule in Nagel-Schreckenberg-Modell
+					if(randomNum == 1 && velocity >= 1) velocity--;
+					if(x < 432){
+						if(blockIndex == 6 && velocity > 3) velocity = 3;
+						if(blockIndex == 7 && velocity > 2) velocity = 2;
+						if(blockIndex == 8 && streetWest.getTrafficLight().getStatus() == TrafficLightStatus.RED) velocity = 0;
+					}
+					
+					//4. rule in Nagel-Schreckenberg-Modell
+					car.setVelocity(velocity);
 				}
-				//3. rule in Nagel-Schreckenberg-Modell
-				if(randomNum == 1 && velocity >= 1) velocity--;
-				//4. rule in Nagel-Schreckenberg-Modell
-				car.setVelocity(velocity);
 				if(velocity > 0){
 					car.getSprite().translateX(velocity);
 					newPosition[0] = newPosition[0] + velocity;
@@ -187,6 +201,21 @@ public class Simulation extends ApplicationAdapter{
 							streetWest.occupyBlockInFirstLine(newBlockIndex);
 							car.setBlockIndex(newBlockIndex);
 						}
+					}else if (newX >= 432 && newX < 512){
+						if(blockIndex > -1){
+							streetWest.emptyBlockInFirstLine(blockIndex);
+							car.setBlockIndex(-1);
+						}
+					}else if (newX >= 592 && newX < 1024){
+						int newBlockIndex = (int) (newX - 592) / 48;
+						if(newBlockIndex > blockIndex){
+							if(blockIndex > -1)	streetEast.emptyBlockInSecondLine(blockIndex);
+							streetEast.occupyBlockInSecondLine(newBlockIndex);
+							car.setBlockIndex(newBlockIndex);
+						}
+					}else if(newX >= 1024){
+						streetEast.emptyBlockInSecondLine(blockIndex);
+						cars[i] = createRandomCar();
 					}
 					car.setPosition(newPosition);
 				}
