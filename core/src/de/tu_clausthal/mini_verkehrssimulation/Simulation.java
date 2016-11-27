@@ -32,7 +32,7 @@ import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
  *
  */
 public class Simulation extends ApplicationAdapter{
-	int countOfCars = 5;
+	int countOfCars = 10;
 	int trafficLightDuration = 5;
 	TiledMap roadsTiledMap;
 	OrthographicCamera camera;
@@ -133,31 +133,89 @@ public class Simulation extends ApplicationAdapter{
 			int velocity = car.getVelocity();
 			int[] position = car.getPosition();
 			int x = position[0];
-			//int y = position[1];
+			int y = position[1];
 			int blockIndex = car.getBlockIndex();
 			Street startStreet = car.getStartStreet();
 			Street nextStreet = car.getNextStreet();
-			//int startStreetIndex = startStreet.getIndex();
-			//int nextStreetIndex = nextStreet.getIndex();
+			int startStreetIndex = startStreet.getIndex();
+			int nextStreetIndex = nextStreet.getIndex();
 			CarTurning turning = car.getTurning();
 						
 			int nextOccupiedBlockIndex = -1;
-
-			if(x < 432){ //area 0, 1
+			
+			int movingPosition = 0;
+			int rightRotationAngel = 0;
+			int leftRotationAngel = 0;
+			String newDirectionAfterTurningRight = "";
+			String newDirectionAfterTurningLeft = "";
+			int newXAfterTurningRight = 0;
+			int newXAfterTurningLeft = 0;
+			int newYAfterTurningRight = 0;
+			int newYAfterTurningLeft = 0;
+			switch(startStreetIndex){
+			case 0: //west 
+				movingPosition = x;
+				rightRotationAngel = -90;
+				leftRotationAngel = 90;
+				newDirectionAfterTurningRight = "south";
+				newDirectionAfterTurningLeft = "north";
+				newXAfterTurningRight = 480;
+				newXAfterTurningLeft = 512;
+				newYAfterTurningRight = position[1];
+				newYAfterTurningLeft = position[1];
+				break;
+			case 1: //south
+				movingPosition = y;
+				rightRotationAngel = 0;
+				leftRotationAngel = 180;
+				newDirectionAfterTurningRight = "east";
+				newDirectionAfterTurningLeft = "west";
+				newXAfterTurningRight = position[0];
+				newXAfterTurningLeft = position[0];
+				newYAfterTurningRight = 488;
+				newYAfterTurningLeft = 520;
+				break;
+			case 2: //east
+				movingPosition = 1024 - x;
+				rightRotationAngel = 90;
+				leftRotationAngel = -90;
+				newDirectionAfterTurningRight = "north";
+				newDirectionAfterTurningLeft = "south";
+				newXAfterTurningRight = 512;
+				newXAfterTurningLeft = 480;
+				newYAfterTurningRight = position[1];
+				newYAfterTurningLeft = position[1];
+				break;
+			case 3: //north
+				movingPosition = 1024 - y;
+				rightRotationAngel = 180;
+				leftRotationAngel = 0;
+				newDirectionAfterTurningRight = "west";
+				newDirectionAfterTurningLeft = "east";
+				newXAfterTurningRight = position[0];
+				newXAfterTurningLeft = position[0];
+				newYAfterTurningRight = 520;
+				newYAfterTurningLeft = 488;
+				break;
+			}
+			
+			if(movingPosition < 432){ //area 0, 1
 				nextOccupiedBlockIndex = startStreet.getNextOccupiedBlockIndexInFirstLineFromIndex(blockIndex);
 				velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
-				velocity = applyTrafficLight(streetWest, velocity, blockIndex);
-			}else if(x >= 480 && x < 512){
+				velocity = applyTrafficLight(startStreet, velocity, blockIndex);
+			}else if(movingPosition >= 480 && movingPosition < 512){
 				if(turning.equals(CarTurning.RIGHT)){
-					car.getSprite().setRotation(-90);
-					position[0] = 480;
-					car.setDrivingDirection("south");
+					car.getSprite().setRotation(rightRotationAngel);
+					position[0] = newXAfterTurningRight;
+					position[1] = newYAfterTurningRight;
+					car.setDrivingDirection(newDirectionAfterTurningRight);
 				}
-			}else if (x >= 512){
+			}else if (movingPosition >= 512){
 				if(turning.equals(CarTurning.LEFT)){
-					car.getSprite().setRotation(90);
-					position[0] = 512;
-					car.setDrivingDirection("north");
+					car.getSprite().setRotation(leftRotationAngel);
+					position[0] = newXAfterTurningLeft;
+					position[1] = newYAfterTurningLeft;
+					car.setDrivingDirection(newDirectionAfterTurningLeft);
 				}else{
 					//later change streetEast to next street
 					nextOccupiedBlockIndex = nextStreet.getNextOccupiedBlockIndexInSecondLineFromIndex(blockIndex);
@@ -166,7 +224,9 @@ public class Simulation extends ApplicationAdapter{
 			}
 			
 			car.setVelocity(velocity);
-
+			car.setPosition(position);
+			car.getSprite().setPosition(position[0], position[1]);
+			
 			if(velocity > 0){
 				car.move();
 				if(car.isOut()) cars[i] = createRandomCar();
@@ -186,9 +246,8 @@ public class Simulation extends ApplicationAdapter{
 	
 	private Car createRandomCar(){
 		Sprite carSprite = new Sprite(carTexture);
-		int velocity = ThreadLocalRandom.current().nextInt(1, 6);
-		//int random = ThreadLocalRandom.current().nextInt(1, 5);
-		int random = 1; // all cars come from west
+		int velocity = ThreadLocalRandom.current().nextInt(1, 5);
+		int random = ThreadLocalRandom.current().nextInt(1, 5); 
 		int[] position = new int[2];
 		Street startStreet = null;
 		Street[] possibleNextStreets = new Street[3];
@@ -196,7 +255,6 @@ public class Simulation extends ApplicationAdapter{
 		String drivingDirection = "";
 		CarTurning turning = CarTurning.NONE;
 		int random2 = ThreadLocalRandom.current().nextInt(0, 3);
-		//random2 = 2; 
 		switch(random){
 		case 1:
 			position[0] = Parameters.STREETWEST_START_POINT_WIDTH;
@@ -266,10 +324,10 @@ public class Simulation extends ApplicationAdapter{
 	
 	private int applyNagelSchreckenbergModel(int velocity, int blockIndex, int nextOccupiedBlockIndex){
 		//1. rule in Nagel-Schreckenberg-Modell
-		if(velocity < 5) velocity ++;
+		if(velocity < 4) velocity ++;
 		//2. rule in Nagel-Schreckenberg-Modell
 		if(nextOccupiedBlockIndex != -1) {
-			if(blockIndex == -1 && nextOccupiedBlockIndex <= 5){
+			if(blockIndex == -1 && nextOccupiedBlockIndex <= 4){
 				velocity = nextOccupiedBlockIndex;
 			}else{ 
 				if(velocity > nextOccupiedBlockIndex - blockIndex - 1){
@@ -278,7 +336,7 @@ public class Simulation extends ApplicationAdapter{
 			}
 		}
 		//3. rule in Nagel-Schreckenberg-Modell
-		int randomNum = ThreadLocalRandom.current().nextInt(1, 4); // get a random number between 1,2,3 
+		int randomNum = ThreadLocalRandom.current().nextInt(1, 3); // get a random number between 1,2,3 
 		if(randomNum == 1 && velocity >= 1) velocity--;
 		return velocity;
 	}
