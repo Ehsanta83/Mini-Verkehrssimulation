@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -49,7 +50,7 @@ public class Simulation extends ApplicationAdapter{
 	public void create () {
 		float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-
+       
         camera = new OrthographicCamera();
         camera.setToOrtho(false,w,h);
         camera.update();
@@ -233,6 +234,20 @@ public class Simulation extends ApplicationAdapter{
 			}
 			car.getSprite().draw(sb);
 		}
+        
+        //show FPS
+        int fps = Gdx.graphics.getFramesPerSecond();
+        BitmapFont fpsFont = new BitmapFont();
+        if(fps >= 45){
+        	fpsFont.setColor(0, 1, 0, 1); //green
+        }else if (fps >= 30){
+        	fpsFont.setColor(1, 1, 0, 1); //yellow
+        }else{
+        	fpsFont.setColor(1, 0, 0, 1); //red
+        }
+        fpsFont.draw(sb, "FPS: " + fps, 19, 1005);
+        fpsFont.setColor(1, 1, 1, 1); //white
+        
         sb.end();
 		
 	}
