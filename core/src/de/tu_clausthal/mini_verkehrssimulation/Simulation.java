@@ -3,6 +3,7 @@
  */
 package de.tu_clausthal.mini_verkehrssimulation;
 
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -38,13 +39,12 @@ public class Simulation extends ApplicationAdapter{
 	TiledMap roadsTiledMap;
 	OrthographicCamera camera;
 	TiledMapRenderer roadsTiledMapRenderer;
-	SpriteBatch sb;
+	SpriteBatch spriteBatch;
     Texture carTexture;
-    Street streetEast, streetSouth, streetWest, streetNorth;
+    HashMap<String, Street> streets;
     ShapeRenderer trafficLightEastShapeRenderer, trafficLightSouthShapeRenderer, trafficLightWestShapeRenderer, trafficLightNorthShapeRenderer;
     long startTime;
     Car[] cars;
-    Sprite carSprite;
     
 	@Override
 	public void create () {
@@ -58,11 +58,17 @@ public class Simulation extends ApplicationAdapter{
 		roadsTiledMap = new TmxMapLoader().load("roads.tmx");
 		roadsTiledMapRenderer = new OrthogonalTiledMapRenderer(roadsTiledMap);
 		
-		streetEast = new Street(2);
-		streetSouth = new Street(1);
- 		streetWest = new Street(0);
- 		streetNorth = new Street(3);
- 		
+		
+		Street streetEast = new Street(90, -90, "north", "south", 512, 480, 520, 520);
+		Street streetSouth = new Street(0, 180, "east", "west", 512, 512, 488, 520);
+		Street streetWest = new Street(-90, 90, "south", "north", 480, 512, 488, 488);
+		Street streetNorth = new Street(180, 0, "west", "east", 480, 480, 520, 488);
+		streets = new HashMap<>();
+		streets.put("east", streetEast);
+		streets.put("south", streetSouth);
+		streets.put("west", streetWest);
+		streets.put("north", streetNorth);
+		 		
  		startTime = System.currentTimeMillis();
 		
 		trafficLightEastShapeRenderer = new ShapeRenderer();
@@ -70,7 +76,7 @@ public class Simulation extends ApplicationAdapter{
 		trafficLightWestShapeRenderer = new ShapeRenderer();
 		trafficLightNorthShapeRenderer = new ShapeRenderer();
 		
-		sb = new SpriteBatch();
+		spriteBatch = new SpriteBatch();
 		carTexture = new Texture(Gdx.files.internal("car.png"));
 		cars = new Car[countOfCars];
 		for(int i=0; i < countOfCars; i++){
@@ -80,7 +86,7 @@ public class Simulation extends ApplicationAdapter{
 	
 	@Override
     public void dispose() {
-		sb.dispose();
+		spriteBatch.dispose();
 		carTexture.dispose();
     }
 
@@ -96,143 +102,143 @@ public class Simulation extends ApplicationAdapter{
 		double mod = elapsedTime % (trafficLightDuration * 4);
 		if(mod < trafficLightDuration) {
 			turnAllTrafficLightsToRed();
-			streetEast.turnTrafficLightToGreen();
+			streets.get("east").turnTrafficLightToGreen();
 		}else if(mod >= trafficLightDuration && mod < 2 * trafficLightDuration) {
 			turnAllTrafficLightsToRed();
-			streetSouth.turnTrafficLightToGreen();
+			streets.get("south").turnTrafficLightToGreen();
 		}else if(mod >= 2 * trafficLightDuration && mod < 3 * trafficLightDuration) {
 			turnAllTrafficLightsToRed();
-			streetWest.turnTrafficLightToGreen();
+			streets.get("west").turnTrafficLightToGreen();
 		}else{
 			turnAllTrafficLightsToRed();
-			streetNorth.turnTrafficLightToGreen();
+			streets.get("north").turnTrafficLightToGreen();
 		}
 		
 		trafficLightEastShapeRenderer.begin(ShapeType.Filled);
-		trafficLightEastShapeRenderer.setColor(streetEast.getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightEastShapeRenderer.setColor(streets.get("east").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
 		trafficLightEastShapeRenderer.circle(576, 552, 8);
 		trafficLightEastShapeRenderer.end();
 		
 		trafficLightSouthShapeRenderer.begin(ShapeType.Filled);
-		trafficLightSouthShapeRenderer.setColor(streetSouth.getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightSouthShapeRenderer.setColor(streets.get("south").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
 		trafficLightSouthShapeRenderer.circle(552, 448, 8);
 		trafficLightSouthShapeRenderer.end();
 		
 		trafficLightWestShapeRenderer.begin(ShapeType.Filled);
-		trafficLightWestShapeRenderer.setColor(streetWest.getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightWestShapeRenderer.setColor(streets.get("west").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
 		trafficLightWestShapeRenderer.circle(448, 472, 8);
 		trafficLightWestShapeRenderer.end();
 		
 		trafficLightNorthShapeRenderer.begin(ShapeType.Filled);
-		trafficLightNorthShapeRenderer.setColor(streetNorth.getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightNorthShapeRenderer.setColor(streets.get("north").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
 		trafficLightNorthShapeRenderer.circle(472, 576, 8);
 		trafficLightNorthShapeRenderer.end();
 		
-		sb.begin();
+		spriteBatch.begin();
 		for(int i=0; i< cars.length; i++){
 			Car car = cars[i];
 			int velocity = car.getVelocity();
-			int[] position = car.getPosition();
-			int x = position[0];
-			int y = position[1];
+			int x = (int) car.getSprite().getX();
+			int y = (int) car.getSprite().getY();
 			int blockIndex = car.getBlockIndex();
-			Street startStreet = car.getStartStreet();
-			Street nextStreet = car.getNextStreet();
-			int startStreetIndex = startStreet.getIndex();
-			int nextStreetIndex = nextStreet.getIndex();
 			CarTurning turning = car.getTurning();
-						
+			String currentStreet = car.getCurrentStreet();
+			String currentDrivingDirection = car.getCurrentDrivingDirection();
+			
 			int nextOccupiedBlockIndex = -1;
+			int distanceFromStartInMovingAxis = 0;
 			
-			int movingPosition = 0;
-			int rightRotationAngel = 0;
-			int leftRotationAngel = 0;
-			String newDirectionAfterTurningRight = "";
-			String newDirectionAfterTurningLeft = "";
-			int newXAfterTurningRight = 0;
-			int newXAfterTurningLeft = 0;
-			int newYAfterTurningRight = 0;
-			int newYAfterTurningLeft = 0;
-			switch(startStreetIndex){
-			case 0: //west 
-				movingPosition = x;
-				rightRotationAngel = -90;
-				leftRotationAngel = 90;
-				newDirectionAfterTurningRight = "south";
-				newDirectionAfterTurningLeft = "north";
-				newXAfterTurningRight = 480;
-				newXAfterTurningLeft = 512;
-				newYAfterTurningRight = position[1];
-				newYAfterTurningLeft = position[1];
+			switch(currentStreet){
+			case "west": 
+				distanceFromStartInMovingAxis = x;
 				break;
-			case 1: //south
-				movingPosition = y;
-				rightRotationAngel = 0;
-				leftRotationAngel = 180;
-				newDirectionAfterTurningRight = "east";
-				newDirectionAfterTurningLeft = "west";
-				newXAfterTurningRight = position[0];
-				newXAfterTurningLeft = position[0];
-				newYAfterTurningRight = 488;
-				newYAfterTurningLeft = 520;
+			case "south":
+				distanceFromStartInMovingAxis = y;
 				break;
-			case 2: //east
-				movingPosition = 1024 - x;
-				rightRotationAngel = 90;
-				leftRotationAngel = -90;
-				newDirectionAfterTurningRight = "north";
-				newDirectionAfterTurningLeft = "south";
-				newXAfterTurningRight = 512;
-				newXAfterTurningLeft = 480;
-				newYAfterTurningRight = position[1];
-				newYAfterTurningLeft = position[1];
+			case "east":
+				distanceFromStartInMovingAxis = 1024 - x;
 				break;
-			case 3: //north
-				movingPosition = 1024 - y;
-				rightRotationAngel = 180;
-				leftRotationAngel = 0;
-				newDirectionAfterTurningRight = "west";
-				newDirectionAfterTurningLeft = "east";
-				newXAfterTurningRight = position[0];
-				newXAfterTurningLeft = position[0];
-				newYAfterTurningRight = 520;
-				newYAfterTurningLeft = 488;
+			case "north":
+				distanceFromStartInMovingAxis = 1024 - y;
 				break;
 			}
 			
-			if(movingPosition < 432){ //area 0, 1
-				nextOccupiedBlockIndex = startStreet.getNextOccupiedBlockIndexInFirstLineFromIndex(blockIndex);
+			if(distanceFromStartInMovingAxis < 432){ 
+				int newBlockIndex = (int) distanceFromStartInMovingAxis / 48;
+				if(newBlockIndex > blockIndex){
+					if(blockIndex > -1)	streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
+					streets.get(currentStreet).getFirstLine().occupyBlock(newBlockIndex);
+					blockIndex = newBlockIndex;
+				}
+				nextOccupiedBlockIndex = streets.get(currentStreet).getFirstLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
 				velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
-				velocity = applyTrafficLight(startStreet, velocity, blockIndex);
-			}else if(movingPosition >= 480 && movingPosition < 512){
+				velocity = applyTrafficLight(streets.get(currentStreet), velocity, blockIndex);
+			}else if(distanceFromStartInMovingAxis >= 432 && distanceFromStartInMovingAxis < 480){
+				if(blockIndex > -1){
+					streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
+					blockIndex = -1;
+				}
+			}else if(distanceFromStartInMovingAxis >= 480 && distanceFromStartInMovingAxis < 512){
 				if(turning.equals(CarTurning.RIGHT)){
-					car.getSprite().setRotation(rightRotationAngel);
-					position[0] = newXAfterTurningRight;
-					position[1] = newYAfterTurningRight;
-					car.setDrivingDirection(newDirectionAfterTurningRight);
+					car.getSprite().setRotation(streets.get(currentStreet).getRightRotationAngel());
+					x = streets.get(currentStreet).getNewXAfterTurningRight();
+					y = streets.get(currentStreet).getNewYAfterTurningRight();
+					String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningRight();
+					car.setCurrentStreet(newStreet);
+					car.setCurrentDrivingDirection(newStreet);
+					car.setTurning(CarTurning.NONE);
 				}
-			}else if (movingPosition >= 512){
+			}else if(distanceFromStartInMovingAxis >= 512 && distanceFromStartInMovingAxis < 592){			
 				if(turning.equals(CarTurning.LEFT)){
-					car.getSprite().setRotation(leftRotationAngel);
-					position[0] = newXAfterTurningLeft;
-					position[1] = newYAfterTurningLeft;
-					car.setDrivingDirection(newDirectionAfterTurningLeft);
-				}else{
-					//later change streetEast to next street
-					nextOccupiedBlockIndex = nextStreet.getNextOccupiedBlockIndexInSecondLineFromIndex(blockIndex);
-					velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
+					car.getSprite().setRotation(streets.get(currentStreet).getLeftRotationAngel());
+					x = streets.get(currentStreet).getNewXAfterTurningLeft();
+					y = streets.get(currentStreet).getNewYAfterTurningLeft();
+					String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningLeft();
+					car.setCurrentStreet(newStreet);
+					car.setCurrentDrivingDirection(newStreet);
+					car.setTurning(CarTurning.NONE);
 				}
+			}else if(distanceFromStartInMovingAxis >= 592 && distanceFromStartInMovingAxis < 1024){
+				int newBlockIndex = (int) (distanceFromStartInMovingAxis - 592) / 48;
+				if(newBlockIndex > blockIndex){
+					if(blockIndex > -1)	streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
+					streets.get(currentStreet).getSecondLine().occupyBlock(newBlockIndex);
+					blockIndex = newBlockIndex;
+				}			
+				nextOccupiedBlockIndex = streets.get(currentStreet).getSecondLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
+				velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
+			}else if(distanceFromStartInMovingAxis >= 1024){
+				if(blockIndex > -1){
+					streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
+				}
+				cars[i] = createRandomCar();
+				continue;
 			}
 			
+			car.setBlockIndex(blockIndex);
 			car.setVelocity(velocity);
-			car.setPosition(position);
-			car.getSprite().setPosition(position[0], position[1]);
+			car.getSprite().setPosition(x, y);
 			
 			if(velocity > 0){
 				car.move();
-				if(car.isOut()) cars[i] = createRandomCar();
+				
+				switch(currentDrivingDirection){
+				case "east":
+					car.getSprite().translateX(velocity);
+					break;
+				case "north":
+					car.getSprite().translateY(velocity);
+					break;
+				case "west":
+					car.getSprite().translateX(-velocity);
+					break;
+				case "south":
+					car.getSprite().translateY(-velocity);
+					break;
+				}
 			}
-			car.getSprite().draw(sb);
+
+			car.getSprite().draw(spriteBatch);
 		}
         
         //show FPS
@@ -245,95 +251,63 @@ public class Simulation extends ApplicationAdapter{
         }else{
         	fpsFont.setColor(1, 0, 0, 1); //red
         }
-        fpsFont.draw(sb, "FPS: " + fps, 19, 1005);
+        fpsFont.draw(spriteBatch, "FPS: " + fps, 19, 1005);
         fpsFont.setColor(1, 1, 1, 1); //white
         
-        sb.end();
-		
+        spriteBatch.end();
 	}
 
 	private void turnAllTrafficLightsToRed(){
-		streetEast.turnTrafficLightToRed();
-		streetSouth.turnTrafficLightToRed();
-		streetWest.turnTrafficLightToRed();
-		streetNorth.turnTrafficLightToRed();
+		streets.get("west").turnTrafficLightToRed();
+		streets.get("south").turnTrafficLightToRed();
+		streets.get("north").turnTrafficLightToRed();
+		streets.get("east").turnTrafficLightToRed();
 	}
 	
 	private Car createRandomCar(){
 		Sprite carSprite = new Sprite(carTexture);
 		int velocity = ThreadLocalRandom.current().nextInt(1, 5);
-		int random = ThreadLocalRandom.current().nextInt(1, 5); 
-		int[] position = new int[2];
-		Street startStreet = null;
-		Street[] possibleNextStreets = new Street[3];
-		Street nextStreet = null;
-		String drivingDirection = "";
-		CarTurning turning = CarTurning.NONE;
-		int random2 = ThreadLocalRandom.current().nextInt(0, 3);
+		String startStreet = "";
+		String currentDrivingDirection = "";
+		int random = ThreadLocalRandom.current().nextInt(1, 5);
 		switch(random){
 		case 1:
-			position[0] = Parameters.STREETWEST_START_POINT_WIDTH;
-			position[1] = Parameters.STREETWEST_START_POINT_HEIGHT;
-			carSprite.setPosition(position[0], position[1]);
-			startStreet = streetWest;
-			drivingDirection = "east";
-			possibleNextStreets = new Street[]{streetNorth, streetEast, streetSouth}; 
-			nextStreet = possibleNextStreets[random2];
-			if(nextStreet.equals(streetNorth)){
-				turning = CarTurning.LEFT;
-			}else if(nextStreet.equals(streetSouth)){
-				turning = CarTurning.RIGHT;
-			}
+			carSprite.setPosition(Parameters.STREETWEST_START_POINT_WIDTH, Parameters.STREETWEST_START_POINT_HEIGHT);
+			startStreet = "west";
+			currentDrivingDirection = "east";
 			break;
 		case 2:			
-			position[0] = Parameters.STREETNORTH_START_POINT_WIDTH;
-			position[1] = Parameters.STREETNORTH_START_POINT_HEIGHT;
-			carSprite.setPosition(position[0], position[1]);
+			carSprite.setPosition(Parameters.STREETNORTH_START_POINT_WIDTH, Parameters.STREETNORTH_START_POINT_HEIGHT);
 			carSprite.setRotation(-90);
-			startStreet = streetNorth;
-			drivingDirection = "south";
-			possibleNextStreets = new Street[]{streetEast, streetSouth, streetWest};
-			nextStreet = possibleNextStreets[random2];
-			if(nextStreet.equals(streetEast)){
-				turning = CarTurning.LEFT;
-			}else if(nextStreet.equals(streetWest)){
-				turning = CarTurning.RIGHT;
-			}
+			startStreet = "north";
+			currentDrivingDirection = "south";
 			break;
 		case 3:
-			position[0] = Parameters.STREETEAST_START_POINT_WIDTH;
-			position[1] = Parameters.STREETEAST_START_POINT_HEIGHT;
-			carSprite.setPosition(position[0], position[1]);
-			startStreet = streetEast;
+			carSprite.setPosition(Parameters.STREETEAST_START_POINT_WIDTH, Parameters.STREETEAST_START_POINT_HEIGHT);
 			carSprite.setRotation(180);
-			drivingDirection = "west";
-			possibleNextStreets = new Street[]{streetSouth, streetWest, streetNorth};
-			nextStreet = possibleNextStreets[random2];
-			if(nextStreet.equals(streetSouth)){
-				turning = CarTurning.LEFT;
-			}else if(nextStreet.equals(streetNorth)){
-				turning = CarTurning.RIGHT;
-			}
+			startStreet = "east";
+			currentDrivingDirection = "west";
 			break;
 		case 4:
-			position[0] = Parameters.STREETSOUTH_START_POINT_WIDTH;
-			position[1] = Parameters.STREETSOUTH_START_POINT_HEIGHT;
-			carSprite.setPosition(position[0], position[1]);
+			carSprite.setPosition(Parameters.STREETSOUTH_START_POINT_WIDTH, Parameters.STREETSOUTH_START_POINT_HEIGHT);
 			carSprite.setRotation(90);
-			startStreet = streetSouth;
-			drivingDirection = "north";
-			possibleNextStreets = new Street[]{streetWest, streetNorth, streetEast}; 
-			nextStreet = possibleNextStreets[random2];
-			if(nextStreet.equals(streetWest)){
-				turning = CarTurning.LEFT;
-			}else if(nextStreet.equals(streetEast)){
-				turning = CarTurning.RIGHT;
-			}
+			startStreet = "south";
+			currentDrivingDirection = "north";
 			break;
 		}
 		
-		
-		Car car = new Car(carSprite, velocity, position, startStreet, nextStreet, drivingDirection, turning);
+		random = ThreadLocalRandom.current().nextInt(1, 4);
+		CarTurning turning = CarTurning.NONE;
+		switch(random){
+		case 1:
+			turning = CarTurning.LEFT;
+			break;
+		case 2:			
+			turning = CarTurning.RIGHT;
+			break;
+		}
+
+		Car car = new Car(carSprite, velocity, startStreet, currentDrivingDirection, turning);
 		return car;
 	}
 	
@@ -351,8 +325,8 @@ public class Simulation extends ApplicationAdapter{
 			}
 		}
 		//3. rule in Nagel-Schreckenberg-Modell
-		int randomNum = ThreadLocalRandom.current().nextInt(1, 3); // get a random number between 1,2,3 
-		if(randomNum == 1 && velocity >= 1) velocity--;
+		int random = ThreadLocalRandom.current().nextInt(1, 3); // get a random number between 1,2,3 
+		if(random == 1 && velocity >= 1) velocity--;
 		return velocity;
 	}
 	

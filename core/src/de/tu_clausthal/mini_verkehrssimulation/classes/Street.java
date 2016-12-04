@@ -9,15 +9,31 @@ package de.tu_clausthal.mini_verkehrssimulation.classes;
  */
 public class Street {
 	private TrafficLight trafficLight;
-	private Block[] firstLineBlocks, secondLineBlocks;
-	private int index;
+	private StreetLine firstLine, secondLine;
+	private int rightRotationAngel;
+	private int leftRotationAngel;
+	private String newDirectionAfterTurningRight;
+	private String newDirectionAfterTurningLeft;
+	private int newXAfterTurningRight;
+	private int newXAfterTurningLeft;
+	private int newYAfterTurningRight;
+	private int newYAfterTurningLeft;
 	
-	public Street(int index) {
+	public Street(int rightRotationAngel, int leftRotationAngel, String newDirectionAfterTurningRight,
+			String newDirectionAfterTurningLeft, int newXAfterTurningRight, int newXAfterTurningLeft,
+			int newYAfterTurningRight, int newYAfterTurningLeft) {
 		super();
-		this.index = index;
+		this.rightRotationAngel = rightRotationAngel;
+		this.leftRotationAngel = leftRotationAngel;
+		this.newDirectionAfterTurningRight = newDirectionAfterTurningRight;
+		this.newDirectionAfterTurningLeft = newDirectionAfterTurningLeft;
+		this.newXAfterTurningRight = newXAfterTurningRight;
+		this.newXAfterTurningLeft = newXAfterTurningLeft;
+		this.newYAfterTurningRight = newYAfterTurningRight;
+		this.newYAfterTurningLeft = newYAfterTurningLeft;
 		this.trafficLight = new TrafficLight(TrafficLightStatus.RED);
-		firstLineBlocks = new Block[]{new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()};
-		secondLineBlocks = new Block[]{new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block(), new Block()};
+		firstLine = new StreetLine();
+		secondLine = new StreetLine();
 	}
 
 	public TrafficLight getTrafficLight() {
@@ -27,13 +43,85 @@ public class Street {
 	public void setTrafficLight(TrafficLight trafficLight) {
 		this.trafficLight = trafficLight;
 	}
-	
-	public int getIndex() {
-		return index;
+
+	public StreetLine getFirstLine() {
+		return firstLine;
 	}
 
-	public void setName(int index) {
-		this.index = index;
+	public void setFirstLine(StreetLine firstLine) {
+		this.firstLine = firstLine;
+	}
+
+	public StreetLine getSecondLine() {
+		return secondLine;
+	}
+
+	public void setSecondLine(StreetLine secondLine) {
+		this.secondLine = secondLine;
+	}
+
+	public int getRightRotationAngel() {
+		return rightRotationAngel;
+	}
+
+	public void setRightRotationAngel(int rightRotationAngel) {
+		this.rightRotationAngel = rightRotationAngel;
+	}
+
+	public int getLeftRotationAngel() {
+		return leftRotationAngel;
+	}
+
+	public void setLeftRotationAngel(int leftRotationAngel) {
+		this.leftRotationAngel = leftRotationAngel;
+	}
+
+	public String getNewDirectionAfterTurningRight() {
+		return newDirectionAfterTurningRight;
+	}
+
+	public void setNewDirectionAfterTurningRight(String newDirectionAfterTurningRight) {
+		this.newDirectionAfterTurningRight = newDirectionAfterTurningRight;
+	}
+
+	public String getNewDirectionAfterTurningLeft() {
+		return newDirectionAfterTurningLeft;
+	}
+
+	public void setNewDirectionAfterTurningLeft(String newDirectionAfterTurningLeft) {
+		this.newDirectionAfterTurningLeft = newDirectionAfterTurningLeft;
+	}
+
+	public int getNewXAfterTurningRight() {
+		return newXAfterTurningRight;
+	}
+
+	public void setNewXAfterTurningRight(int newXAfterTurningRight) {
+		this.newXAfterTurningRight = newXAfterTurningRight;
+	}
+
+	public int getNewXAfterTurningLeft() {
+		return newXAfterTurningLeft;
+	}
+
+	public void setNewXAfterTurningLeft(int newXAfterTurningLeft) {
+		this.newXAfterTurningLeft = newXAfterTurningLeft;
+	}
+
+	public int getNewYAfterTurningRight() {
+		return newYAfterTurningRight;
+	}
+
+	public void setNewYAfterTurningRight(int newYAfterTurningRight) {
+		this.newYAfterTurningRight = newYAfterTurningRight;
+	}
+
+	public int getNewYAfterTurningLeft() {
+		return newYAfterTurningLeft;
+	}
+
+	public void setNewYAfterTurningLeft(int newYAfterTurningLeft) {
+		this.newYAfterTurningLeft = newYAfterTurningLeft;
 	}
 
 	public void turnTrafficLightToRed(){
@@ -42,51 +130,5 @@ public class Street {
 	
 	public void turnTrafficLightToGreen(){
 		this.trafficLight.setStatus(TrafficLightStatus.GREEN);
-	}
-	
-	public void occupyBlockInFirstLine(int blockIndex){
-		firstLineBlocks[blockIndex].setIsOccupied(true);
-	}
-	
-	public void occupyBlockInSecondLine(int blockIndex){
-		secondLineBlocks[blockIndex].setIsOccupied(true);
-	}
-	
-	public void emptyBlockInFirstLine(int blockIndex){
-		firstLineBlocks[blockIndex].setIsOccupied(false);
-	}
-	
-	public void emptyBlockInSecondLine(int blockIndex){
-		secondLineBlocks[blockIndex].setIsOccupied(false);
-	}
-	
-	public boolean isBlockInFirstLineOccupied(int blockIndex){
-		return firstLineBlocks[blockIndex].getIsOccupied();
-	}
-	
-	public boolean isBlockInSecondLineOccupied(int blockIndex){
-		return secondLineBlocks[blockIndex].getIsOccupied();
-	}
-	
-	public int getNextOccupiedBlockIndexInFirstLineFromIndex(int blockIndex){
-		int nextOccupiedBlockIndex = -1;
-		for(int i = (blockIndex == -1) ? 0 : blockIndex + 1; i < firstLineBlocks.length; i++){
-			if(firstLineBlocks[i].getIsOccupied()){
-				nextOccupiedBlockIndex = i;
-				break;
-			}
-		}
-		return nextOccupiedBlockIndex;
-	}
-	
-	public int getNextOccupiedBlockIndexInSecondLineFromIndex(int blockIndex){
-		int nextOccupiedBlockIndex = -1;
-		for(int i = (blockIndex == -1) ? 0 : blockIndex + 1; i < secondLineBlocks.length; i++){
-			if(secondLineBlocks[i].getIsOccupied()){
-				nextOccupiedBlockIndex = i;
-				break;
-			}
-		}
-		return nextOccupiedBlockIndex;
 	}
 }
