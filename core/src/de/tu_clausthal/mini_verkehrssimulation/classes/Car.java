@@ -12,21 +12,21 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class Car {
 	private Sprite sprite;
 	private int velocity;
-	private String startStreet;
 	private String currentStreet;
 	private String currentDrivingDirection;
 	private int blockIndex;
 	private CarTurning turning;
+	private boolean isTurned;
 		
-	public Car(Sprite sprite, int velocity, String startStreet, String currentDrivingDirection, CarTurning turning) {
+	public Car(Sprite sprite, int velocity, String currentStreet, String currentDrivingDirection, CarTurning turning) {
 		super();
 		this.sprite = sprite;
 		this.velocity = velocity;
-		this.startStreet = startStreet;
-		this.currentStreet = startStreet;
+		this.currentStreet = currentStreet;
 		this.currentDrivingDirection = currentDrivingDirection;
 		this.blockIndex = -1;
 		this.turning = turning;	
+		this.isTurned = false;
 	}
 
 	public Sprite getSprite() {
@@ -43,14 +43,6 @@ public class Car {
 
 	public void setVelocity(int velocity) {
 		this.velocity = velocity;
-	}
-
-	public String getStartStreet() {
-		return startStreet;
-	}
-
-	public void setStartStreet(String startStreet) {
-		this.startStreet = startStreet;
 	}
 
 	public String getCurrentStreet() {
@@ -83,6 +75,14 @@ public class Car {
 
 	public void setCurrentDrivingDirection(String currentDrivingDirection) {
 		this.currentDrivingDirection = currentDrivingDirection;
+	}
+
+	public boolean isTurned() {
+		return isTurned;
+	}
+
+	public void setTurned(boolean isTurned) {
+		this.isTurned = isTurned;
 	}
 
 	public void move(){

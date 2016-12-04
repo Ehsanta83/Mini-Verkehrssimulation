@@ -59,10 +59,10 @@ public class Simulation extends ApplicationAdapter{
 		roadsTiledMapRenderer = new OrthogonalTiledMapRenderer(roadsTiledMap);
 		
 		
-		Street streetEast = new Street(90, -90, "north", "south", 512, 480, 520, 520);
-		Street streetSouth = new Street(0, 180, "east", "west", 512, 512, 488, 520);
-		Street streetWest = new Street(-90, 90, "south", "north", 480, 512, 488, 488);
-		Street streetNorth = new Street(180, 0, "west", "east", 480, 480, 520, 488);
+		Street streetEast = new Street(90, -90, "north", "south", 512, 480, 520, 520, "west");
+		Street streetSouth = new Street(0, 180, "east", "west", 512, 512, 488, 520, "north");
+		Street streetWest = new Street(-90, 90, "south", "north", 480, 512, 488, 488, "east");
+		Street streetNorth = new Street(180, 0, "west", "east", 480, 480, 520, 488, "south");
 		streets = new HashMap<>();
 		streets.put("east", streetEast);
 		streets.put("south", streetSouth);
@@ -144,11 +144,13 @@ public class Simulation extends ApplicationAdapter{
 			CarTurning turning = car.getTurning();
 			String currentStreet = car.getCurrentStreet();
 			String currentDrivingDirection = car.getCurrentDrivingDirection();
+			boolean isTurned = car.isTurned();
 			
 			int nextOccupiedBlockIndex = -1;
 			int distanceFromStartInMovingAxis = 0;
 			
-			switch(currentStreet){
+			
+			switch(car.isTurned() ? streets.get(currentStreet).getOppositeStreet() : currentStreet){
 			case "west": 
 				distanceFromStartInMovingAxis = x;
 				break;
@@ -187,6 +189,7 @@ public class Simulation extends ApplicationAdapter{
 					car.setCurrentStreet(newStreet);
 					car.setCurrentDrivingDirection(newStreet);
 					car.setTurning(CarTurning.NONE);
+					car.setTurned(true);
 				}
 			}else if(distanceFromStartInMovingAxis >= 512 && distanceFromStartInMovingAxis < 592){			
 				if(turning.equals(CarTurning.LEFT)){
@@ -197,6 +200,7 @@ public class Simulation extends ApplicationAdapter{
 					car.setCurrentStreet(newStreet);
 					car.setCurrentDrivingDirection(newStreet);
 					car.setTurning(CarTurning.NONE);
+					car.setTurned(true);
 				}
 			}else if(distanceFromStartInMovingAxis >= 592 && distanceFromStartInMovingAxis < 1024){
 				int newBlockIndex = (int) (distanceFromStartInMovingAxis - 592) / 48;

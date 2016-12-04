@@ -18,10 +18,11 @@ public class Street {
 	private int newXAfterTurningLeft;
 	private int newYAfterTurningRight;
 	private int newYAfterTurningLeft;
+	private String oppositeStreet;
 	
 	public Street(int rightRotationAngel, int leftRotationAngel, String newDirectionAfterTurningRight,
 			String newDirectionAfterTurningLeft, int newXAfterTurningRight, int newXAfterTurningLeft,
-			int newYAfterTurningRight, int newYAfterTurningLeft) {
+			int newYAfterTurningRight, int newYAfterTurningLeft, String oppositeStreet) {
 		super();
 		this.rightRotationAngel = rightRotationAngel;
 		this.leftRotationAngel = leftRotationAngel;
@@ -31,6 +32,7 @@ public class Street {
 		this.newXAfterTurningLeft = newXAfterTurningLeft;
 		this.newYAfterTurningRight = newYAfterTurningRight;
 		this.newYAfterTurningLeft = newYAfterTurningLeft;
+		this.oppositeStreet = oppositeStreet;
 		this.trafficLight = new TrafficLight(TrafficLightStatus.RED);
 		firstLine = new StreetLine();
 		secondLine = new StreetLine();
@@ -122,6 +124,14 @@ public class Street {
 
 	public void setNewYAfterTurningLeft(int newYAfterTurningLeft) {
 		this.newYAfterTurningLeft = newYAfterTurningLeft;
+	}
+
+	public String getOppositeStreet() {
+		return oppositeStreet;
+	}
+
+	public void setOppositeStreet(String oppositeStreet) {
+		this.oppositeStreet = oppositeStreet;
 	}
 
 	public void turnTrafficLightToRed(){
