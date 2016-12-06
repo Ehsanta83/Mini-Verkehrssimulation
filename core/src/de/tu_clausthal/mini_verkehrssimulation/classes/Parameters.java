@@ -3,7 +3,6 @@
  */
 package de.tu_clausthal.mini_verkehrssimulation.classes;
 
-import java.util.HashMap;
 
 /**
  * @author Ehsan Tatasadi

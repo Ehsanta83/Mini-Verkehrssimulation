@@ -36,6 +36,7 @@ import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
 public class Simulation extends ApplicationAdapter{
 	int countOfCars = 10;
 	int trafficLightDuration = 5;
+	int maxVelocity = 3;
 	TiledMap roadsTiledMap;
 	OrthographicCamera camera;
 	TiledMapRenderer roadsTiledMapRenderer;
@@ -143,8 +144,6 @@ public class Simulation extends ApplicationAdapter{
 			int blockIndex = car.getBlockIndex();
 			CarTurning turning = car.getTurning();
 			String currentStreet = car.getCurrentStreet();
-			String currentDrivingDirection = car.getCurrentDrivingDirection();
-			boolean isTurned = car.isTurned();
 			
 			int nextOccupiedBlockIndex = -1;
 			int distanceFromStartInMovingAxis = 0;
@@ -167,7 +166,7 @@ public class Simulation extends ApplicationAdapter{
 			
 			if(distanceFromStartInMovingAxis < 432){ 
 				int newBlockIndex = (int) distanceFromStartInMovingAxis / 48;
-				if(newBlockIndex > blockIndex){
+				if(newBlockIndex > blockIndex && !streets.get(currentStreet).getFirstLine().isBlockOccupied(newBlockIndex)){
 					if(blockIndex > -1)	streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
 					streets.get(currentStreet).getFirstLine().occupyBlock(newBlockIndex);
 					blockIndex = newBlockIndex;
@@ -204,7 +203,7 @@ public class Simulation extends ApplicationAdapter{
 				}
 			}else if(distanceFromStartInMovingAxis >= 592 && distanceFromStartInMovingAxis < 1024){
 				int newBlockIndex = (int) (distanceFromStartInMovingAxis - 592) / 48;
-				if(newBlockIndex > blockIndex){
+				if(newBlockIndex > blockIndex && !streets.get(currentStreet).getSecondLine().isBlockOccupied(newBlockIndex)){
 					if(blockIndex > -1)	streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
 					streets.get(currentStreet).getSecondLine().occupyBlock(newBlockIndex);
 					blockIndex = newBlockIndex;
@@ -225,21 +224,6 @@ public class Simulation extends ApplicationAdapter{
 			
 			if(velocity > 0){
 				car.move();
-				
-				switch(currentDrivingDirection){
-				case "east":
-					car.getSprite().translateX(velocity);
-					break;
-				case "north":
-					car.getSprite().translateY(velocity);
-					break;
-				case "west":
-					car.getSprite().translateX(-velocity);
-					break;
-				case "south":
-					car.getSprite().translateY(-velocity);
-					break;
-				}
 			}
 
 			car.getSprite().draw(spriteBatch);
@@ -270,10 +254,10 @@ public class Simulation extends ApplicationAdapter{
 	
 	private Car createRandomCar(){
 		Sprite carSprite = new Sprite(carTexture);
-		int velocity = ThreadLocalRandom.current().nextInt(1, 5);
+		int velocity = ThreadLocalRandom.current().nextInt(1, maxVelocity + 1);
 		String startStreet = "";
 		String currentDrivingDirection = "";
-		int random = ThreadLocalRandom.current().nextInt(1, 5);
+		int random = ThreadLocalRandom.current().nextInt(1, 5); 
 		switch(random){
 		case 1:
 			carSprite.setPosition(Parameters.STREETWEST_START_POINT_WIDTH, Parameters.STREETWEST_START_POINT_HEIGHT);
@@ -317,10 +301,10 @@ public class Simulation extends ApplicationAdapter{
 	
 	private int applyNagelSchreckenbergModel(int velocity, int blockIndex, int nextOccupiedBlockIndex){
 		//1. rule in Nagel-Schreckenberg-Modell
-		if(velocity < 4) velocity ++;
+		if(velocity < maxVelocity) velocity ++;
 		//2. rule in Nagel-Schreckenberg-Modell
 		if(nextOccupiedBlockIndex != -1) {
-			if(blockIndex == -1 && nextOccupiedBlockIndex <= 4){
+			if(blockIndex == -1 && nextOccupiedBlockIndex <= maxVelocity){
 				velocity = nextOccupiedBlockIndex;
 			}else{ 
 				if(velocity > nextOccupiedBlockIndex - blockIndex - 1){
@@ -329,14 +313,14 @@ public class Simulation extends ApplicationAdapter{
 			}
 		}
 		//3. rule in Nagel-Schreckenberg-Modell
-		int random = ThreadLocalRandom.current().nextInt(1, 3); // get a random number between 1,2,3 
+		int random = ThreadLocalRandom.current().nextInt(1, 4); // get a random number between 1,2,3 
 		if(random == 1 && velocity >= 1) velocity--;
 		return velocity;
 	}
 	
 	private int applyTrafficLight(Street street, int velocity, int blockIndex) {
 		if(blockIndex == 6 && velocity > 3) velocity = 3;
-		if(blockIndex == 7 && velocity > 2) velocity = 2;
+		if(blockIndex == 7 && velocity > 2) velocity = 1;
 		if(blockIndex == 8 && street.getTrafficLight().getStatus() == TrafficLightStatus.RED) velocity = 0;
 		return velocity;
 	}

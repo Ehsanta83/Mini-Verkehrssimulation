@@ -86,25 +86,19 @@ public class Car {
 	}
 
 	public void move(){
-		int[] newPosition = new int[]{(int) sprite.getX(), (int) sprite.getY()};
 		switch(currentDrivingDirection){
 		case "east":
 			sprite.translateX(velocity);
-			newPosition[0] = newPosition[0] + velocity;
 			break;
 		case "north":
 			sprite.translateY(velocity);
-			newPosition[1] = newPosition[1] + velocity;
 			break;
 		case "west":
 			sprite.translateX(-velocity);
-			newPosition[0] = newPosition[0] - velocity;
 			break;
 		case "south":
 			sprite.translateY(-velocity);
-			newPosition[1] = newPosition[1] - velocity;
 			break;
 		}
-		sprite.setPosition(newPosition[0], newPosition[1]);
 	}
 }
