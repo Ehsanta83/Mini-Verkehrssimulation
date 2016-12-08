@@ -34,7 +34,7 @@ import de.tu_clausthal.mini_verkehrssimulation.classes.TrafficLightStatus;
  *
  */
 public class Simulation extends ApplicationAdapter{
-	int countOfCars = 10;
+	int countOfCars = 20;
 	int trafficLightDuration = 5;
 	int maxVelocity = 3;
 	TiledMap roadsTiledMap;
@@ -46,19 +46,19 @@ public class Simulation extends ApplicationAdapter{
     ShapeRenderer trafficLightEastShapeRenderer, trafficLightSouthShapeRenderer, trafficLightWestShapeRenderer, trafficLightNorthShapeRenderer;
     long startTime;
     Car[] cars;
+    //Thread threads[];
     
 	@Override
 	public void create () {
 		float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-       
+        
         camera = new OrthographicCamera();
         camera.setToOrtho(false,w,h);
         camera.update();
         
 		roadsTiledMap = new TmxMapLoader().load("roads.tmx");
 		roadsTiledMapRenderer = new OrthogonalTiledMapRenderer(roadsTiledMap);
-		
 		
 		Street streetEast = new Street(90, -90, "north", "south", 512, 480, 520, 520, "west");
 		Street streetSouth = new Street(0, 180, "east", "west", 512, 512, 488, 520, "north");
@@ -83,6 +83,7 @@ public class Simulation extends ApplicationAdapter{
 		for(int i=0; i < countOfCars; i++){
 			cars[i] = createRandomCar();
 		}
+		//threads = new Thread[countOfCars];
 	}
 	
 	@Override
@@ -95,153 +96,25 @@ public class Simulation extends ApplicationAdapter{
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		roadsTiledMapRenderer.setView(camera);
 		roadsTiledMapRenderer.render();
 		
-		long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
-		double mod = elapsedTime % (trafficLightDuration * 4);
-		if(mod < trafficLightDuration) {
-			turnAllTrafficLightsToRed();
-			streets.get("east").turnTrafficLightToGreen();
-		}else if(mod >= trafficLightDuration && mod < 2 * trafficLightDuration) {
-			turnAllTrafficLightsToRed();
-			streets.get("south").turnTrafficLightToGreen();
-		}else if(mod >= 2 * trafficLightDuration && mod < 3 * trafficLightDuration) {
-			turnAllTrafficLightsToRed();
-			streets.get("west").turnTrafficLightToGreen();
-		}else{
-			turnAllTrafficLightsToRed();
-			streets.get("north").turnTrafficLightToGreen();
-		}
-		
-		trafficLightEastShapeRenderer.begin(ShapeType.Filled);
-		trafficLightEastShapeRenderer.setColor(streets.get("east").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
-		trafficLightEastShapeRenderer.circle(576, 552, 8);
-		trafficLightEastShapeRenderer.end();
-		
-		trafficLightSouthShapeRenderer.begin(ShapeType.Filled);
-		trafficLightSouthShapeRenderer.setColor(streets.get("south").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
-		trafficLightSouthShapeRenderer.circle(552, 448, 8);
-		trafficLightSouthShapeRenderer.end();
-		
-		trafficLightWestShapeRenderer.begin(ShapeType.Filled);
-		trafficLightWestShapeRenderer.setColor(streets.get("west").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
-		trafficLightWestShapeRenderer.circle(448, 472, 8);
-		trafficLightWestShapeRenderer.end();
-		
-		trafficLightNorthShapeRenderer.begin(ShapeType.Filled);
-		trafficLightNorthShapeRenderer.setColor(streets.get("north").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
-		trafficLightNorthShapeRenderer.circle(472, 576, 8);
-		trafficLightNorthShapeRenderer.end();
-		
-		spriteBatch.begin();
-		for(int i=0; i< cars.length; i++){
-			Car car = cars[i];
-			int velocity = car.getVelocity();
-			int x = (int) car.getSprite().getX();
-			int y = (int) car.getSprite().getY();
-			int blockIndex = car.getBlockIndex();
-			CarTurning turning = car.getTurning();
-			String currentStreet = car.getCurrentStreet();
-			
-			int nextOccupiedBlockIndex = -1;
-			int distanceFromStartInMovingAxis = 0;
-			
-			
-			switch(car.isTurned() ? streets.get(currentStreet).getOppositeStreet() : currentStreet){
-			case "west": 
-				distanceFromStartInMovingAxis = x;
-				break;
-			case "south":
-				distanceFromStartInMovingAxis = y;
-				break;
-			case "east":
-				distanceFromStartInMovingAxis = 1024 - x;
-				break;
-			case "north":
-				distanceFromStartInMovingAxis = 1024 - y;
-				break;
-			}
-			
-			if(distanceFromStartInMovingAxis < 432){ 
-				int newBlockIndex = (int) distanceFromStartInMovingAxis / 48;
-				if(newBlockIndex > blockIndex && !streets.get(currentStreet).getFirstLine().isBlockOccupied(newBlockIndex)){
-					if(blockIndex > -1)	streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
-					streets.get(currentStreet).getFirstLine().occupyBlock(newBlockIndex);
-					blockIndex = newBlockIndex;
-				}
-				nextOccupiedBlockIndex = streets.get(currentStreet).getFirstLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
-				velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
-				velocity = applyTrafficLight(streets.get(currentStreet), velocity, blockIndex);
-			}else if(distanceFromStartInMovingAxis >= 432 && distanceFromStartInMovingAxis < 480){
-				if(blockIndex > -1){
-					streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
-					blockIndex = -1;
-				}
-			}else if(distanceFromStartInMovingAxis >= 480 && distanceFromStartInMovingAxis < 512){
-				if(turning.equals(CarTurning.RIGHT)){
-					car.getSprite().setRotation(streets.get(currentStreet).getRightRotationAngel());
-					x = streets.get(currentStreet).getNewXAfterTurningRight();
-					y = streets.get(currentStreet).getNewYAfterTurningRight();
-					String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningRight();
-					car.setCurrentStreet(newStreet);
-					car.setCurrentDrivingDirection(newStreet);
-					car.setTurning(CarTurning.NONE);
-					car.setTurned(true);
-				}
-			}else if(distanceFromStartInMovingAxis >= 512 && distanceFromStartInMovingAxis < 592){			
-				if(turning.equals(CarTurning.LEFT)){
-					car.getSprite().setRotation(streets.get(currentStreet).getLeftRotationAngel());
-					x = streets.get(currentStreet).getNewXAfterTurningLeft();
-					y = streets.get(currentStreet).getNewYAfterTurningLeft();
-					String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningLeft();
-					car.setCurrentStreet(newStreet);
-					car.setCurrentDrivingDirection(newStreet);
-					car.setTurning(CarTurning.NONE);
-					car.setTurned(true);
-				}
-			}else if(distanceFromStartInMovingAxis >= 592 && distanceFromStartInMovingAxis < 1024){
-				int newBlockIndex = (int) (distanceFromStartInMovingAxis - 592) / 48;
-				if(newBlockIndex > blockIndex && !streets.get(currentStreet).getSecondLine().isBlockOccupied(newBlockIndex)){
-					if(blockIndex > -1)	streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
-					streets.get(currentStreet).getSecondLine().occupyBlock(newBlockIndex);
-					blockIndex = newBlockIndex;
-				}			
-				nextOccupiedBlockIndex = streets.get(currentStreet).getSecondLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
-				velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
-			}else if(distanceFromStartInMovingAxis >= 1024){
-				if(blockIndex > -1){
-					streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
-				}
-				cars[i] = createRandomCar();
-				continue;
-			}
-			
-			car.setBlockIndex(blockIndex);
-			car.setVelocity(velocity);
-			car.getSprite().setPosition(x, y);
-			
-			if(velocity > 0){
-				car.move();
-			}
-
+		renderTrafficLights();
+		spriteBatch.begin();	
+		moveCars();
+     	/*/ waiting for all threads to finish
+ 		for (Thread thread : threads) {
+ 		    try {
+ 				thread.join();
+ 			} catch (InterruptedException e) {
+ 				e.printStackTrace();
+ 			}
+ 		}*/
+ 		for(Car car: cars){
 			car.getSprite().draw(spriteBatch);
 		}
-        
-        //show FPS
-        int fps = Gdx.graphics.getFramesPerSecond();
-        BitmapFont fpsFont = new BitmapFont();
-        if(fps >= 45){
-        	fpsFont.setColor(0, 1, 0, 1); //green
-        }else if (fps >= 30){
-        	fpsFont.setColor(1, 1, 0, 1); //yellow
-        }else{
-        	fpsFont.setColor(1, 0, 0, 1); //red
-        }
-        fpsFont.draw(spriteBatch, "FPS: " + fps, 19, 1005);
-        fpsFont.setColor(1, 1, 1, 1); //white
-        
+		renderFPS();
         spriteBatch.end();
 	}
 
@@ -318,10 +191,161 @@ public class Simulation extends ApplicationAdapter{
 		return velocity;
 	}
 	
-	private int applyTrafficLight(Street street, int velocity, int blockIndex) {
+	private int applyTrafficLightToCars(Street street, int velocity, int blockIndex) {
 		if(blockIndex == 6 && velocity > 3) velocity = 3;
 		if(blockIndex == 7 && velocity > 2) velocity = 1;
 		if(blockIndex == 8 && street.getTrafficLight().getStatus() == TrafficLightStatus.RED) velocity = 0;
 		return velocity;
+	}
+	
+	private void renderTrafficLights(){
+		long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+		double mod = elapsedTime % (trafficLightDuration * 4);
+		if(mod < trafficLightDuration) {
+			turnAllTrafficLightsToRed();
+			streets.get("east").turnTrafficLightToGreen();
+		}else if(mod >= trafficLightDuration && mod < 2 * trafficLightDuration) {
+			turnAllTrafficLightsToRed();
+			streets.get("south").turnTrafficLightToGreen();
+		}else if(mod >= 2 * trafficLightDuration && mod < 3 * trafficLightDuration) {
+			turnAllTrafficLightsToRed();
+			streets.get("west").turnTrafficLightToGreen();
+		}else{
+			turnAllTrafficLightsToRed();
+			streets.get("north").turnTrafficLightToGreen();
+		}
+		
+		trafficLightEastShapeRenderer.begin(ShapeType.Filled);
+		trafficLightEastShapeRenderer.setColor(streets.get("east").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightEastShapeRenderer.circle(576, 552, 8);
+		trafficLightEastShapeRenderer.end();
+		
+		trafficLightSouthShapeRenderer.begin(ShapeType.Filled);
+		trafficLightSouthShapeRenderer.setColor(streets.get("south").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightSouthShapeRenderer.circle(552, 448, 8);
+		trafficLightSouthShapeRenderer.end();
+		
+		trafficLightWestShapeRenderer.begin(ShapeType.Filled);
+		trafficLightWestShapeRenderer.setColor(streets.get("west").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightWestShapeRenderer.circle(448, 472, 8);
+		trafficLightWestShapeRenderer.end();
+		
+		trafficLightNorthShapeRenderer.begin(ShapeType.Filled);
+		trafficLightNorthShapeRenderer.setColor(streets.get("north").getTrafficLight().getStatus() == TrafficLightStatus.GREEN ? Color.GREEN : Color.RED);
+		trafficLightNorthShapeRenderer.circle(472, 576, 8);
+		trafficLightNorthShapeRenderer.end();
+	}
+	
+	private void moveCars(){
+		for(int i=0; i< cars.length; i++){
+			Car car = cars[i];
+			car.setIndex(i);
+			//threads[i] = 
+			new Thread(new Runnable(){
+		        @Override
+	            public void run() {				
+					int velocity = car.getVelocity();
+					int x = (int) car.getSprite().getX();
+					int y = (int) car.getSprite().getY();
+					int blockIndex = car.getBlockIndex();
+					CarTurning turning = car.getTurning();
+					String currentStreet = car.getCurrentStreet();
+					
+					int nextOccupiedBlockIndex = -1;
+					int distanceFromStartInMovingAxis = 0;		
+					
+					switch(car.isTurned() ? streets.get(currentStreet).getOppositeStreet() : currentStreet){
+					case "west": 
+						distanceFromStartInMovingAxis = x;
+						break;
+					case "south":
+						distanceFromStartInMovingAxis = y;
+						break;
+					case "east":
+						distanceFromStartInMovingAxis = 1024 - x;
+						break;
+					case "north":
+						distanceFromStartInMovingAxis = 1024 - y;
+						break;
+					}
+					
+					if(distanceFromStartInMovingAxis < 432){ 
+						int newBlockIndex = (int) distanceFromStartInMovingAxis / 48;
+						if(newBlockIndex > blockIndex && !streets.get(currentStreet).getFirstLine().isBlockOccupied(newBlockIndex)){
+							if(blockIndex > -1)	streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
+							streets.get(currentStreet).getFirstLine().occupyBlock(newBlockIndex);
+							blockIndex = newBlockIndex;
+						}
+						nextOccupiedBlockIndex = streets.get(currentStreet).getFirstLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
+						velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
+						velocity = applyTrafficLightToCars(streets.get(currentStreet), velocity, blockIndex);
+					}else if(distanceFromStartInMovingAxis >= 432 && distanceFromStartInMovingAxis < 480){
+						if(blockIndex > -1){
+							streets.get(currentStreet).getFirstLine().emptyBlock(blockIndex);
+							blockIndex = -1;
+						}
+					}else if(distanceFromStartInMovingAxis >= 480 && distanceFromStartInMovingAxis < 512){
+						if(turning.equals(CarTurning.RIGHT)){
+							car.getSprite().setRotation(streets.get(currentStreet).getRightRotationAngel());
+							x = streets.get(currentStreet).getNewXAfterTurningRight();
+							y = streets.get(currentStreet).getNewYAfterTurningRight();
+							String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningRight();
+							car.setCurrentStreet(newStreet);
+							car.setCurrentDrivingDirection(newStreet);
+							car.setTurning(CarTurning.NONE);
+							car.setTurned(true);
+						}
+					}else if(distanceFromStartInMovingAxis >= 512 && distanceFromStartInMovingAxis < 592){			
+						if(turning.equals(CarTurning.LEFT)){
+							car.getSprite().setRotation(streets.get(currentStreet).getLeftRotationAngel());
+							x = streets.get(currentStreet).getNewXAfterTurningLeft();
+							y = streets.get(currentStreet).getNewYAfterTurningLeft();
+							String newStreet = streets.get(currentStreet).getNewDirectionAfterTurningLeft();
+							car.setCurrentStreet(newStreet);
+							car.setCurrentDrivingDirection(newStreet);
+							car.setTurning(CarTurning.NONE);
+							car.setTurned(true);
+						}
+					}else if(distanceFromStartInMovingAxis >= 592 && distanceFromStartInMovingAxis < 1024){
+						int newBlockIndex = (int) (distanceFromStartInMovingAxis - 592) / 48;
+						if(newBlockIndex > blockIndex && !streets.get(currentStreet).getSecondLine().isBlockOccupied(newBlockIndex)){
+							if(blockIndex > -1)	streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
+							streets.get(currentStreet).getSecondLine().occupyBlock(newBlockIndex);
+							blockIndex = newBlockIndex;
+						}			
+						nextOccupiedBlockIndex = streets.get(currentStreet).getSecondLine().getNextOccupiedBlockIndexFromIndex(blockIndex);
+						velocity = applyNagelSchreckenbergModel(velocity, blockIndex, nextOccupiedBlockIndex);
+					}else if(distanceFromStartInMovingAxis >= 1024){
+						if(blockIndex > -1){
+							streets.get(currentStreet).getSecondLine().emptyBlock(blockIndex);
+						}
+						cars[car.getIndex()] = createRandomCar();
+					}
+					
+					car.setBlockIndex(blockIndex);
+					car.setVelocity(velocity);
+					car.getSprite().setPosition(x, y);
+					
+					if(velocity > 0){
+						car.move();
+					}
+	        	}
+		    }).start();;
+			//threads[i].start();
+		}
+	}
+	
+	private void renderFPS(){
+		int fps = Gdx.graphics.getFramesPerSecond();
+        BitmapFont fpsFont = new BitmapFont();
+        if(fps >= 45){
+        	fpsFont.setColor(0, 1, 0, 1); //green
+        }else if (fps >= 30){
+        	fpsFont.setColor(1, 1, 0, 1); //yellow
+        }else{
+        	fpsFont.setColor(1, 0, 0, 1); //red
+        }
+        fpsFont.draw(spriteBatch, "FPS: " + fps, 19, 1005);
+        fpsFont.setColor(1, 1, 1, 1); //white
 	}
 }

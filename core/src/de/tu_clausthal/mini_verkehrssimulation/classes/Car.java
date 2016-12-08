@@ -17,6 +17,7 @@ public class Car {
 	private int blockIndex;
 	private CarTurning turning;
 	private boolean isTurned;
+	private int index;
 		
 	public Car(Sprite sprite, int velocity, String currentStreet, String currentDrivingDirection, CarTurning turning) {
 		super();
@@ -27,6 +28,7 @@ public class Car {
 		this.blockIndex = -1;
 		this.turning = turning;	
 		this.isTurned = false;
+		this.index = -1;
 	}
 
 	public Sprite getSprite() {
@@ -83,6 +85,14 @@ public class Car {
 
 	public void setTurned(boolean isTurned) {
 		this.isTurned = isTurned;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public void move(){
