@@ -20,7 +20,6 @@ public class Car {
 	private int index;
 		
 	public Car(Sprite sprite, int velocity, String currentStreet, String currentDrivingDirection, CarTurning turning) {
-		super();
 		this.sprite = sprite;
 		this.velocity = velocity;
 		this.currentStreet = currentStreet;

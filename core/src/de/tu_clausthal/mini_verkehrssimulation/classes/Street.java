@@ -23,7 +23,6 @@ public class Street {
 	public Street(int rightRotationAngel, int leftRotationAngel, String newDirectionAfterTurningRight,
 			String newDirectionAfterTurningLeft, int newXAfterTurningRight, int newXAfterTurningLeft,
 			int newYAfterTurningRight, int newYAfterTurningLeft, String oppositeStreet) {
-		super();
 		this.rightRotationAngel = rightRotationAngel;
 		this.leftRotationAngel = leftRotationAngel;
 		this.newDirectionAfterTurningRight = newDirectionAfterTurningRight;

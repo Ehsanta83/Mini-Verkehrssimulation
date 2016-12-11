@@ -11,7 +11,6 @@ public class TrafficLight {
 	private TrafficLightStatus status;
 	
 	public TrafficLight(TrafficLightStatus status){
-		super();
 		this.status = status;
 	}
 
