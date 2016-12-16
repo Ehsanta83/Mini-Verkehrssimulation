@@ -18,6 +18,8 @@
 !src/main/resources/**/*.png
 !src/main/resources/**/*.ttf
 !src/main/resources/**/*.efx
+!src/main/resources/**/*.tmx
+!src/main/resources/**/*.jpg
 
 !src/site/*.doxyfile
 !src/site/*.htm

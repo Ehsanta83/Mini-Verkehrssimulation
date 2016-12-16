@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="roads_tiles_2" tilewidth="16" tileheight="16" tilecount="768" columns="32">
+  <image source="roads_tiles.jpg" width="512" height="384"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt2cdOV0EUx/FhJ/aGPIEKKgo2fAELdlSEF1ARFMX+AiJixR4srFSUJghKKLpSsSKKJYq6tWKXBAT5sjWZZBbnfy+59yw+i0lO5sz8k7m/+WdSooxZiEVYjCVYimVYjlQsQIpgXZEx5jTO4CzOodjI93GpW48sZGMDNiIHm7AZucgUrqtnrw1oRBNu4KaR7+NStxcF2If9OICDOITDKES+cN0r9voa7XiDt3hn5Pu41F3CZZSiDOWoQCWuoAolwnVd7LUbf9GDXvwz8n1c6u7iHu7jAR7iEVrwGK1oFq6znX/pPi51H+j7EZ/wGV/Qga/4hu94b2TrbOdfuo9LXTS/wWAMwVAMw3CMwEiMwqAo2Trb+Zfu41IXj0mYjClIwFRMQyKSECdcZzv/0n1c6rzOW81/zX/Nf81/zf/I5r/rXEHNf9e5gpr/rnMFNf9d5wpq/rvOFdT8d50rqPnvOldQ8991Ls1/zX/Nf81/zX/Nf81/b/J/NHsdg7GIwTjE+pT/4+k7ARP7v78m8uMkTMcMzMQszEYy5njQ///xXMzD/P7vrwfjVKzASqxCGlYjHRk+rGcN1mIdMj0Y52ILtmIbtmMHdmKXD+vZjTzsQb4H40IcwVEcw3GcwEmc8mE953EBF1HiwbgK1biKGtTiGq6jzof13MJt3EGzB+NWPMFTtOEZnuMFXvqwHj/+//3AT/zCb/xBZwT6DNT3X9v9Pyzvv7b7f1jef233/7C8/9ru/2F5/7Wd/7C8/9rOf1jef23nPyzvv7bzr/mv+a/5r/mv+a/5r/mv+a/5r/mv+a/5r/mv+a/5r/mv+a/5r/mv+S9Z1weTZCiH
+  </data>
+ </layer>
+</map>
