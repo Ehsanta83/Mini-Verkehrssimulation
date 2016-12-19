@@ -1,6 +1,7 @@
 /**
- * 
+ *
  */
+
 package de.tu_clausthal.in.meclab.verkehrssimulation.classes;
 
 /**
