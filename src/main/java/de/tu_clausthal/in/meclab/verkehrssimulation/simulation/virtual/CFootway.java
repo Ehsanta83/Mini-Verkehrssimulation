@@ -5,5 +5,15 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
  *
  * @author Ehsan Tatasadi
  */
-public class CFootway implements ILane {
+public class CFootway extends ILane
+{
+    /**
+     * constructor of footway class
+     *
+     * @param p_numberOfBlocks number of blocks
+     */
+    public CFootway( final int p_numberOfBlocks )
+    {
+        super( p_numberOfBlocks );
+    }
 }

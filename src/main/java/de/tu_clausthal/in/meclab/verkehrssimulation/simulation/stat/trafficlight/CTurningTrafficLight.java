@@ -5,9 +5,15 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
  *
  * @author Ehsan Tatasadi
  */
-public class CTurningTrafficLight implements ITrafficLight {
-    @Override
-    public Runnable call() throws Exception {
-        return null;
+public class CTurningTrafficLight extends IBaseTrafficLight
+{
+    /**
+     * turning traffic light constructor
+     *
+     * @param p_status traffic light status
+     */
+    public CTurningTrafficLight( final ETrafficLightStatus p_status )
+    {
+        super( p_status );
     }
 }

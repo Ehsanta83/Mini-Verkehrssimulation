@@ -5,9 +5,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
  *
  * @author Ehsan Tatasadi
  */
-public class CMother implements IHuman {
-    @Override
-    public Runnable call() throws Exception {
-        return null;
-    }
+public class CMother extends IBaseHuman
+{
 }

@@ -5,5 +5,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel;
  *
  * @author Ehsan Tatasadi
  */
-public class CNagelSchreckenberg implements IFollowingModel {
+public class CNagelSchreckenberg implements IFollowingModel
+{
 }

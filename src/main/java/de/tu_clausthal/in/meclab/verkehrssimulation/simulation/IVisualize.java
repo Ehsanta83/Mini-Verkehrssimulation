@@ -6,5 +6,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
  *
  * @author Ehsan Tatasadi
  */
-public interface IVisualize {
+public interface IVisualize
+{
 }

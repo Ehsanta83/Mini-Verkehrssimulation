@@ -5,9 +5,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
  *
  * @author Ehsan Tatasadi
  */
-public class CElder implements IHuman {
-    @Override
-    public Runnable call() throws Exception {
-        return null;
-    }
+public class CElder extends IBaseHuman
+{
+
 }

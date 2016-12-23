@@ -7,5 +7,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
  *
  * @author Ehsan Tatasadi
  */
-public interface IStatic extends IObject {
+public interface IStatic extends IObject
+{
 }
