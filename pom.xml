@@ -158,6 +158,28 @@
 				</configuration>
 			</plugin>
 
+			<!-- Doxygen -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<executions>
+					<execution>
+						<id>doxygen</id>
+						<phase>site</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>doxygen</executable>
+							<arguments>
+								<argument>src/site/configuration.doxyfile</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- checkstyle is perform at compile phase -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
