@@ -11,11 +11,18 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public final class CMain
 {
     /**
+     * constructor
+     */
+    private CMain()
+    {
+    }
+
+    /**
      * main method
      *
      * @param p_arg arguments
      */
-    public static void main ( final String[] p_arg )
+    public static void main( final String[] p_arg )
     {
         final LwjglApplicationConfiguration l_config = new LwjglApplicationConfiguration();
         l_config.title = "Verkehrssimulation";
