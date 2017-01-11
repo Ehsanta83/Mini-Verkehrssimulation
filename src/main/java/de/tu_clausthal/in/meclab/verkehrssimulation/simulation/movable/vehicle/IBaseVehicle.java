@@ -1,7 +1,13 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel.CNagelSchreckenberg;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
+
+import java.util.HashMap;
 
 /**
  * vehicle abstract class
@@ -42,9 +48,9 @@ public abstract class IBaseVehicle implements IMovable
      */
     private boolean m_isTurned;
     /**
-     * the index of the vehicle in the vehicles array
+     * if the vehicle is out of the screen
      */
-    private int m_index;
+    private boolean m_isOut;
 
     /**
      * constructor of vehicle
@@ -65,7 +71,6 @@ public abstract class IBaseVehicle implements IMovable
         this.m_blockIndex = -1;
         this.m_turning = p_turning;
         this.m_isTurned = false;
-        this.m_index = -1;
     }
 
     /**
@@ -197,53 +202,161 @@ public abstract class IBaseVehicle implements IMovable
     {
         this.m_isTurned = p_isTurned;
     }
-
     /**
-     * get index
+     *  get is out
      *
-     * @return index
+     * @return is out
      */
-    public int getIndex()
+    public boolean isOut()
     {
-        return m_index;
+        return m_isOut;
     }
 
     /**
-     * set index
+     * set is out
      *
-     * @param p_index index
+     * @param p_isOut
      */
-    public void setIndex( final int p_index )
+    public void setIsOut( final boolean p_isOut )
     {
-        this.m_index = p_index;
+        this.m_isOut = p_isOut;
     }
 
     /**
      * change the position of the sprite of the car in driving direction according to the velocity
      */
+    @Override
     public void move()
     {
-        if ( "east".equals( m_currentDrivingDirection ) )
+        int l_xPosition = (int) m_sprite.getX();
+        int l_yPosition = (int) m_sprite.getY();
+        final int l_nextOccupiedBlockIndex;
+        final HashMap<String, CStreet> l_streets = CSimulation.getStreets();
+        final CNagelSchreckenberg l_nagelSchreckenberg = new CNagelSchreckenberg();
+        final int l_distanceFromStartInMovingAxis = l_streets.get( m_currentStreet ).getDistanceBetweenVehicleAndStartPointInMovingAxis( this );
+        if ( l_distanceFromStartInMovingAxis < 432 )
         {
-            m_sprite.translateX( m_velocity );
+            final int l_newBlockIndex = l_distanceFromStartInMovingAxis / 48;
+            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( l_newBlockIndex ) )
+            {
+                if ( m_blockIndex > -1 )
+                {
+                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_blockIndex );
+                }
+                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
+                m_blockIndex = l_newBlockIndex;
+            }
+            l_nextOccupiedBlockIndex = l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex );
+            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_nextOccupiedBlockIndex );
+            m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
         }
-        else if ( "north".equals( m_currentDrivingDirection ) )
+        else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
         {
-            m_sprite.translateY( m_velocity );
+            if ( m_blockIndex > -1 )
+            {
+                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_blockIndex );
+                m_blockIndex = -1;
+            }
         }
-        else if ( "west".equals( m_currentDrivingDirection ) )
+        else if ( l_distanceFromStartInMovingAxis >= 480 && l_distanceFromStartInMovingAxis < 512 )
         {
-            m_sprite.translateX( -m_velocity );
+            if ( m_turning.equals( EVehicleTurning.RIGHT ) )
+            {
+                m_sprite.setRotation( l_streets.get( m_currentStreet ).getRightRotationAngel() );
+                l_xPosition = l_streets.get( m_currentStreet ).getNewXAfterTurningRight();
+                l_yPosition = l_streets.get( m_currentStreet ).getNewYAfterTurningRight();
+                final String l_newStreet = l_streets.get( m_currentStreet ).getNewDirectionAfterTurningRight();
+                setCurrentStreet( l_newStreet );
+                setCurrentDrivingDirection( l_newStreet );
+                setTurning( EVehicleTurning.NONE );
+                setTurned( true );
+            }
         }
-        else if ( "south".equals( m_currentDrivingDirection ) )
+        else if ( l_distanceFromStartInMovingAxis >= 512 && l_distanceFromStartInMovingAxis < 592 )
         {
-            m_sprite.translateY( -m_velocity );
+            if ( m_turning.equals( EVehicleTurning.LEFT ) )
+            {
+                m_sprite.setRotation( l_streets.get( m_currentStreet ).getLeftRotationAngel() );
+                l_xPosition = l_streets.get( m_currentStreet ).getNewXAfterTurningLeft();
+                l_yPosition = l_streets.get( m_currentStreet ).getNewYAfterTurningLeft();
+                final String l_newStreet = l_streets.get( m_currentStreet ).getNewDirectionAfterTurningLeft();
+                setCurrentStreet( l_newStreet );
+                setCurrentDrivingDirection( l_newStreet );
+                setTurning( EVehicleTurning.NONE );
+                setTurned( true );
+            }
         }
+        else if ( l_distanceFromStartInMovingAxis >= 592 && l_distanceFromStartInMovingAxis < 1024 )
+        {
+            final int l_newBlockIndex = ( l_distanceFromStartInMovingAxis - 592 ) / 48;
+            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( l_newBlockIndex ) )
+            {
+                if ( m_blockIndex > -1 )
+                {
+                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_blockIndex );
+                }
+                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
+                m_blockIndex = l_newBlockIndex;
+            }
+            l_nextOccupiedBlockIndex = l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex );
+            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_nextOccupiedBlockIndex );
+        }
+        else if ( l_distanceFromStartInMovingAxis >= 1024 )
+        {
+            if ( m_blockIndex > -1 )
+            {
+                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_blockIndex );
+            }
+
+            setIsOut( true );
+        }
+        setBlockIndex( m_blockIndex );
+        setVelocity( m_velocity );
+        getSprite().setPosition( l_xPosition, l_yPosition );
+        if ( m_velocity > 0 )
+        {
+            if ( "east".equals( m_currentDrivingDirection ) )
+            {
+                m_sprite.translateX( m_velocity );
+            }
+            else if ( "north".equals( m_currentDrivingDirection ) )
+            {
+                m_sprite.translateY( m_velocity );
+            }
+            else if ( "west".equals( m_currentDrivingDirection ) )
+            {
+                m_sprite.translateX( -m_velocity );
+            }
+            else if ( "south".equals( m_currentDrivingDirection ) )
+            {
+                m_sprite.translateY( -m_velocity );
+            }
+        }
+        
+    }
+
+    /**
+     * apply traffic light to the cars
+     *
+     * @param p_street street
+     * @param p_velocity velocity
+     * @param p_blockIndex block index
+     * @return new velocity
+     */
+    private int applyTrafficLightToVelocity( final CStreet p_street, final int p_velocity, final int p_blockIndex )
+    {
+        int l_newVelocity = p_velocity;
+        if ( p_blockIndex == 6 && p_velocity > 3 )
+            l_newVelocity = 3;
+        if ( p_blockIndex == 7 && p_velocity > 2 )
+            l_newVelocity = 1;
+        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.RED )
+            l_newVelocity = 0;
+        return l_newVelocity;
     }
 
     @Override
-    public Runnable call() throws Exception
+    public void run()
     {
-        return null;
     }
 }

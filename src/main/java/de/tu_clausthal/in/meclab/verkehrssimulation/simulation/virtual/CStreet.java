@@ -1,7 +1,12 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.EVehicleTurning;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
+
+import java.util.HashMap;
 
 /**
  * street class
@@ -226,9 +231,44 @@ public class CStreet implements IVirtual
         this.m_vehiclesTrafficLight.setStatus( ETrafficLightStatus.GREEN );
     }
 
-    @Override
-    public Runnable call() throws Exception
+    /**
+     * get distance between vehicle and start point in moving axis
+     *
+     * @param p_vehicle vehicle
+     *
+     * @return distance between vehicle and start point in moving axis
+     */
+    public int getDistanceBetweenVehicleAndStartPointInMovingAxis( final IBaseVehicle p_vehicle )
     {
-        return null;
+        final int l_xPosition = (int) p_vehicle.getSprite().getX();
+        final int l_yPosition = (int) p_vehicle.getSprite().getY();
+        final boolean l_isTurned = p_vehicle.isTurned();
+        final String l_currentStreet = p_vehicle.getCurrentStreet();
+        final HashMap<String, CStreet> l_streets = CSimulation.getStreets();
+        int l_distanceFromStartInMovingAxis = 0;
+
+        final String l_mostBackStreet = l_isTurned ? l_streets.get( l_currentStreet ).getOppositeStreet() : l_currentStreet;
+        if ( "west".equals( l_mostBackStreet ) )
+        {
+            l_distanceFromStartInMovingAxis = l_xPosition;
+        }
+        else if ( "south".equals( l_mostBackStreet ) )
+        {
+            l_distanceFromStartInMovingAxis = l_yPosition;
+        }
+        else if ( "east".equals( l_mostBackStreet ) )
+        {
+            l_distanceFromStartInMovingAxis = 1024 - l_xPosition;
+        }
+        else if ( "north".equals( l_mostBackStreet ) )
+        {
+            l_distanceFromStartInMovingAxis = 1024 - l_yPosition;
+        }
+        return l_distanceFromStartInMovingAxis;
+    }
+
+    @Override
+    public void run()
+    {
     }
 }

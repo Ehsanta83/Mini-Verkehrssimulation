@@ -43,8 +43,7 @@ public abstract class IBaseTrafficLight implements IStatic
     }
 
     @Override
-    public Runnable call() throws Exception
+    public void run()
     {
-        return null;
     }
 }

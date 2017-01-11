@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CConfigs;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CCar;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.EVehicleTurning;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
@@ -39,9 +40,9 @@ public class CSimulation extends ApplicationAdapter
      */
     private static final int TRAFFIC_LIGHT_DURATION = 5;
     /**
-     * maximum velocity of a vehicle
+     * streets hashmap
      */
-    private final int m_maxVelocity = 3;
+    private static HashMap<String, CStreet> s_streets;
     /**
      * camera
      */
@@ -58,10 +59,6 @@ public class CSimulation extends ApplicationAdapter
      * car texture
      */
     private Texture m_carTexture;
-    /**
-     * streets hashmap
-     */
-    private HashMap<String, CStreet> m_streets;
     /**
      * east street traffic light shape renderer
      */
@@ -91,6 +88,11 @@ public class CSimulation extends ApplicationAdapter
      */
     private Random m_randomGenerator;
 
+    public static HashMap<String, CStreet> getStreets()
+    {
+        return s_streets;
+    }
+
     @Override
     public void create()
     {
@@ -108,11 +110,11 @@ public class CSimulation extends ApplicationAdapter
         final CStreet l_streetSouth = new CStreet( 0, 180, "east", "west", 512, 512, 488, 520, "north" );
         final CStreet l_streetWest = new CStreet( -90, 90, "south", "north", 480, 512, 488, 488, "east" );
         final CStreet l_streetNorth = new CStreet( 180, 0, "west", "east", 480, 480, 520, 488, "south" );
-        m_streets = new HashMap<>();
-        m_streets.put( "east", l_streetEast );
-        m_streets.put( "south", l_streetSouth );
-        m_streets.put( "west", l_streetWest );
-        m_streets.put( "north", l_streetNorth );
+        s_streets = new HashMap<>();
+        s_streets.put( "east", l_streetEast );
+        s_streets.put( "south", l_streetSouth );
+        s_streets.put( "west", l_streetWest );
+        s_streets.put( "north", l_streetNorth );
 
         m_startTime = System.currentTimeMillis();
 
@@ -168,10 +170,10 @@ public class CSimulation extends ApplicationAdapter
      */
     private void turnAllTrafficLightsToRed()
     {
-        m_streets.get( "west" ).turnTrafficLightToRed();
-        m_streets.get( "south" ).turnTrafficLightToRed();
-        m_streets.get( "north" ).turnTrafficLightToRed();
-        m_streets.get( "east" ).turnTrafficLightToRed();
+        s_streets.get( "west" ).turnTrafficLightToRed();
+        s_streets.get( "south" ).turnTrafficLightToRed();
+        s_streets.get( "north" ).turnTrafficLightToRed();
+        s_streets.get( "east" ).turnTrafficLightToRed();
     }
 
     /**
@@ -182,7 +184,7 @@ public class CSimulation extends ApplicationAdapter
     private CCar createRandomCar()
     {
         final Sprite l_carSprite = new Sprite( m_carTexture );
-        final int l_velocity = m_randomGenerator.nextInt( m_maxVelocity ) + 1;
+        final int l_velocity = m_randomGenerator.nextInt( CConfigs.MAX_VELOCITY_OF_VEHICLES ) + 1;
         final String l_startStreet;
         final String l_currentDrivingDirection;
         int l_random = m_randomGenerator.nextInt( 4 );
@@ -231,63 +233,6 @@ public class CSimulation extends ApplicationAdapter
     }
 
     /**
-     * apply nagel-schreckenberg model to the velocity of a car
-     *
-     * @param p_velocity velocity
-     * @param p_blockIndex block index
-     * @param p_nextOccupiedBlockIndex next occupied block index
-     * @return new velocity
-     */
-    private int applyNagelSchreckenbergModel( int p_velocity, int p_blockIndex, int p_nextOccupiedBlockIndex )
-    {
-        int l_newVelocity = p_velocity;
-        //1. rule in Nagel-Schreckenberg-Modell
-        if ( l_newVelocity < m_maxVelocity )
-            l_newVelocity++;
-        //2. rule in Nagel-Schreckenberg-Modell
-        if ( p_nextOccupiedBlockIndex != -1 )
-        {
-            if ( p_blockIndex == -1 && p_nextOccupiedBlockIndex <= m_maxVelocity )
-            {
-                l_newVelocity = p_nextOccupiedBlockIndex;
-            }
-            else
-            {
-                if ( l_newVelocity > p_nextOccupiedBlockIndex - p_blockIndex - 1 )
-                {
-                    l_newVelocity = p_nextOccupiedBlockIndex - p_blockIndex - 1;
-                }
-            }
-        }
-        //3. rule in Nagel-Schreckenberg-Modell
-        // get a random number between 1,2,3
-        final int l_random = m_randomGenerator.nextInt( 3 );
-        if ( l_random == 0 && l_newVelocity >= 1 )
-            l_newVelocity--;
-        return l_newVelocity;
-    }
-
-    /**
-     * apply traffic light to the cars
-     *
-     * @param p_street street
-     * @param p_velocity velocity
-     * @param p_blockIndex block index
-     * @return new velocity
-     */
-    private int applyTrafficLightToCars( final CStreet p_street, final int p_velocity, final int p_blockIndex )
-    {
-        int l_newVelocity = p_velocity;
-        if ( p_blockIndex == 6 && p_velocity > 3 )
-            l_newVelocity = 3;
-        if ( p_blockIndex == 7 && p_velocity > 2 )
-            l_newVelocity = 1;
-        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.RED )
-            l_newVelocity = 0;
-        return l_newVelocity;
-    }
-
-    /**
      * render traffic lights
      */
     private void renderTrafficLights()
@@ -297,41 +242,41 @@ public class CSimulation extends ApplicationAdapter
         if ( l_mod < TRAFFIC_LIGHT_DURATION )
         {
             turnAllTrafficLightsToRed();
-            m_streets.get( "east" ).turnTrafficLightToGreen();
+            s_streets.get( "east" ).turnTrafficLightToGreen();
         }
         else if ( l_mod >= TRAFFIC_LIGHT_DURATION && l_mod < 2 * TRAFFIC_LIGHT_DURATION )
         {
             turnAllTrafficLightsToRed();
-            m_streets.get( "south" ).turnTrafficLightToGreen();
+            s_streets.get( "south" ).turnTrafficLightToGreen();
         }
         else if ( l_mod >= 2 * TRAFFIC_LIGHT_DURATION && l_mod < 3 * TRAFFIC_LIGHT_DURATION )
         {
             turnAllTrafficLightsToRed();
-            m_streets.get( "west" ).turnTrafficLightToGreen();
+            s_streets.get( "west" ).turnTrafficLightToGreen();
         }
         else
         {
             turnAllTrafficLightsToRed();
-            m_streets.get( "north" ).turnTrafficLightToGreen();
+            s_streets.get( "north" ).turnTrafficLightToGreen();
         }
 
         m_trafficLightEastShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightEastShapeRenderer.setColor( m_streets.get( "east" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightEastShapeRenderer.setColor( s_streets.get( "east" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightEastShapeRenderer.circle( 576, 552, 8 );
         m_trafficLightEastShapeRenderer.end();
 
         m_trafficLightSouthShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightSouthShapeRenderer.setColor( m_streets.get( "south" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightSouthShapeRenderer.setColor( s_streets.get( "south" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightSouthShapeRenderer.circle( 552, 448, 8 );
         m_trafficLightSouthShapeRenderer.end();
 
         m_trafficLightWestShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightWestShapeRenderer.setColor( m_streets.get( "west" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightWestShapeRenderer.setColor( s_streets.get( "west" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightWestShapeRenderer.circle( 448, 472, 8 );
         m_trafficLightWestShapeRenderer.end();
 
         m_trafficLightNorthShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightNorthShapeRenderer.setColor( m_streets.get( "north" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightNorthShapeRenderer.setColor( s_streets.get( "north" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightNorthShapeRenderer.circle( 472, 576, 8 );
         m_trafficLightNorthShapeRenderer.end();
     }
@@ -344,131 +289,12 @@ public class CSimulation extends ApplicationAdapter
         for ( int i = 0; i < m_cars.length; i++ )
         {
             final CCar l_car = m_cars[i];
-            l_car.setIndex( i );
-            int l_velocity = l_car.getVelocity();
-            int l_xPosition = (int) l_car.getSprite().getX();
-            int l_yPosition = (int) l_car.getSprite().getY();
-            int l_blockIndex = l_car.getBlockIndex();
-            final EVehicleTurning l_turning = l_car.getTurning();
-            final String l_currentStreet = l_car.getCurrentStreet();
-            final int l_nextOccupiedBlockIndex;
-            final int l_distanceFromStartInMovingAxis = getDistanceFromStartInMovingAxis( l_car.isTurned(), l_currentStreet, l_xPosition, l_yPosition );
-            if ( l_distanceFromStartInMovingAxis < 432 )
+            l_car.move();
+            if ( l_car.isOut() )
             {
-                final int l_newBlockIndex = l_distanceFromStartInMovingAxis / 48;
-                if ( l_newBlockIndex > l_blockIndex && !m_streets.get( l_currentStreet ).getFirstLane().isBlockOccupied( l_newBlockIndex ) )
-                {
-                    if ( l_blockIndex > -1 )
-                    {
-                        m_streets.get( l_currentStreet ).getFirstLane().emptyBlock( l_blockIndex );
-                    }
-                    m_streets.get( l_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
-                    l_blockIndex = l_newBlockIndex;
-                }
-                l_nextOccupiedBlockIndex = m_streets.get( l_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( l_blockIndex );
-                l_velocity = applyNagelSchreckenbergModel( l_velocity, l_blockIndex, l_nextOccupiedBlockIndex );
-                l_velocity = applyTrafficLightToCars( m_streets.get( l_currentStreet ), l_velocity, l_blockIndex );
-            }
-            else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
-            {
-                if ( l_blockIndex > -1 )
-                {
-                    m_streets.get( l_currentStreet ).getFirstLane().emptyBlock( l_blockIndex );
-                    l_blockIndex = -1;
-                }
-            }
-            else if ( l_distanceFromStartInMovingAxis >= 480 && l_distanceFromStartInMovingAxis < 512 )
-            {
-                if ( l_turning.equals( EVehicleTurning.RIGHT ) )
-                {
-                    l_car.getSprite().setRotation( m_streets.get( l_currentStreet ).getRightRotationAngel() );
-                    l_xPosition = m_streets.get( l_currentStreet ).getNewXAfterTurningRight();
-                    l_yPosition = m_streets.get( l_currentStreet ).getNewYAfterTurningRight();
-                    final String l_newStreet = m_streets.get( l_currentStreet ).getNewDirectionAfterTurningRight();
-                    l_car.setCurrentStreet( l_newStreet );
-                    l_car.setCurrentDrivingDirection( l_newStreet );
-                    l_car.setTurning( EVehicleTurning.NONE );
-                    l_car.setTurned( true );
-                }
-            }
-            else if ( l_distanceFromStartInMovingAxis >= 512 && l_distanceFromStartInMovingAxis < 592 )
-            {
-                if ( l_turning.equals( EVehicleTurning.LEFT ) )
-                {
-                    l_car.getSprite().setRotation( m_streets.get( l_currentStreet ).getLeftRotationAngel() );
-                    l_xPosition = m_streets.get( l_currentStreet ).getNewXAfterTurningLeft();
-                    l_yPosition = m_streets.get( l_currentStreet ).getNewYAfterTurningLeft();
-                    final String l_newStreet = m_streets.get( l_currentStreet ).getNewDirectionAfterTurningLeft();
-                    l_car.setCurrentStreet( l_newStreet );
-                    l_car.setCurrentDrivingDirection( l_newStreet );
-                    l_car.setTurning( EVehicleTurning.NONE );
-                    l_car.setTurned( true );
-                }
-            }
-            else if ( l_distanceFromStartInMovingAxis >= 592 && l_distanceFromStartInMovingAxis < 1024 )
-            {
-                final int l_newBlockIndex = ( l_distanceFromStartInMovingAxis - 592 ) / 48;
-                if ( l_newBlockIndex > l_blockIndex && !m_streets.get( l_currentStreet ).getSecondLane().isBlockOccupied( l_newBlockIndex ) )
-                {
-                    if ( l_blockIndex > -1 )
-                    {
-                        m_streets.get( l_currentStreet ).getSecondLane().emptyBlock( l_blockIndex );
-                    }
-                    m_streets.get( l_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
-                    l_blockIndex = l_newBlockIndex;
-                }
-                l_nextOccupiedBlockIndex = m_streets.get( l_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( l_blockIndex );
-                l_velocity = applyNagelSchreckenbergModel( l_velocity, l_blockIndex, l_nextOccupiedBlockIndex );
-            }
-            else if ( l_distanceFromStartInMovingAxis >= 1024 )
-            {
-                if ( l_blockIndex > -1 )
-                {
-                    m_streets.get( l_currentStreet ).getSecondLane().emptyBlock( l_blockIndex );
-                }
-                m_cars[l_car.getIndex()] = createRandomCar();
-            }
-            l_car.setBlockIndex( l_blockIndex );
-            l_car.setVelocity( l_velocity );
-            l_car.getSprite().setPosition( l_xPosition, l_yPosition );
-            if ( l_velocity > 0 )
-            {
-                l_car.move();
+                m_cars[i] = createRandomCar();
             }
         }
-    }
-
-    /**
-     * get distance from start in moving axis
-     *
-     * @param p_isTurned if car is turned
-     * @param p_currentStreet current street
-     * @param p_xPosition x position
-     * @param p_yPosition y position
-     * @return distance from start in moving axis
-     */
-    private int getDistanceFromStartInMovingAxis( final boolean p_isTurned, final String p_currentStreet, final int p_xPosition, final int p_yPosition)
-    {
-        int l_distanceFromStartInMovingAxis = 0;
-
-        final String l_mostBackStreet = p_isTurned ? m_streets.get( p_currentStreet ).getOppositeStreet() : p_currentStreet;
-        if ( "west".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = p_xPosition;
-        }
-        else if ( "south".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = p_yPosition;
-        }
-        else if ( "east".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = 1024 - p_xPosition;
-        }
-        else if ( "north".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = 1024 - p_yPosition;
-        }
-        return l_distanceFromStartInMovingAxis;
     }
 
     /**
