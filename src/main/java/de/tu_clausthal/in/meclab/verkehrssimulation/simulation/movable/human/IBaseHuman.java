@@ -15,7 +15,8 @@ public abstract class IBaseHuman implements IMovable
     }
 
     @Override
-    public void run()
+    public Object call()
     {
+        return null;
     }
 }

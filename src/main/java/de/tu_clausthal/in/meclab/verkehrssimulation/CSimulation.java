@@ -21,8 +21,10 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.E
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 /**
  * simulation class
@@ -96,25 +98,17 @@ public class CSimulation extends ApplicationAdapter
     @Override
     public void create()
     {
-        final float l_width = Gdx.graphics.getWidth();
-        final float l_height = Gdx.graphics.getHeight();
-
         m_camera = new OrthographicCamera();
-        m_camera.setToOrtho( false, l_width, l_height );
+        m_camera.setToOrtho( false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
         m_camera.update();
 
-        final TiledMap l_roadsTiledMap = new TmxMapLoader().load( "roads.tmx" );
-        m_roadsTiledMapRenderer = new OrthogonalTiledMapRenderer( l_roadsTiledMap );
+        m_roadsTiledMapRenderer = new OrthogonalTiledMapRenderer( new TmxMapLoader().load( "roads.tmx" ) );
 
-        final CStreet l_streetEast = new CStreet( 90, -90, "north", "south", 512, 480, 520, 520, "west" );
-        final CStreet l_streetSouth = new CStreet( 0, 180, "east", "west", 512, 512, 488, 520, "north" );
-        final CStreet l_streetWest = new CStreet( -90, 90, "south", "north", 480, 512, 488, 488, "east" );
-        final CStreet l_streetNorth = new CStreet( 180, 0, "west", "east", 480, 480, 520, 488, "south" );
         s_streets = new HashMap<>();
-        s_streets.put( "east", l_streetEast );
-        s_streets.put( "south", l_streetSouth );
-        s_streets.put( "west", l_streetWest );
-        s_streets.put( "north", l_streetNorth );
+        s_streets.put( "east", new CStreet( 90, -90, "north", "south", 512, 480, 520, 520, "west" ) );
+        s_streets.put( "south", new CStreet( 0, 180, "east", "west", 512, 512, 488, 520, "north" ) );
+        s_streets.put( "west", new CStreet( -90, 90, "south", "north", 480, 512, 488, 488, "east" ) );
+        s_streets.put( "north", new CStreet( 180, 0, "west", "east", 480, 480, 520, 488, "south" ) );
 
         m_startTime = System.currentTimeMillis();
 
@@ -127,14 +121,11 @@ public class CSimulation extends ApplicationAdapter
 
         m_spriteBatch = new SpriteBatch();
         m_carTexture = new Texture( Gdx.files.internal( "car.png" ) );
-        m_cars = new CCar[VEHICLES_COUNT];
-        for ( int i = 0; i < VEHICLES_COUNT; i++ )
-        {
-            m_cars[i] = createRandomCar();
-        }
-        //threads = new Thread[VEHICLES_COUNT];
 
-
+        m_cars = IntStream.range( 0, VEHICLES_COUNT )
+            .parallel()
+            .mapToObj( i -> this.createRandomCar() )
+            .toArray( CCar[]::new );
     }
 
     @Override
@@ -157,10 +148,10 @@ public class CSimulation extends ApplicationAdapter
         m_spriteBatch.begin();
         moveCars();
 
-        for ( final CCar l_car: m_cars )
-        {
-            l_car.getSprite().draw( m_spriteBatch );
-        }
+        //ToDo: we have problem by rendering when parallel
+        Arrays.stream( m_cars )
+            .forEach( i ->  i.getSprite().draw( m_spriteBatch ) );
+
         renderFPS();
         m_spriteBatch.end();
     }

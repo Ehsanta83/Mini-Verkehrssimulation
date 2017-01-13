@@ -356,7 +356,8 @@ public abstract class IBaseVehicle implements IMovable
     }
 
     @Override
-    public void run()
+    public Object call()
     {
+        return null;
     }
 }

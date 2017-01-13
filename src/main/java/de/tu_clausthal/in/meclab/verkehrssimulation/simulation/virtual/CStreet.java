@@ -1,7 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.EVehicleTurning;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
@@ -268,7 +267,8 @@ public class CStreet implements IVirtual
     }
 
     @Override
-    public void run()
+    public Object call()
     {
+        return null;
     }
 }
