@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel.CNagelSchreckenberg;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
 
 import java.util.HashMap;
@@ -222,15 +222,32 @@ public abstract class IBaseVehicle implements IMovable
         this.m_isOut = p_isOut;
     }
 
+
     /**
-     * change the position of the sprite of the car in driving direction according to the velocity
+     * apply traffic light to the cars
+     *
+     * @param p_street street
+     * @param p_velocity velocity
+     * @param p_blockIndex block index
+     * @return new velocity
      */
+    private int applyTrafficLightToVelocity( final CStreet p_street, final int p_velocity, final int p_blockIndex )
+    {
+        int l_newVelocity = p_velocity;
+        if ( p_blockIndex == 6 && p_velocity > 3 )
+            l_newVelocity = 3;
+        if ( p_blockIndex == 7 && p_velocity > 2 )
+            l_newVelocity = 1;
+        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.RED )
+            l_newVelocity = 0;
+        return l_newVelocity;
+    }
+
     @Override
-    public void move()
+    public Object call()
     {
         int l_xPosition = (int) m_sprite.getX();
         int l_yPosition = (int) m_sprite.getY();
-        final int l_nextOccupiedBlockIndex;
         final HashMap<String, CStreet> l_streets = CSimulation.getStreets();
         final CNagelSchreckenberg l_nagelSchreckenberg = new CNagelSchreckenberg();
         final int l_distanceFromStartInMovingAxis = l_streets.get( m_currentStreet ).getDistanceBetweenVehicleAndStartPointInMovingAxis( this );
@@ -246,8 +263,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            l_nextOccupiedBlockIndex = l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex );
-            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_nextOccupiedBlockIndex );
+            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
             m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
@@ -298,8 +314,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            l_nextOccupiedBlockIndex = l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex );
-            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_nextOccupiedBlockIndex );
+            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {
@@ -332,32 +347,6 @@ public abstract class IBaseVehicle implements IMovable
                 m_sprite.translateY( -m_velocity );
             }
         }
-        
-    }
-
-    /**
-     * apply traffic light to the cars
-     *
-     * @param p_street street
-     * @param p_velocity velocity
-     * @param p_blockIndex block index
-     * @return new velocity
-     */
-    private int applyTrafficLightToVelocity( final CStreet p_street, final int p_velocity, final int p_blockIndex )
-    {
-        int l_newVelocity = p_velocity;
-        if ( p_blockIndex == 6 && p_velocity > 3 )
-            l_newVelocity = 3;
-        if ( p_blockIndex == 7 && p_velocity > 2 )
-            l_newVelocity = 1;
-        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.RED )
-            l_newVelocity = 0;
-        return l_newVelocity;
-    }
-
-    @Override
-    public Object call()
-    {
         return null;
     }
 }

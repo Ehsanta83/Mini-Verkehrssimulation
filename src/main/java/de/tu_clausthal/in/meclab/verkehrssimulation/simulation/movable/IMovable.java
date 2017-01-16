@@ -9,5 +9,4 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
  */
 public interface IMovable extends IObject
 {
-    void move();
 }

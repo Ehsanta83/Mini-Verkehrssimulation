@@ -12,7 +12,7 @@ public class CPedestrianTrafficLight extends IBaseTrafficLight
      *
      * @param p_status traffic light status
      */
-    public CPedestrianTrafficLight( final ETrafficLightStatus p_status )
+    public CPedestrianTrafficLight( final EVehiclesTrafficLight p_status )
     {
         super( p_status );
     }

@@ -11,14 +11,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CConfigs;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CCar;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.EVehicleTurning;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
 
 import java.util.Arrays;
@@ -157,17 +156,6 @@ public class CSimulation extends ApplicationAdapter
     }
 
     /**
-     * turn all traffic lights to red
-     */
-    private void turnAllTrafficLightsToRed()
-    {
-        s_streets.get( "west" ).turnTrafficLightToRed();
-        s_streets.get( "south" ).turnTrafficLightToRed();
-        s_streets.get( "north" ).turnTrafficLightToRed();
-        s_streets.get( "east" ).turnTrafficLightToRed();
-    }
-
-    /**
      * create a random car. start street, next street and velocity will be random.
      *
      * @return car
@@ -228,46 +216,48 @@ public class CSimulation extends ApplicationAdapter
      */
     private void renderTrafficLights()
     {
+        s_streets.get( "west" ).turnTrafficLightToRed();
+        s_streets.get( "south" ).turnTrafficLightToRed();
+        s_streets.get( "north" ).turnTrafficLightToRed();
+        s_streets.get( "east" ).turnTrafficLightToRed();
         final long l_elapsedTime = ( System.currentTimeMillis() - m_startTime ) / 1000;
         final double l_mod = l_elapsedTime % ( TRAFFIC_LIGHT_DURATION * 4 );
         if ( l_mod < TRAFFIC_LIGHT_DURATION )
         {
-            turnAllTrafficLightsToRed();
             s_streets.get( "east" ).turnTrafficLightToGreen();
         }
-        else if ( l_mod >= TRAFFIC_LIGHT_DURATION && l_mod < 2 * TRAFFIC_LIGHT_DURATION )
-        {
-            turnAllTrafficLightsToRed();
-            s_streets.get( "south" ).turnTrafficLightToGreen();
-        }
-        else if ( l_mod >= 2 * TRAFFIC_LIGHT_DURATION && l_mod < 3 * TRAFFIC_LIGHT_DURATION )
-        {
-            turnAllTrafficLightsToRed();
-            s_streets.get( "west" ).turnTrafficLightToGreen();
-        }
+        else
+            if ( l_mod >= TRAFFIC_LIGHT_DURATION && l_mod < 2 * TRAFFIC_LIGHT_DURATION )
+            {
+                s_streets.get( "south" ).turnTrafficLightToGreen();
+            }
+             else
+                if ( l_mod >= 2 * TRAFFIC_LIGHT_DURATION && l_mod < 3 * TRAFFIC_LIGHT_DURATION )
+                {
+                    s_streets.get( "west" ).turnTrafficLightToGreen();
+                }
         else
         {
-            turnAllTrafficLightsToRed();
             s_streets.get( "north" ).turnTrafficLightToGreen();
         }
 
         m_trafficLightEastShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightEastShapeRenderer.setColor( s_streets.get( "east" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightEastShapeRenderer.setColor( s_streets.get( "east" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightEastShapeRenderer.circle( 576, 552, 8 );
         m_trafficLightEastShapeRenderer.end();
 
         m_trafficLightSouthShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightSouthShapeRenderer.setColor( s_streets.get( "south" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightSouthShapeRenderer.setColor( s_streets.get( "south" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightSouthShapeRenderer.circle( 552, 448, 8 );
         m_trafficLightSouthShapeRenderer.end();
 
         m_trafficLightWestShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightWestShapeRenderer.setColor( s_streets.get( "west" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightWestShapeRenderer.setColor( s_streets.get( "west" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightWestShapeRenderer.circle( 448, 472, 8 );
         m_trafficLightWestShapeRenderer.end();
 
         m_trafficLightNorthShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightNorthShapeRenderer.setColor( s_streets.get( "north" ).getVehiclesTrafficLight().getStatus() == ETrafficLightStatus.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightNorthShapeRenderer.setColor( s_streets.get( "north" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightNorthShapeRenderer.circle( 472, 576, 8 );
         m_trafficLightNorthShapeRenderer.end();
     }
@@ -280,7 +270,7 @@ public class CSimulation extends ApplicationAdapter
         for ( int i = 0; i < m_cars.length; i++ )
         {
             final CCar l_car = m_cars[i];
-            l_car.move();
+            l_car.call();
             if ( l_car.isOut() )
             {
                 m_cars[i] = createRandomCar();

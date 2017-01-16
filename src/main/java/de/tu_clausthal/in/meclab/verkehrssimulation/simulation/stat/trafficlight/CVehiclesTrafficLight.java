@@ -12,7 +12,7 @@ public class CVehiclesTrafficLight extends IBaseTrafficLight
      *
      * @param p_status traffic light status
      */
-    public CVehiclesTrafficLight( final ETrafficLightStatus p_status )
+    public CVehiclesTrafficLight( final EVehiclesTrafficLight p_status )
     {
         super( p_status );
     }

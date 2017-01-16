@@ -3,7 +3,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ETrafficLightStatus;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 
 import java.util.HashMap;
 
@@ -89,7 +89,7 @@ public class CStreet implements IVirtual
         this.m_newYAfterTurningRight = p_newYAfterTurningRight;
         this.m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         this.m_oppositeStreet = p_oppositeStreet;
-        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( ETrafficLightStatus.RED );
+        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( EVehiclesTrafficLight.RED );
         this.m_firstLane = new CLane( 9 );
         this.m_secondLane = new CLane( 9 );
     }
@@ -219,7 +219,7 @@ public class CStreet implements IVirtual
      */
     public void turnTrafficLightToRed()
     {
-        this.m_vehiclesTrafficLight.setStatus( ETrafficLightStatus.RED );
+        this.m_vehiclesTrafficLight.setStatus( EVehiclesTrafficLight.RED );
     }
 
     /**
@@ -227,7 +227,7 @@ public class CStreet implements IVirtual
      */
     public void turnTrafficLightToGreen()
     {
-        this.m_vehiclesTrafficLight.setStatus( ETrafficLightStatus.GREEN );
+        this.m_vehiclesTrafficLight.setStatus( EVehiclesTrafficLight.GREEN );
     }
 
     /**
