@@ -5,15 +5,16 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
  *
  * @author Ehsan Tatasadi
  */
-public class CVehiclesTrafficLight extends IBaseTrafficLight
+public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLight>
 {
+
     /**
-     * vehicle traffic light constructor
+     * traffic light constructor
      *
-     * @param p_status traffic light status
+     * @param p_duration duration of traffic light colors
      */
-    public CVehiclesTrafficLight( final EVehiclesTrafficLight p_status )
+    protected CVehiclesTrafficLight( final int... p_duration )
     {
-        super( p_status );
+        super( EVehiclesTrafficLight.RED, p_duration );
     }
 }

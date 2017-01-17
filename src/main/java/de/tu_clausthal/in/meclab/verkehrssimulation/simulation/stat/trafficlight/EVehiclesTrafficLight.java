@@ -1,13 +1,11 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.IStatic;
-
 /**
  * vehicle traffic light enumeration
  *
  * @author Ehsan Tatasadi
  */
-public enum EVehiclesTrafficLight implements IStatic
+public enum EVehiclesTrafficLight implements IETrafficLight
 {
     RED, REDYELLOW, GREEN, YELLOW;
 
