@@ -143,7 +143,13 @@ public class CSimulation extends ApplicationAdapter
         m_roadsTiledMapRenderer.setView( m_camera );
         m_roadsTiledMapRenderer.render();
 
-        renderTrafficLights();
+        try
+        {
+            renderTrafficLights();
+        } catch ( final Exception e )
+        {
+            e.printStackTrace();
+        }
         m_spriteBatch.begin();
         moveCars();
 
@@ -214,12 +220,12 @@ public class CSimulation extends ApplicationAdapter
     /**
      * render traffic lights
      */
-    private void renderTrafficLights()
+    private void renderTrafficLights() throws Exception
     {
-        s_streets.get( "west" ).turnTrafficLightToRed();
-        s_streets.get( "south" ).turnTrafficLightToRed();
-        s_streets.get( "north" ).turnTrafficLightToRed();
-        s_streets.get( "east" ).turnTrafficLightToRed();
+        s_streets.get( "north" ).call();/*
+        s_streets.get( "south" ).call();
+        s_streets.get( "west" ).call();
+        s_streets.get( "east" ).call();
         final long l_elapsedTime = ( System.currentTimeMillis() - m_startTime ) / 1000;
         final double l_mod = l_elapsedTime % ( TRAFFIC_LIGHT_DURATION * 4 );
         if ( l_mod < TRAFFIC_LIGHT_DURATION )
@@ -254,10 +260,10 @@ public class CSimulation extends ApplicationAdapter
         m_trafficLightWestShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
         m_trafficLightWestShapeRenderer.setColor( s_streets.get( "west" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightWestShapeRenderer.circle( 448, 472, 8 );
-        m_trafficLightWestShapeRenderer.end();
+        m_trafficLightWestShapeRenderer.end();*/
 
         m_trafficLightNorthShapeRenderer.begin( ShapeRenderer.ShapeType.Filled );
-        m_trafficLightNorthShapeRenderer.setColor( s_streets.get( "north" ).getVehiclesTrafficLight().getStatus() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
+        m_trafficLightNorthShapeRenderer.setColor( s_streets.get( "north" ).getVehiclesTrafficLight().getColor() == EVehiclesTrafficLight.GREEN ? Color.GREEN : Color.RED );
         m_trafficLightNorthShapeRenderer.circle( 472, 576, 8 );
         m_trafficLightNorthShapeRenderer.end();
     }

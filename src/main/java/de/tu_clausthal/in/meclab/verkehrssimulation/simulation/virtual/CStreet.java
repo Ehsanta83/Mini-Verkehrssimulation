@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
+import com.badlogic.gdx.Gdx;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
@@ -89,7 +90,7 @@ public class CStreet implements IVirtual
         this.m_newYAfterTurningRight = p_newYAfterTurningRight;
         this.m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         this.m_oppositeStreet = p_oppositeStreet;
-        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( EVehiclesTrafficLight.RED );
+        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( 15 * 60, 2 * 60, 5 * 60, 3 * 60 );
         this.m_firstLane = new CLane( 9 );
         this.m_secondLane = new CLane( 9 );
     }
@@ -215,22 +216,6 @@ public class CStreet implements IVirtual
     }
 
     /**
-     * turn traffic right to red
-     */
-    public void turnTrafficLightToRed()
-    {
-        this.m_vehiclesTrafficLight.setStatus( EVehiclesTrafficLight.RED );
-    }
-
-    /**
-     * turn traffic light to green
-     */
-    public void turnTrafficLightToGreen()
-    {
-        this.m_vehiclesTrafficLight.setStatus( EVehiclesTrafficLight.GREEN );
-    }
-
-    /**
      * get distance between vehicle and start point in moving axis
      *
      * @param p_vehicle vehicle
@@ -267,8 +252,9 @@ public class CStreet implements IVirtual
     }
 
     @Override
-    public Object call()
+    public Object call() throws Exception
     {
-        return null;
+        m_vehiclesTrafficLight.call();
+        return this;
     }
 }

@@ -37,4 +37,9 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
         }
         return this;
     }
+
+    public T getColor()
+    {
+        return m_color;
+    }
 }

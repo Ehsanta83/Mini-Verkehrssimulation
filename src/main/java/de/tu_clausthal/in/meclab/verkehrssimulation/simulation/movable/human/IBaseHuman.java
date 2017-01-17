@@ -10,11 +10,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 public abstract class IBaseHuman implements IMovable
 {
     @Override
-    public void move()
-    {
-    }
-
-    @Override
     public Object call()
     {
         return null;

@@ -13,7 +13,7 @@ public class CPedestrianTrafficLight extends IBaseTrafficLight<EPedestrianTraffi
      *
      * @param p_duration duration of traffic light colors
      */
-    protected CPedestrianTrafficLight( final int... p_duration)
+    public CPedestrianTrafficLight( final int... p_duration)
     {
         super( EPedestrianTrafficLight.RED, p_duration );
     }

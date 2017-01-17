@@ -12,7 +12,7 @@ public class CTurningTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLigh
      *
      * @param p_duration duration of traffic light colors
      */
-    protected CTurningTrafficLight( final int... p_duration)
+    public CTurningTrafficLight( final int... p_duration)
     {
         super( EVehiclesTrafficLight.RED, p_duration );
     }
