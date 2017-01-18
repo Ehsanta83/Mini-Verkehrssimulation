@@ -79,7 +79,8 @@ public class CStreet implements IVirtual
      */
     public CStreet( final int p_rightRotationAngel, final int p_leftRotationAngel, final String p_newDirectionAfterTurningRight,
                     final String p_newDirectionAfterTurningLeft, final int p_newXAfterTurningRight, final int p_newXAfterTurningLeft,
-                    final int p_newYAfterTurningRight, final int p_newYAfterTurningLeft, final String p_oppositeStreet )
+                    final int p_newYAfterTurningRight, final int p_newYAfterTurningLeft, final String p_oppositeStreet,
+                    final EVehiclesTrafficLight p_trafficLightStartColor, final int p_trafficLightstartColorDuration, final int... p_trafficLightColorsDuration )
     {
         this.m_rightRotationAngel = p_rightRotationAngel;
         this.m_leftRotationAngel = p_leftRotationAngel;
@@ -90,7 +91,7 @@ public class CStreet implements IVirtual
         this.m_newYAfterTurningRight = p_newYAfterTurningRight;
         this.m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         this.m_oppositeStreet = p_oppositeStreet;
-        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( 15 * 60, 2 * 60, 5 * 60, 3 * 60 );
+        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( p_trafficLightStartColor, p_trafficLightstartColorDuration, p_trafficLightColorsDuration );
         this.m_firstLane = new CLane( 9 );
         this.m_secondLane = new CLane( 9 );
     }

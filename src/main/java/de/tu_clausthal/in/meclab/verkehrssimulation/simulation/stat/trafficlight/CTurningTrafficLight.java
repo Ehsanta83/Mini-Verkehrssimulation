@@ -10,10 +10,12 @@ public class CTurningTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLigh
     /**
      * traffic light constructor
      *
-     * @param p_duration duration of traffic light colors
+     * @param p_startColor start color of the traffic light
+     * @param p_startColorDuration duration of the start color
+     * @param p_duration duration of the traffic light colors
      */
-    public CTurningTrafficLight( final int... p_duration)
+    public CTurningTrafficLight( final EVehiclesTrafficLight p_startColor, final int p_startColorDuration, final int... p_duration )
     {
-        super( EVehiclesTrafficLight.RED, p_duration );
+        super( p_startColor, p_startColorDuration, p_duration );
     }
 }

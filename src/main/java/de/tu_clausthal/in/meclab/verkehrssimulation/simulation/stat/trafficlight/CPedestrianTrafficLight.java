@@ -7,14 +7,15 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
  */
 public class CPedestrianTrafficLight extends IBaseTrafficLight<EPedestrianTrafficLight>
 {
-
     /**
      * traffic light constructor
      *
-     * @param p_duration duration of traffic light colors
+     * @param p_startColor start color of the traffic light
+     * @param p_startColorDuration duration of the start color
+     * @param p_duration duration of the traffic light colors
      */
-    public CPedestrianTrafficLight( final int... p_duration)
+    public CPedestrianTrafficLight( final EPedestrianTrafficLight p_startColor, final int p_startColorDuration, final int... p_duration )
     {
-        super( EPedestrianTrafficLight.RED, p_duration );
+        super( p_startColor, p_startColorDuration, p_duration );
     }
 }

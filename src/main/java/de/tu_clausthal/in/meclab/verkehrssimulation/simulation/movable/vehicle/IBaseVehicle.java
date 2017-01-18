@@ -238,7 +238,7 @@ public abstract class IBaseVehicle implements IMovable
             l_newVelocity = 3;
         if ( p_blockIndex == 7 && p_velocity > 2 )
             l_newVelocity = 1;
-        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getColor() == EVehiclesTrafficLight.RED )
+        if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getColor() != EVehiclesTrafficLight.GREEN )
             l_newVelocity = 0;
         return l_newVelocity;
     }

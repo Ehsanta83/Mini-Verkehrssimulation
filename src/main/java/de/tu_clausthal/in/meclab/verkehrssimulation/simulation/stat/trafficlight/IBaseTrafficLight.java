@@ -16,14 +16,15 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     /**
      * traffic light constructor
      *
-     * @param p_color default color of traffic light
-     * @param p_duration duration of traffic light colors
+     * @param p_startColor start color of the traffic light
+     * @param p_startColorDuration duration of the start color
+     * @param p_duration duration of the traffic light colors
      */
-    protected IBaseTrafficLight( T p_color, final int... p_duration )
+    protected IBaseTrafficLight( final T p_startColor, final int p_startColorDuration, final int... p_duration )
     {
-        m_color = p_color;
+        m_color = p_startColor;
         m_duration = p_duration;
-        m_time = m_duration[m_color.ordinal()];
+        m_time = p_startColorDuration;
     }
 
     @Override
