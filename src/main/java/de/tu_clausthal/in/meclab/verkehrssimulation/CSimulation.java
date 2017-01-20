@@ -109,6 +109,8 @@ public class CSimulation extends ApplicationAdapter
     private Texture m_trafficLightNorthYellowTexture;
     private Texture m_trafficLightNorthRedYellowTexture;
 
+    private HashMap<String, HashMap<EVehiclesTrafficLight, Texture>> m_trafficLightTexturesMap;
+
     public static HashMap<String, CStreet> getStreets()
     {
         return s_streets;
@@ -161,6 +163,36 @@ public class CSimulation extends ApplicationAdapter
         m_trafficLightNorthRedTexture = new Texture( Gdx.files.internal( "trafficlights/tl_north_red.png" ) );
         m_trafficLightNorthYellowTexture = new Texture( Gdx.files.internal( "trafficlights/tl_north_yellow.png" ) );
         m_trafficLightNorthRedYellowTexture = new Texture( Gdx.files.internal( "trafficlights/tl_north_redyellow.png" ) );
+
+        m_trafficLightTexturesMap = new HashMap<>();
+        m_trafficLightTexturesMap.put( "east", new HashMap<EVehiclesTrafficLight, Texture>()
+            { {
+                put( EVehiclesTrafficLight.GREEN, m_trafficLightEastGreenTexture );
+                put( EVehiclesTrafficLight.RED, m_trafficLightEastRedTexture );
+                put( EVehiclesTrafficLight.YELLOW, m_trafficLightEastYellowTexture );
+                put( EVehiclesTrafficLight.REDYELLOW, m_trafficLightEastRedYellowTexture );
+            } } );
+        m_trafficLightTexturesMap.put( "north", new HashMap<EVehiclesTrafficLight, Texture>()
+        { {
+            put( EVehiclesTrafficLight.GREEN, m_trafficLightNorthGreenTexture );
+            put( EVehiclesTrafficLight.RED, m_trafficLightNorthRedTexture );
+            put( EVehiclesTrafficLight.YELLOW, m_trafficLightNorthYellowTexture );
+            put( EVehiclesTrafficLight.REDYELLOW, m_trafficLightNorthRedYellowTexture );
+        } } );
+        m_trafficLightTexturesMap.put( "west", new HashMap<EVehiclesTrafficLight, Texture>()
+        { {
+            put( EVehiclesTrafficLight.GREEN, m_trafficLightWestGreenTexture );
+            put( EVehiclesTrafficLight.RED, m_trafficLightWestRedTexture );
+            put( EVehiclesTrafficLight.YELLOW, m_trafficLightWestYellowTexture );
+            put( EVehiclesTrafficLight.REDYELLOW, m_trafficLightWestRedYellowTexture );
+        } } );
+        m_trafficLightTexturesMap.put( "south", new HashMap<EVehiclesTrafficLight, Texture>()
+        { {
+            put( EVehiclesTrafficLight.GREEN, m_trafficLightSouthGreenTexture );
+            put( EVehiclesTrafficLight.RED, m_trafficLightSouthRedTexture );
+            put( EVehiclesTrafficLight.YELLOW, m_trafficLightSouthYellowTexture );
+            put( EVehiclesTrafficLight.REDYELLOW, m_trafficLightSouthRedYellowTexture );
+        } } );
 
         m_trafficLightEastSprite = new Sprite( m_trafficLightEastRedTexture );
         m_trafficLightEastSprite.setPosition( 576, 552 );
@@ -237,69 +269,10 @@ public class CSimulation extends ApplicationAdapter
         s_streets.get( "west" ).call();
         s_streets.get( "east" ).call();
 
-        switch ( s_streets.get( "east" ).getVehiclesTrafficLight().getColor() )
-        {
-            case GREEN:
-                m_trafficLightEastSprite.setTexture( m_trafficLightEastGreenTexture );
-                break;
-            case YELLOW:
-                m_trafficLightEastSprite.setTexture( m_trafficLightEastYellowTexture );
-                break;
-            case REDYELLOW:
-                m_trafficLightEastSprite.setTexture( m_trafficLightEastRedYellowTexture );
-                break;
-            default:
-                m_trafficLightEastSprite.setTexture( m_trafficLightEastRedTexture );
-                break;
-        }
-
-        switch ( s_streets.get( "north" ).getVehiclesTrafficLight().getColor() )
-        {
-            case GREEN:
-                m_trafficLightNorthSprite.setTexture( m_trafficLightNorthGreenTexture );
-                break;
-            case YELLOW:
-                m_trafficLightNorthSprite.setTexture( m_trafficLightNorthYellowTexture );
-                break;
-            case REDYELLOW:
-                m_trafficLightNorthSprite.setTexture( m_trafficLightNorthRedYellowTexture );
-                break;
-            default:
-                m_trafficLightNorthSprite.setTexture( m_trafficLightNorthRedTexture );
-                break;
-        }
-
-        switch ( s_streets.get( "west" ).getVehiclesTrafficLight().getColor() )
-        {
-            case GREEN:
-                m_trafficLightWestSprite.setTexture( m_trafficLightWestGreenTexture );
-                break;
-            case YELLOW:
-                m_trafficLightWestSprite.setTexture( m_trafficLightWestYellowTexture );
-                break;
-            case REDYELLOW:
-                m_trafficLightWestSprite.setTexture( m_trafficLightWestRedYellowTexture );
-                break;
-            default:
-                m_trafficLightWestSprite.setTexture( m_trafficLightWestRedTexture );
-                break;
-        }
-
-        switch ( s_streets.get( "south" ).getVehiclesTrafficLight().getColor() )
-        {
-            case GREEN:
-                m_trafficLightSouthSprite.setTexture( m_trafficLightSouthGreenTexture );
-                break;
-            case YELLOW:
-                m_trafficLightSouthSprite.setTexture( m_trafficLightSouthYellowTexture );
-                break;
-            case REDYELLOW:
-                m_trafficLightSouthSprite.setTexture( m_trafficLightSouthRedYellowTexture );
-                break;
-            default:
-                m_trafficLightSouthSprite.setTexture( m_trafficLightSouthRedTexture );
-                break;
-        }
+        m_trafficLightEastSprite.setTexture( m_trafficLightTexturesMap.get( "east" ).get( s_streets.get( "east" ).getVehiclesTrafficLight().getColor() ) );
+        m_trafficLightNorthSprite.setTexture( m_trafficLightTexturesMap.get( "north" ).get( s_streets.get( "north" ).getVehiclesTrafficLight().getColor() ) );
+        m_trafficLightWestSprite.setTexture( m_trafficLightTexturesMap.get( "west" ).get( s_streets.get( "west" ).getVehiclesTrafficLight().getColor() ) );
+        m_trafficLightSouthSprite.setTexture( m_trafficLightTexturesMap.get( "south" ).get( s_streets.get( "south" ).getVehiclesTrafficLight().getColor() ) );
 
         m_spriteBatch.begin();
         m_trafficLightEastSprite.draw( m_spriteBatch );
