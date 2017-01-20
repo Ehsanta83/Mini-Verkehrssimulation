@@ -2,6 +2,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 
 /**
  * main desktop application
@@ -28,6 +29,6 @@ public final class CMain
         l_config.title = "Verkehrssimulation";
         l_config.width = 1024;
         l_config.height = 1024;
-        new LwjglApplication( new CSimulation(), l_config );
+        new LwjglApplication( new CScreen(), l_config );
     }
 }

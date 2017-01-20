@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.common;
+package de.tu_clausthal.in.meclab.verkehrssimulation;
 
 /**
  * configuration class

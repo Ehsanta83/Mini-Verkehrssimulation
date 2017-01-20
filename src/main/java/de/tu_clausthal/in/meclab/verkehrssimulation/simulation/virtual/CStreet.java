@@ -1,7 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
-import com.badlogic.gdx.Gdx;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
@@ -15,6 +15,10 @@ import java.util.HashMap;
  */
 public class CStreet implements IVirtual
 {
+    /**
+     * sprite
+     */
+    private final Sprite m_sprite;
     /**
      * vehicles traffic light
      */
@@ -94,6 +98,8 @@ public class CStreet implements IVirtual
         this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( p_trafficLightStartColor, p_trafficLightstartColorDuration, p_trafficLightColorsDuration );
         this.m_firstLane = new CLane( 9 );
         this.m_secondLane = new CLane( 9 );
+        // TODO: we should change tilemap to sprite later
+        m_sprite = null;
     }
 
     /**
@@ -225,11 +231,11 @@ public class CStreet implements IVirtual
      */
     public int getDistanceBetweenVehicleAndStartPointInMovingAxis( final IBaseVehicle p_vehicle )
     {
-        final int l_xPosition = (int) p_vehicle.getSprite().getX();
-        final int l_yPosition = (int) p_vehicle.getSprite().getY();
+        final int l_xPosition = (int) p_vehicle.sprite().getX();
+        final int l_yPosition = (int) p_vehicle.sprite().getY();
         final boolean l_isTurned = p_vehicle.isTurned();
         final String l_currentStreet = p_vehicle.getCurrentStreet();
-        final HashMap<String, CStreet> l_streets = CSimulation.getStreets();
+        final HashMap<String, CStreet> l_streets = CScreen.getStreets();
         int l_distanceFromStartInMovingAxis = 0;
 
         final String l_mostBackStreet = l_isTurned ? l_streets.get( l_currentStreet ).getOppositeStreet() : l_currentStreet;
@@ -257,5 +263,11 @@ public class CStreet implements IVirtual
     {
         m_vehiclesTrafficLight.call();
         return this;
+    }
+
+    @Override
+    public Sprite sprite()
+    {
+        return m_sprite;
     }
 }

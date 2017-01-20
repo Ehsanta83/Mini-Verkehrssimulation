@@ -1,27 +1,26 @@
 
-package de.tu_clausthal.in.meclab.verkehrssimulation;
+package de.tu_clausthal.in.meclab.verkehrssimulation.ui;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import de.tu_clausthal.in.meclab.verkehrssimulation.common.CCommon;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IVisualize;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CCar;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
@@ -29,7 +28,7 @@ import java.util.stream.IntStream;
  *
  * @author Ehsan Tatasadi
  */
-public class CSimulation extends ApplicationAdapter
+public class CScreen extends ApplicationAdapter
 {
     /**
      * count of vehicles in simulation
@@ -43,6 +42,10 @@ public class CSimulation extends ApplicationAdapter
      * streets hashmap
      */
     private static HashMap<String, CStreet> s_streets;
+    /**
+     * sprites list
+     */
+    private final List<? extends IVisualize> m_sprites;
     /**
      * camera
      */
@@ -60,33 +63,10 @@ public class CSimulation extends ApplicationAdapter
      */
     private Texture m_carTexture;
     /**
-     * east street traffic light shape renderer
-     */
-    private ShapeRenderer m_trafficLightEastShapeRenderer;
-    /**
-     * south street traffic light shape renderer
-     */
-    private ShapeRenderer m_trafficLightSouthShapeRenderer;
-    /**
-     * west street traffic light shape renderer
-     */
-    private ShapeRenderer m_trafficLightWestShapeRenderer;
-    /**
-     * north street traffic light shape renderer
-     */
-    private ShapeRenderer m_trafficLightNorthShapeRenderer;
-    /**
-     * start time in millisecond
-     */
-    private long m_startTime;
-    /**
      * array of all cars in simulation
      */
     private CCar[] m_cars;
-    /**
-     * random generator
-     */
-    private Random m_randomGenerator;
+
 
     private Sprite m_trafficLightEastSprite;
     private Sprite m_trafficLightSouthSprite;
@@ -110,6 +90,18 @@ public class CSimulation extends ApplicationAdapter
     private Texture m_trafficLightNorthRedYellowTexture;
 
     private HashMap<String, HashMap<EVehiclesTrafficLight, Texture>> m_trafficLightTexturesMap;
+
+
+
+    /**
+     * constructor
+     *
+     * @param p_sprites list of sprites
+     */
+    public CScreen( final List<? extends IVisualize> p_sprites )
+    {
+        m_sprites = p_sprites;
+    }
 
     public static HashMap<String, CStreet> getStreets()
     {
@@ -135,14 +127,6 @@ public class CSimulation extends ApplicationAdapter
         s_streets.put( "north", new CStreet( 180, 0, "west", "east", 480,
             480, 520, 488, "south", EVehiclesTrafficLight.RED, 23 * 60, 24 * 60, 1 * 60, 5 * 60, 2 * 60 ) );
 
-        m_startTime = System.currentTimeMillis();
-
-        m_randomGenerator = new Random();
-
-        m_trafficLightEastShapeRenderer = new ShapeRenderer();
-        m_trafficLightSouthShapeRenderer = new ShapeRenderer();
-        m_trafficLightWestShapeRenderer = new ShapeRenderer();
-        m_trafficLightNorthShapeRenderer = new ShapeRenderer();
 
         m_spriteBatch = new SpriteBatch();
         m_carTexture = new Texture( Gdx.files.internal( "car.png" ) );
@@ -253,7 +237,7 @@ public class CSimulation extends ApplicationAdapter
 
         //ToDo: we have problem by rendering when parallel
         Arrays.stream( m_cars )
-            .forEach( i ->  i.getSprite().draw( m_spriteBatch ) );
+            .forEach( i ->  i.sprite().draw( m_spriteBatch ) );
 
         renderFPS();
         m_spriteBatch.end();

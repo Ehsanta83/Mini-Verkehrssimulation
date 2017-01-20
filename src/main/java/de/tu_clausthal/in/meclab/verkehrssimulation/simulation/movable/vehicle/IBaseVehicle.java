@@ -1,7 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CSimulation;
+import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel.CNagelSchreckenberg;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
@@ -73,12 +73,8 @@ public abstract class IBaseVehicle implements IMovable
         this.m_isTurned = false;
     }
 
-    /**
-     * get sprite
-     *
-     * @return sprite
-     */
-    public Sprite getSprite()
+    @Override
+    public Sprite sprite()
     {
         return m_sprite;
     }
@@ -248,7 +244,7 @@ public abstract class IBaseVehicle implements IMovable
     {
         int l_xPosition = (int) m_sprite.getX();
         int l_yPosition = (int) m_sprite.getY();
-        final HashMap<String, CStreet> l_streets = CSimulation.getStreets();
+        final HashMap<String, CStreet> l_streets = CScreen.getStreets();
         final CNagelSchreckenberg l_nagelSchreckenberg = new CNagelSchreckenberg();
         final int l_distanceFromStartInMovingAxis = l_streets.get( m_currentStreet ).getDistanceBetweenVehicleAndStartPointInMovingAxis( this );
         if ( l_distanceFromStartInMovingAxis < 432 )
@@ -327,7 +323,7 @@ public abstract class IBaseVehicle implements IMovable
         }
         setBlockIndex( m_blockIndex );
         setVelocity( m_velocity );
-        getSprite().setPosition( l_xPosition, l_yPosition );
+        sprite().setPosition( l_xPosition, l_yPosition );
         if ( m_velocity > 0 )
         {
             if ( "east".equals( m_currentDrivingDirection ) )

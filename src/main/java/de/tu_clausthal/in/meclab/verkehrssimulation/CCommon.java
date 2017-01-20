@@ -1,12 +1,13 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.common;
+package de.tu_clausthal.in.meclab.verkehrssimulation;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CConfigs;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CCar;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.EVehicleTurning;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 
-import java.util.Random;
+import java.util.*;
 
 /**
  * common class
@@ -15,6 +16,16 @@ import java.util.Random;
  */
 public final class CCommon
 {
+    public static final Map<EVehiclesTrafficLight, Texture> VEHICLES_TRAFFIC_LIGHT_TEXTURE_MAP = Collections.unmodifiableMap()
+        new HashMap<EVehiclesTrafficLight, Texture>()
+    {
+        {
+            put( EVehiclesTrafficLight.GREEN, m_trafficLightEastGreenTexture );
+            put( EVehiclesTrafficLight.RED, m_trafficLightEastRedTexture );
+            put( EVehiclesTrafficLight.YELLOW, m_trafficLightEastYellowTexture );
+            put( EVehiclesTrafficLight.REDYELLOW, m_trafficLightEastRedYellowTexture );
+        }
+    };
     /**
      * constructor
      */
