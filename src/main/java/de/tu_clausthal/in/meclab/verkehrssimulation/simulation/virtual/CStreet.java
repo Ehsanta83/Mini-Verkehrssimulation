@@ -84,20 +84,20 @@ public class CStreet implements IVirtual
     public CStreet( final int p_rightRotationAngel, final int p_leftRotationAngel, final String p_newDirectionAfterTurningRight,
                     final String p_newDirectionAfterTurningLeft, final int p_newXAfterTurningRight, final int p_newXAfterTurningLeft,
                     final int p_newYAfterTurningRight, final int p_newYAfterTurningLeft, final String p_oppositeStreet,
-                    final EVehiclesTrafficLight p_trafficLightStartColor, final int p_trafficLightstartColorDuration, final int... p_trafficLightColorsDuration )
+                    final CVehiclesTrafficLight p_vehiclesTrafficLight )
     {
-        this.m_rightRotationAngel = p_rightRotationAngel;
-        this.m_leftRotationAngel = p_leftRotationAngel;
-        this.m_newDirectionAfterTurningRight = p_newDirectionAfterTurningRight;
-        this.m_newDirectionAfterTurningLeft = p_newDirectionAfterTurningLeft;
-        this.m_newXAfterTurningRight = p_newXAfterTurningRight;
-        this.m_newXAfterTurningLeft = p_newXAfterTurningLeft;
-        this.m_newYAfterTurningRight = p_newYAfterTurningRight;
-        this.m_newYAfterTurningLeft = p_newYAfterTurningLeft;
-        this.m_oppositeStreet = p_oppositeStreet;
-        this.m_vehiclesTrafficLight = new CVehiclesTrafficLight( p_trafficLightStartColor, p_trafficLightstartColorDuration, p_trafficLightColorsDuration );
-        this.m_firstLane = new CLane( 9 );
-        this.m_secondLane = new CLane( 9 );
+        m_rightRotationAngel = p_rightRotationAngel;
+        m_leftRotationAngel = p_leftRotationAngel;
+        m_newDirectionAfterTurningRight = p_newDirectionAfterTurningRight;
+        m_newDirectionAfterTurningLeft = p_newDirectionAfterTurningLeft;
+        m_newXAfterTurningRight = p_newXAfterTurningRight;
+        m_newXAfterTurningLeft = p_newXAfterTurningLeft;
+        m_newYAfterTurningRight = p_newYAfterTurningRight;
+        m_newYAfterTurningLeft = p_newYAfterTurningLeft;
+        m_oppositeStreet = p_oppositeStreet;
+        m_vehiclesTrafficLight = p_vehiclesTrafficLight;
+        m_firstLane = new CLane( 9 );
+        m_secondLane = new CLane( 9 );
         // TODO: we should change tilemap to sprite later
         m_sprite = null;
     }
@@ -269,5 +269,10 @@ public class CStreet implements IVirtual
     public Sprite sprite()
     {
         return m_sprite;
+    }
+
+    @Override
+    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation)
+    {
     }
 }

@@ -15,6 +15,6 @@ public final class CTest
 
     public static void main ( final String p_args[ ] )
     {
-        System.out.println( EVehiclesTrafficLight.GREEN.toString().toLowerCase() );
+        //System.out.println( EVehiclesTrafficLight.GREEN.toString().toLowerCase() );
     }
 }

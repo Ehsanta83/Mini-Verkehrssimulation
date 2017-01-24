@@ -1,7 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.IStatic;
 
@@ -28,18 +26,6 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
      * sprite
      */
     private Sprite m_sprite;
-    /**
-     * texture of the sprite
-     */
-    private Texture m_texture;
-    /**
-     * x position
-     */
-    private int m_xPosition;
-    /**
-     * y position
-     */
-    private int m_yPosition;
 
     /**
      * constructor
@@ -48,14 +34,11 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
      * @param p_startColorDuration duration of the start color
      * @param p_duration duration of the traffic light colors
      */
-    protected IBaseTrafficLight( final T p_startColor, final int p_startColorDuration, final int p_xPosition, final int p_yPosition,  final int... p_duration )
+    protected IBaseTrafficLight( final T p_startColor, final int p_startColorDuration, final int... p_duration )
     {
         m_color = p_startColor;
         m_time = p_startColorDuration;
-        m_xPosition = p_xPosition;
-        m_yPosition = p_yPosition;
         m_duration = p_duration;
-        m_texture = new Texture( Gdx.files.internal( "trafficlights/tl_" + m_color.toString().toLowerCase() + ".png" ) );
     }
 
     @Override
@@ -66,6 +49,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
         {
             m_color = (T) m_color.call();
             m_time = m_duration[m_color.ordinal()];
+            m_sprite.setTexture( m_color.getTexture() );
         }
         return this;
     }
@@ -87,9 +71,11 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     }
 
     @Override
-    public void spriteInitialize()
+    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation)
     {
-        m_sprite = new Sprite( m_texture );
+        m_sprite = new Sprite( m_color.getTexture() );
+        m_sprite.setPosition( p_xPosition, p_yPosition );
+        m_sprite.setRotation( p_rotation );
     }
 
 

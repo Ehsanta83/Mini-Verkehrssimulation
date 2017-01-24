@@ -20,5 +20,5 @@ public interface IVisualize
     /**
      * initialize sprite
      */
-    void spriteInitialize();
+    void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation );
 }

@@ -29,6 +29,6 @@ public final class CMain
         l_config.title = "Verkehrssimulation";
         l_config.width = 1024;
         l_config.height = 1024;
-        new LwjglApplication( new CScreen(), l_config );
+        new LwjglApplication( new CScreen( null ), l_config );
     }
 }
