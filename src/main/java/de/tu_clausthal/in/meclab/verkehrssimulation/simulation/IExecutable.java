@@ -9,6 +9,6 @@ import java.util.concurrent.Callable;
  *
  * @author Ehsan Tatasadi
  */
-public interface IExecutable extends Callable
+public interface IExecutable extends Callable<IExecutable>
 {
 }

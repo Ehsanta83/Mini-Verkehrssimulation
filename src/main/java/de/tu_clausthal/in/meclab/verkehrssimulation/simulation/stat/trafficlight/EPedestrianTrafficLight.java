@@ -27,13 +27,15 @@ public enum EPedestrianTrafficLight implements IETrafficLight
             m_texture = new Texture( Gdx.files.internal( "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
         }
     }
+
     @Override
     public Texture getTexture()
     {
         return m_texture;
     }
+
     @Override
-    public Object call() throws Exception
+    public EPedestrianTrafficLight call() throws Exception
     {
         switch ( this )
         {

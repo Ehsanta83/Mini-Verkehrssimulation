@@ -239,27 +239,26 @@ public class CStreet implements IVirtual
         int l_distanceFromStartInMovingAxis = 0;
 
         final String l_mostBackStreet = l_isTurned ? l_streets.get( l_currentStreet ).getOppositeStreet() : l_currentStreet;
-        if ( "west".equals( l_mostBackStreet ) )
+        switch ( l_mostBackStreet )
         {
-            l_distanceFromStartInMovingAxis = l_xPosition;
-        }
-        else if ( "south".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = l_yPosition;
-        }
-        else if ( "east".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = 1024 - l_xPosition;
-        }
-        else if ( "north".equals( l_mostBackStreet ) )
-        {
-            l_distanceFromStartInMovingAxis = 1024 - l_yPosition;
+            case "west":
+                l_distanceFromStartInMovingAxis = l_xPosition;
+                break;
+            case "south":
+                l_distanceFromStartInMovingAxis = l_yPosition;
+                break;
+            case "east":
+                l_distanceFromStartInMovingAxis = 1024 - l_xPosition;
+                break;
+            case "north":
+                l_distanceFromStartInMovingAxis = 1024 - l_yPosition;
+                break;
         }
         return l_distanceFromStartInMovingAxis;
     }
 
     @Override
-    public Object call() throws Exception
+    public CStreet call() throws Exception
     {
         m_vehiclesTrafficLight.call();
         return this;

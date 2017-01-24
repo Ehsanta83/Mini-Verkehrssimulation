@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 
 /**
@@ -16,9 +17,9 @@ public abstract class IBaseHuman implements IMovable
     private Sprite m_sprite;
 
     @Override
-    public Object call()
+    public IBaseHuman call()
     {
-        return null;
+        return this;
     }
 
     @Override

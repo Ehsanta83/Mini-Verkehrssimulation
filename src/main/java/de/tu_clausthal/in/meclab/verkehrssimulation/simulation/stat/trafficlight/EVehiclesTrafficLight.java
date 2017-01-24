@@ -2,6 +2,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
 /**
  * vehicle traffic light enumeration
@@ -24,7 +25,7 @@ public enum EVehiclesTrafficLight implements IETrafficLight
     {
         if ( m_texture == null )
         {
-            m_texture = new Texture( Gdx.files.internal( "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
+            m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
         }
     }
 
@@ -35,7 +36,7 @@ public enum EVehiclesTrafficLight implements IETrafficLight
     }
 
     @Override
-    public Object call() throws Exception
+    public EVehiclesTrafficLight call() throws Exception
     {
         switch ( this )
         {

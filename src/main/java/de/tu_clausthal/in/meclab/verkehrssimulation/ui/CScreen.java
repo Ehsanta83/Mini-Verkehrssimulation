@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -98,7 +97,7 @@ public class CScreen extends ApplicationAdapter
         m_camera.setToOrtho( false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
         m_camera.update();
 
-        m_roadsTiledMapRenderer = new OrthogonalTiledMapRenderer( new TmxMapLoader().load( "roads.tmx" ) );
+        m_roadsTiledMapRenderer = new OrthogonalTiledMapRenderer( new TmxMapLoader().load( CCommon.PACKAGEPATH + "roads.tmx" ) );
 
         m_westVehiclesTrafficLight = new CVehiclesTrafficLight( EVehiclesTrafficLight.GREEN, 5 * 60, 24 * 60, 1 * 60, 5 * 60, 2 * 60 );
         m_southVehiclesTrafficLight = new CVehiclesTrafficLight( EVehiclesTrafficLight.RED, 7 * 60, 24 * 60, 1 * 60, 5 * 60, 2 * 60 );
@@ -117,7 +116,7 @@ public class CScreen extends ApplicationAdapter
 
 
         m_spriteBatch = new SpriteBatch();
-        m_carTexture = new Texture( Gdx.files.internal( "car.png" ) );
+        m_carTexture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "car.png" ) );
 
         m_eastVehiclesTrafficLight.spriteInitialize( 590, 547, 90 );
         m_southVehiclesTrafficLight.spriteInitialize( 560, 405, 0 );

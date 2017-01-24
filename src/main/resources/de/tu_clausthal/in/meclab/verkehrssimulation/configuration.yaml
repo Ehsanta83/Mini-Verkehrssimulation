@@ -1,0 +1,4 @@
+# screen size of the window - optional with default 1024x1024
+window :
+    width : 1024
+    height : 1024

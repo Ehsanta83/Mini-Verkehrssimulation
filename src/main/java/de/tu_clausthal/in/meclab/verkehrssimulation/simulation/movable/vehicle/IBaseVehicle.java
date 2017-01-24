@@ -240,12 +240,11 @@ public abstract class IBaseVehicle implements IMovable
     }
 
     @Override
-    public Object call()
+    public IBaseVehicle call()
     {
         int l_xPosition = (int) m_sprite.getX();
         int l_yPosition = (int) m_sprite.getY();
         final HashMap<String, CStreet> l_streets = CScreen.getStreets();
-        final CNagelSchreckenberg l_nagelSchreckenberg = new CNagelSchreckenberg();
         final int l_distanceFromStartInMovingAxis = l_streets.get( m_currentStreet ).getDistanceBetweenVehicleAndStartPointInMovingAxis( this );
         if ( l_distanceFromStartInMovingAxis < 432 )
         {
@@ -259,7 +258,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
             m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
@@ -310,7 +309,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = l_nagelSchreckenberg.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {
@@ -343,7 +342,7 @@ public abstract class IBaseVehicle implements IMovable
                 m_sprite.translateY( -m_velocity );
             }
         }
-        return null;
+        return this;
     }
 
     @Override

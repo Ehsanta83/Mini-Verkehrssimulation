@@ -42,7 +42,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     }
 
     @Override
-    public Object call() throws Exception
+    public IBaseTrafficLight<T> call() throws Exception
     {
         m_time--;
         if ( m_time <= 0 )

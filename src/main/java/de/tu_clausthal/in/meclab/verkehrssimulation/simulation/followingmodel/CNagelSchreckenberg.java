@@ -11,6 +11,11 @@ import java.util.Random;
  */
 public class CNagelSchreckenberg implements IFollowingModel
 {
+    /**
+     * singleton instance
+     */
+    public static final CNagelSchreckenberg INSTANCE = new CNagelSchreckenberg();
+
     @Override
     public int applyModelToAVehicle( int p_velocity, int p_blockIndex, int p_nextOccupiedBlockIndex )
     {
