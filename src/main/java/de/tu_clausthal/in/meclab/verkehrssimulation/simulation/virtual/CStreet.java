@@ -25,11 +25,11 @@ public class CStreet implements IVirtual
     /**
      * first lane
      */
-    private final CVehiclesWay m_firstLane;
+    private final CVehiclesWay m_firstWay;
     /**
      * second lane (opposite lane)
      */
-    private final CVehiclesWay m_secondLane;
+    private final CVehiclesWay m_secondWay;
     /**
      * new rotation angel of the vehicle after turning right
      */
@@ -95,8 +95,8 @@ public class CStreet implements IVirtual
         m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         m_oppositeStreet = p_oppositeStreet;
         m_vehiclesTrafficLight = p_vehiclesTrafficLight;
-        m_firstLane = new CVehiclesWay( 1, 9 );
-        m_secondLane = new CVehiclesWay( 1, 9 );
+        m_firstWay = new CVehiclesWay( 1, 9 );
+        m_secondWay = new CVehiclesWay( 1, 9 );
         // TODO: we should change tilemap to sprite later
         m_sprite = null;
     }
@@ -112,23 +112,23 @@ public class CStreet implements IVirtual
     }
 
     /**
-     * get first lane
+     * get first way
      *
-     * @return first lane
+     * @return first way
      */
-    public CVehiclesWay getFirstLane()
+    public CVehiclesWay getFirstWay()
     {
-        return m_firstLane;
+        return m_firstWay;
     }
 
     /**
-     * get second lane
+     * get second way
      *
-     * @return second lane
+     * @return second way
      */
-    public CVehiclesWay getSecondLane()
+    public CVehiclesWay getSecondWay()
     {
-        return m_secondLane;
+        return m_secondWay;
     }
 
     /**
@@ -212,16 +212,6 @@ public class CStreet implements IVirtual
     }
 
     /**
-     * get opposite street
-     *
-     * @return opposite street
-     */
-    public String getOppositeStreet()
-    {
-        return m_oppositeStreet;
-    }
-
-    /**
      * get distance between vehicle and start point in moving axis
      *
      * @param p_vehicle vehicle
@@ -237,7 +227,7 @@ public class CStreet implements IVirtual
         final HashMap<String, CStreet> l_streets = CScreen.getStreets();
         int l_distanceFromStartInMovingAxis = 0;
 
-        final String l_mostBackStreet = l_isTurned ? l_streets.get( l_currentStreet ).getOppositeStreet() : l_currentStreet;
+        final String l_mostBackStreet = l_isTurned ? l_streets.get( l_currentStreet ).m_oppositeStreet : l_currentStreet;
         switch ( l_mostBackStreet )
         {
             case "west":

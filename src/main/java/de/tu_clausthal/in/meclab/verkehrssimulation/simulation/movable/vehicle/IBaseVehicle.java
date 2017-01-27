@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel.CNagelSchreckenberg;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
@@ -128,6 +129,26 @@ public abstract class IBaseVehicle implements IMovable
         return p_velocity;
     }
 
+    /**
+     * move the vehicle in a way
+     *
+     * @param p_way the vehicles way of the street
+     * @param p_newBlockIndex new block index of the car in the lane
+     */
+    private void moveInAWay( final CVehiclesWay p_way, final int p_newBlockIndex )
+    {
+        if ( p_newBlockIndex > m_coordinateInWay[1] && !p_way.isBlockOccupied( new int[]{m_coordinateInWay[0], p_newBlockIndex} ) )
+        {
+            if ( m_coordinateInWay[1] > -1 )
+            {
+                p_way.emptyBlock( m_coordinateInWay );
+            }
+            p_way.occupyBlock( this, new int[]{m_coordinateInWay[0], p_newBlockIndex} );
+            m_coordinateInWay[1] = p_newBlockIndex;
+        }
+        m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], p_way.getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
+    }
+
     @Override
     public IBaseVehicle call()
     {
@@ -138,23 +159,14 @@ public abstract class IBaseVehicle implements IMovable
         if ( l_distanceFromStartInMovingAxis < 432 )
         {
             final int l_newBlockIndex = l_distanceFromStartInMovingAxis / 48;
-            if ( l_newBlockIndex > m_coordinateInWay[1] && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( new int[]{m_coordinateInWay[0], l_newBlockIndex} ) )
-            {
-                if ( m_coordinateInWay[1] > -1 )
-                {
-                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_coordinateInWay );
-                }
-                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( this, new int[]{m_coordinateInWay[0], l_newBlockIndex} );
-                m_coordinateInWay[1] = l_newBlockIndex;
-            }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
+            moveInAWay( l_streets.get( m_currentStreet ).getFirstWay(), l_newBlockIndex );
             m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_coordinateInWay[1] );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
         {
             if ( m_coordinateInWay[1] > -1 )
             {
-                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_coordinateInWay );
+                l_streets.get( m_currentStreet ).getFirstWay().emptyBlock( m_coordinateInWay );
                 m_coordinateInWay[1] = -1;
             }
         }
@@ -189,22 +201,14 @@ public abstract class IBaseVehicle implements IMovable
         else if ( l_distanceFromStartInMovingAxis >= 592 && l_distanceFromStartInMovingAxis < 1024 )
         {
             final int l_newBlockIndex = ( l_distanceFromStartInMovingAxis - 592 ) / 48;
-            if ( l_newBlockIndex > m_coordinateInWay[1] && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( new int[]{m_coordinateInWay[0], l_newBlockIndex} ) )
-            {
-                if ( m_coordinateInWay[1] > -1 )
-                {
-                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_coordinateInWay );
-                }
-                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( this, new int[]{m_coordinateInWay[0], l_newBlockIndex} );
-                m_coordinateInWay[1] = l_newBlockIndex;
-            }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
+            moveInAWay( l_streets.get( m_currentStreet ).getSecondWay(), l_newBlockIndex );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], l_streets.get( m_currentStreet ).getSecondWay().getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {
             if ( m_coordinateInWay[1] > -1 )
             {
-                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_coordinateInWay );
+                l_streets.get( m_currentStreet ).getSecondWay().emptyBlock( m_coordinateInWay );
             }
 
             m_isOut = true;
