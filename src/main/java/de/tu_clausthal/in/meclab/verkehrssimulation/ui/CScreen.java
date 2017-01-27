@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IVisualize;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CCar;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
@@ -30,14 +31,6 @@ import java.util.stream.IntStream;
  */
 public class CScreen extends ApplicationAdapter
 {
-    /**
-     * count of vehicles in simulation
-     */
-    private static final int VEHICLES_COUNT = 20;
-    /**
-     * traffic lights duration
-     */
-    private static final int TRAFFIC_LIGHT_DURATION = 5;
     /**
      * streets hashmap
      */
@@ -123,7 +116,7 @@ public class CScreen extends ApplicationAdapter
         m_westVehiclesTrafficLight.spriteInitialize( 420, 435, 270 );
         m_northVehiclesTrafficLight.spriteInitialize( 449, 576, 180 );
 
-        m_cars = IntStream.range( 0, VEHICLES_COUNT )
+        m_cars = IntStream.range( 0, CConfiguration.INSTANCE.vehiclesCount())
             .parallel()
             .mapToObj( i -> CCommon.createRandomCar( m_carTexture ) )
             .toArray( CCar[]::new );

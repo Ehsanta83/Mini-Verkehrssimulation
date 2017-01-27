@@ -229,14 +229,13 @@ public abstract class IBaseVehicle implements IMovable
      */
     private int applyTrafficLightToVelocity( final CStreet p_street, final int p_velocity, final int p_blockIndex )
     {
-        int l_newVelocity = p_velocity;
         if ( p_blockIndex == 6 && p_velocity > 3 )
-            l_newVelocity = 3;
+            return 3;
         if ( p_blockIndex == 7 && p_velocity > 2 )
-            l_newVelocity = 1;
+            return 1;
         if ( p_blockIndex == 8 && p_street.getVehiclesTrafficLight().getColor() != EVehiclesTrafficLight.GREEN )
-            l_newVelocity = 0;
-        return l_newVelocity;
+            return 0;
+        return p_velocity;
     }
 
     @Override
@@ -325,28 +324,28 @@ public abstract class IBaseVehicle implements IMovable
         sprite().setPosition( l_xPosition, l_yPosition );
         if ( m_velocity > 0 )
         {
-            if ( "east".equals( m_currentDrivingDirection ) )
+            switch ( m_currentDrivingDirection )
             {
-                m_sprite.translateX( m_velocity );
-            }
-            else if ( "north".equals( m_currentDrivingDirection ) )
-            {
-                m_sprite.translateY( m_velocity );
-            }
-            else if ( "west".equals( m_currentDrivingDirection ) )
-            {
-                m_sprite.translateX( -m_velocity );
-            }
-            else if ( "south".equals( m_currentDrivingDirection ) )
-            {
-                m_sprite.translateY( -m_velocity );
+                case "east":
+                    m_sprite.translateX( m_velocity );
+                    break;
+                case "north":
+                    m_sprite.translateY( m_velocity );
+                    break;
+                case "west":
+                    m_sprite.translateX( -m_velocity );
+                    break;
+                case "south":
+                    m_sprite.translateY( -m_velocity );
+                    break;
+                default:
             }
         }
         return this;
     }
 
     @Override
-    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation)
+    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation )
     {
     }
 }

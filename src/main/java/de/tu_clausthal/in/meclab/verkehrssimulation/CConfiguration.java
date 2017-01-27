@@ -27,6 +27,10 @@ public final class CConfiguration
      * window width
      */
     private int m_windowwidth;
+    /**
+     * vehicles count in the simulation
+     */
+    private int m_vehiclesCount;
 
     /**
      * constructor
@@ -52,8 +56,9 @@ public final class CConfiguration
         // read configuration
         final Map<String, Object> l_data = (Map<String, Object>) new Yaml().load( l_path.openStream() );
 
-        m_windowwidth = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "width", 800 );
-        m_windowheight = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "height", 600 );
+        m_windowwidth = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "width", 1024 );
+        m_windowheight = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "height", 1024 );
+        m_vehiclesCount = ( (Map<String, Integer>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "vehiclescount", 1024 );
 
         return this;
     }
@@ -64,7 +69,7 @@ public final class CConfiguration
      *
      * @return height
      */
-    final int windowHeight()
+    public final int windowHeight()
     {
         return m_windowheight;
     }
@@ -74,8 +79,18 @@ public final class CConfiguration
      *
      * @return width
      */
-    final int windowWidth()
+    public final int windowWidth()
     {
         return m_windowwidth;
+    }
+
+    /**
+     * return vehicles count in the simulation
+     *
+     * @return vehicles count
+     */
+    public final int vehiclesCount()
+    {
+        return m_vehiclesCount;
     }
 }
