@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 
 import java.util.HashMap;
 
@@ -26,11 +25,11 @@ public class CStreet implements IVirtual
     /**
      * first lane
      */
-    private final CLane m_firstLane;
+    private final CVehiclesWay m_firstLane;
     /**
      * second lane (opposite lane)
      */
-    private final CLane m_secondLane;
+    private final CVehiclesWay m_secondLane;
     /**
      * new rotation angel of the vehicle after turning right
      */
@@ -96,8 +95,8 @@ public class CStreet implements IVirtual
         m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         m_oppositeStreet = p_oppositeStreet;
         m_vehiclesTrafficLight = p_vehiclesTrafficLight;
-        m_firstLane = new CLane( 9 );
-        m_secondLane = new CLane( 9 );
+        m_firstLane = new CVehiclesWay( 9 );
+        m_secondLane = new CVehiclesWay( 9 );
         // TODO: we should change tilemap to sprite later
         m_sprite = null;
     }
@@ -117,7 +116,7 @@ public class CStreet implements IVirtual
      *
      * @return first lane
      */
-    public CLane getFirstLane()
+    public CVehiclesWay getFirstLane()
     {
         return m_firstLane;
     }
@@ -127,7 +126,7 @@ public class CStreet implements IVirtual
      *
      * @return second lane
      */
-    public CLane getSecondLane()
+    public CVehiclesWay getSecondLane()
     {
         return m_secondLane;
     }

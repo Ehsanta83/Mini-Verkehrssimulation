@@ -257,7 +257,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_blockIndex ) );
             m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
@@ -308,7 +308,7 @@ public abstract class IBaseVehicle implements IMovable
                 l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndex( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_blockIndex ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {

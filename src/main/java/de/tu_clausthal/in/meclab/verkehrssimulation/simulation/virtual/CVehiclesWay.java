@@ -5,14 +5,14 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
  *
  * @author Ehsan Tatasadi
  */
-public class CLane extends ILane
+public class CVehiclesWay extends IBaseWay
 {
     /**
      * constructor of the lane class
      *
      * @param p_numberOfBlocks number of blocks
      */
-    public CLane( final int p_numberOfBlocks )
+    public CVehiclesWay(final int p_numberOfBlocks )
     {
         super( p_numberOfBlocks );
     }

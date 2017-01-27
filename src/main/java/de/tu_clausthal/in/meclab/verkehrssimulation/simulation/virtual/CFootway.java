@@ -5,7 +5,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
  *
  * @author Ehsan Tatasadi
  */
-public class CFootway extends ILane
+public class CFootway extends IBaseWay
 {
     /**
      * constructor of footway class
