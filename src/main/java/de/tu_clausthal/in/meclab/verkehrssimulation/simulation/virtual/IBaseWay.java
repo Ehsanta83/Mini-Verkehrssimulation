@@ -17,6 +17,9 @@ public abstract class IBaseWay
 
     /**
      * constructor
+     *
+     * @param p_lanesCount the count of lanes
+     * @param p_blocksCountInALane the count of blocks in a lane
      */
     protected IBaseWay( final int p_lanesCount, final int p_blocksCountInALane )
     {

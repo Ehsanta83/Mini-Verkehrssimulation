@@ -95,8 +95,8 @@ public class CStreet implements IVirtual
         m_newYAfterTurningLeft = p_newYAfterTurningLeft;
         m_oppositeStreet = p_oppositeStreet;
         m_vehiclesTrafficLight = p_vehiclesTrafficLight;
-        m_firstLane = new CVehiclesWay( 9 );
-        m_secondLane = new CVehiclesWay( 9 );
+        m_firstLane = new CVehiclesWay( 1, 9 );
+        m_secondLane = new CVehiclesWay( 1, 9 );
         // TODO: we should change tilemap to sprite later
         m_sprite = null;
     }

@@ -35,6 +35,10 @@ public abstract class IBaseVehicle implements IMovable
      */
     private String m_currentDrivingDirection;
     /**
+     * the index of the lane of the street in which the vehicle now is
+     */
+    private int m_laneIndex;
+    /**
      * the index of the block of the lane of the street in which the vehicle now is
      */
     private int m_blockIndex;
@@ -64,13 +68,14 @@ public abstract class IBaseVehicle implements IMovable
     protected IBaseVehicle( final Sprite p_sprite, final int p_velocity, final String p_currentStreet,
                             final String p_currentDrivingDirection, final EVehicleTurning p_turning )
     {
-        this.m_sprite = p_sprite;
-        this.m_velocity = p_velocity;
-        this.m_currentStreet = p_currentStreet;
-        this.m_currentDrivingDirection = p_currentDrivingDirection;
-        this.m_blockIndex = -1;
-        this.m_turning = p_turning;
-        this.m_isTurned = false;
+        m_sprite = p_sprite;
+        m_velocity = p_velocity;
+        m_currentStreet = p_currentStreet;
+        m_currentDrivingDirection = p_currentDrivingDirection;
+        m_laneIndex = 0;
+        m_blockIndex = -1;
+        m_turning = p_turning;
+        m_isTurned = false;
     }
 
     @Override
@@ -248,23 +253,23 @@ public abstract class IBaseVehicle implements IMovable
         if ( l_distanceFromStartInMovingAxis < 432 )
         {
             final int l_newBlockIndex = l_distanceFromStartInMovingAxis / 48;
-            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( l_newBlockIndex ) )
+            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( m_laneIndex, l_newBlockIndex ) )
             {
                 if ( m_blockIndex > -1 )
                 {
-                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_blockIndex );
+                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_laneIndex, m_blockIndex );
                 }
-                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( l_newBlockIndex );
+                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( this, m_laneIndex, l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_laneIndex, m_blockIndex ) );
             m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
         {
             if ( m_blockIndex > -1 )
             {
-                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_blockIndex );
+                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_laneIndex, m_blockIndex );
                 m_blockIndex = -1;
             }
         }
@@ -299,22 +304,22 @@ public abstract class IBaseVehicle implements IMovable
         else if ( l_distanceFromStartInMovingAxis >= 592 && l_distanceFromStartInMovingAxis < 1024 )
         {
             final int l_newBlockIndex = ( l_distanceFromStartInMovingAxis - 592 ) / 48;
-            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( l_newBlockIndex ) )
+            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( m_laneIndex, l_newBlockIndex ) )
             {
                 if ( m_blockIndex > -1 )
                 {
-                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_blockIndex );
+                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_laneIndex, m_blockIndex );
                 }
-                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( l_newBlockIndex );
+                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( this, m_laneIndex, l_newBlockIndex );
                 m_blockIndex = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_laneIndex, m_blockIndex ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {
             if ( m_blockIndex > -1 )
             {
-                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_blockIndex );
+                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_laneIndex, m_blockIndex );
             }
 
             setIsOut( true );
