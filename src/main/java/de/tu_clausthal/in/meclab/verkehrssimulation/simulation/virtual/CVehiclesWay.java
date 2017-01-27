@@ -1,17 +1,17 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
 /**
- * lane class
+ * vehicles way class
  *
  * @author Ehsan Tatasadi
  */
 public class CVehiclesWay extends IBaseWay
 {
     /**
-     * constructor of the lane class
+     * constructor of the vehicles way class
      *
-     * @param p_lanesCount the count of lanes
-     * @param p_blocksCountInALane the count of blocks in a lane
+     * @param p_lanesCount the count of the lanes
+     * @param p_blocksCountInALane the count of the blocks in a lane
      */
     public CVehiclesWay( final int p_lanesCount, final int p_blocksCountInALane )
     {

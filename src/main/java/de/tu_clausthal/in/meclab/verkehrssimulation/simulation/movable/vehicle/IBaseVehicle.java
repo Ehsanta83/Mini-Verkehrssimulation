@@ -35,13 +35,9 @@ public abstract class IBaseVehicle implements IMovable
      */
     private String m_currentDrivingDirection;
     /**
-     * the index of the lane of the street in which the vehicle now is
+     * coordinates in the current way [indexOfLane, indexOfBlock]
      */
-    private int m_laneIndex;
-    /**
-     * the index of the block of the lane of the street in which the vehicle now is
-     */
-    private int m_blockIndex;
+    private int[] m_coordinateInWay;
     /**
      * in which direction the vehicle will drive in the intersection
      * none(drives direct)/left/right
@@ -72,8 +68,7 @@ public abstract class IBaseVehicle implements IMovable
         m_velocity = p_velocity;
         m_currentStreet = p_currentStreet;
         m_currentDrivingDirection = p_currentDrivingDirection;
-        m_laneIndex = 0;
-        m_blockIndex = -1;
+        m_coordinateInWay = new int[]{0, -1};
         m_turning = p_turning;
         m_isTurned = false;
     }
@@ -82,26 +77,6 @@ public abstract class IBaseVehicle implements IMovable
     public Sprite sprite()
     {
         return m_sprite;
-    }
-
-    /**
-     * get velocity
-     *
-     * @return velocity
-     */
-    public int getVelocity()
-    {
-        return m_velocity;
-    }
-
-    /**
-     * set velocity
-     *
-     * @param p_velocity velocity
-     */
-    public void setVelocity( final int p_velocity )
-    {
-        this.m_velocity = p_velocity;
     }
 
     /**
@@ -115,76 +90,6 @@ public abstract class IBaseVehicle implements IMovable
     }
 
     /**
-     * set current street
-     *
-     * @param p_currentStreet current street
-     */
-    public void setCurrentStreet( final String p_currentStreet )
-    {
-        this.m_currentStreet = p_currentStreet;
-    }
-
-    /**
-     * get block index
-     *
-     * @return block index
-     */
-    public int getBlockIndex()
-    {
-        return m_blockIndex;
-    }
-
-    /**
-     * set block index
-     *
-     * @param p_blockIndex block index
-     */
-    public void setBlockIndex( final int p_blockIndex )
-    {
-        this.m_blockIndex = p_blockIndex;
-    }
-
-    /**
-     * get turning
-     *
-     * @return turning
-     */
-    public EVehicleTurning getTurning()
-    {
-        return m_turning;
-    }
-
-    /**
-     * set turning
-     *
-     * @param p_turning turning
-     */
-    public void setTurning( final EVehicleTurning p_turning )
-    {
-        this.m_turning = p_turning;
-    }
-
-    /**
-     * get current driving direction
-     *
-     * @return current driving direction
-     */
-    public String getCurrentDrivingDirection()
-    {
-        return m_currentDrivingDirection;
-    }
-
-    /**
-     * set current driving direction
-     *
-     * @param p_currentDrivingDirection current driving direciton
-     */
-    public void setCurrentDrivingDirection( final String p_currentDrivingDirection )
-    {
-        this.m_currentDrivingDirection = p_currentDrivingDirection;
-    }
-
-    /**
      * get is turned
      *
      * @return is turned
@@ -195,15 +100,6 @@ public abstract class IBaseVehicle implements IMovable
     }
 
     /**
-     * set is turned
-     *
-     * @param p_isTurned is turned
-     */
-    public void setTurned( final boolean p_isTurned )
-    {
-        this.m_isTurned = p_isTurned;
-    }
-    /**
      *  get is out
      *
      * @return is out
@@ -212,17 +108,6 @@ public abstract class IBaseVehicle implements IMovable
     {
         return m_isOut;
     }
-
-    /**
-     * set is out
-     *
-     * @param p_isOut
-     */
-    public void setIsOut( final boolean p_isOut )
-    {
-        this.m_isOut = p_isOut;
-    }
-
 
     /**
      * apply traffic light to the cars
@@ -253,24 +138,24 @@ public abstract class IBaseVehicle implements IMovable
         if ( l_distanceFromStartInMovingAxis < 432 )
         {
             final int l_newBlockIndex = l_distanceFromStartInMovingAxis / 48;
-            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( m_laneIndex, l_newBlockIndex ) )
+            if ( l_newBlockIndex > m_coordinateInWay[1] && !l_streets.get( m_currentStreet ).getFirstLane().isBlockOccupied( new int[]{m_coordinateInWay[0], l_newBlockIndex} ) )
             {
-                if ( m_blockIndex > -1 )
+                if ( m_coordinateInWay[1] > -1 )
                 {
-                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_laneIndex, m_blockIndex );
+                    l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_coordinateInWay );
                 }
-                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( this, m_laneIndex, l_newBlockIndex );
-                m_blockIndex = l_newBlockIndex;
+                l_streets.get( m_currentStreet ).getFirstLane().occupyBlock( this, new int[]{m_coordinateInWay[0], l_newBlockIndex} );
+                m_coordinateInWay[1] = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_laneIndex, m_blockIndex ) );
-            m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_blockIndex );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], l_streets.get( m_currentStreet ).getFirstLane().getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
+            m_velocity = applyTrafficLightToVelocity( l_streets.get( m_currentStreet ), m_velocity, m_coordinateInWay[1] );
         }
         else if ( l_distanceFromStartInMovingAxis >= 432 && l_distanceFromStartInMovingAxis < 480 )
         {
-            if ( m_blockIndex > -1 )
+            if ( m_coordinateInWay[1] > -1 )
             {
-                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_laneIndex, m_blockIndex );
-                m_blockIndex = -1;
+                l_streets.get( m_currentStreet ).getFirstLane().emptyBlock( m_coordinateInWay );
+                m_coordinateInWay[1] = -1;
             }
         }
         else if ( l_distanceFromStartInMovingAxis >= 480 && l_distanceFromStartInMovingAxis < 512 )
@@ -281,10 +166,10 @@ public abstract class IBaseVehicle implements IMovable
                 l_xPosition = l_streets.get( m_currentStreet ).getNewXAfterTurningRight();
                 l_yPosition = l_streets.get( m_currentStreet ).getNewYAfterTurningRight();
                 final String l_newStreet = l_streets.get( m_currentStreet ).getNewDirectionAfterTurningRight();
-                setCurrentStreet( l_newStreet );
-                setCurrentDrivingDirection( l_newStreet );
-                setTurning( EVehicleTurning.NONE );
-                setTurned( true );
+                m_currentStreet = l_newStreet;
+                m_currentDrivingDirection = l_newStreet;
+                m_turning = EVehicleTurning.NONE;
+                m_isTurned = true;
             }
         }
         else if ( l_distanceFromStartInMovingAxis >= 512 && l_distanceFromStartInMovingAxis < 592 )
@@ -295,37 +180,35 @@ public abstract class IBaseVehicle implements IMovable
                 l_xPosition = l_streets.get( m_currentStreet ).getNewXAfterTurningLeft();
                 l_yPosition = l_streets.get( m_currentStreet ).getNewYAfterTurningLeft();
                 final String l_newStreet = l_streets.get( m_currentStreet ).getNewDirectionAfterTurningLeft();
-                setCurrentStreet( l_newStreet );
-                setCurrentDrivingDirection( l_newStreet );
-                setTurning( EVehicleTurning.NONE );
-                setTurned( true );
+                m_currentStreet = l_newStreet;
+                m_currentDrivingDirection = l_newStreet;
+                m_turning = EVehicleTurning.NONE;
+                m_isTurned = true;
             }
         }
         else if ( l_distanceFromStartInMovingAxis >= 592 && l_distanceFromStartInMovingAxis < 1024 )
         {
             final int l_newBlockIndex = ( l_distanceFromStartInMovingAxis - 592 ) / 48;
-            if ( l_newBlockIndex > m_blockIndex && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( m_laneIndex, l_newBlockIndex ) )
+            if ( l_newBlockIndex > m_coordinateInWay[1] && !l_streets.get( m_currentStreet ).getSecondLane().isBlockOccupied( new int[]{m_coordinateInWay[0], l_newBlockIndex} ) )
             {
-                if ( m_blockIndex > -1 )
+                if ( m_coordinateInWay[1] > -1 )
                 {
-                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_laneIndex, m_blockIndex );
+                    l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_coordinateInWay );
                 }
-                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( this, m_laneIndex, l_newBlockIndex );
-                m_blockIndex = l_newBlockIndex;
+                l_streets.get( m_currentStreet ).getSecondLane().occupyBlock( this, new int[]{m_coordinateInWay[0], l_newBlockIndex} );
+                m_coordinateInWay[1] = l_newBlockIndex;
             }
-            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_blockIndex, l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_laneIndex, m_blockIndex ) );
+            m_velocity = CNagelSchreckenberg.INSTANCE.applyModelToAVehicle( m_velocity, m_coordinateInWay[1], l_streets.get( m_currentStreet ).getSecondLane().getNextOccupiedBlockIndexFromIndexInALane( m_coordinateInWay ) );
         }
         else if ( l_distanceFromStartInMovingAxis >= 1024 )
         {
-            if ( m_blockIndex > -1 )
+            if ( m_coordinateInWay[1] > -1 )
             {
-                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_laneIndex, m_blockIndex );
+                l_streets.get( m_currentStreet ).getSecondLane().emptyBlock( m_coordinateInWay );
             }
 
-            setIsOut( true );
+            m_isOut = true;
         }
-        setBlockIndex( m_blockIndex );
-        setVelocity( m_velocity );
         sprite().setPosition( l_xPosition, l_yPosition );
         if ( m_velocity > 0 )
         {

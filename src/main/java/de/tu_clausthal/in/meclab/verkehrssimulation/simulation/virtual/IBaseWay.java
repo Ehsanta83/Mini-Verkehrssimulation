@@ -3,7 +3,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 
 /**
- * lanes abstract class
+ * Way abstract class
  *
  * @author Ehsan Tatasadi
  */
@@ -18,8 +18,8 @@ public abstract class IBaseWay
     /**
      * constructor
      *
-     * @param p_lanesCount the count of lanes
-     * @param p_blocksCountInALane the count of blocks in a lane
+     * @param p_lanesCount the count of the lanes
+     * @param p_blocksCountInALane the count of the blocks in a lane
      */
     protected IBaseWay( final int p_lanesCount, final int p_blocksCountInALane )
     {
@@ -30,49 +30,46 @@ public abstract class IBaseWay
      * occupy a block of a lane with an IMovable object
      *
      * @param p_movable the IMovable object
-     * @param p_laneIndex the lane index of the object
-     * @param p_blockIndex the block index in the lane
+     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
      */
-    public void occupyBlock( final IMovable p_movable,  final int p_laneIndex, final int p_blockIndex )
+    public void occupyBlock( final IMovable p_movable,  final int[] p_coordination )
     {
-        m_blocks[p_laneIndex][p_blockIndex] = p_movable;
+        m_blocks[p_coordination[0]][p_coordination[1]] = p_movable;
     }
 
     /**
      * empty a block of a lane
      *
-     * @param p_laneIndex the lane index of the object
-     * @param p_blockIndex the block index in the lane
+     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
      */
-    public void emptyBlock( final int p_laneIndex, final int p_blockIndex )
+    public void emptyBlock( final int[] p_coordination )
     {
-        m_blocks[p_laneIndex][p_blockIndex] = null;
+        m_blocks[p_coordination[0]][p_coordination[1]] = null;
     }
 
     /**
      * if the block is occupied
      *
-     * @param p_laneIndex the lane index of the object
-     * @param p_blockIndex the block index in the lane
+     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
      * @return if the block is occupied
      */
-    public boolean isBlockOccupied( final int p_laneIndex, final int p_blockIndex )
+    public boolean isBlockOccupied( final int[] p_coordination )
     {
-        return m_blocks[p_laneIndex][p_blockIndex] != null;
+        return m_blocks[p_coordination[0]][p_coordination[1]] != null;
     }
 
     /**
      * get the next occupied block index from the current index in the driving direction in a lane
      *
-     * @param p_blockIndex the index of the block in the lane
+     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
      * @return the next occupied block index in the lane
      */
-    public int getNextOccupiedBlockIndexFromIndexInALane( final int p_laneIndex, final int p_blockIndex )
+    public int getNextOccupiedBlockIndexFromIndexInALane( final int[] p_coordination )
     {
         int nextOccupiedBlockIndex = -1;
-        for ( int i = ( p_blockIndex == -1 ) ? 0 : p_blockIndex + 1; i < m_blocks[p_laneIndex].length; i++ )
+        for ( int i = ( p_coordination[1] == -1 ) ? 0 : p_coordination[1] + 1; i < m_blocks[p_coordination[0]].length; i++ )
         {
-            if ( m_blocks[p_laneIndex][i] != null )
+            if ( m_blocks[p_coordination[0]][i] != null )
             {
                 nextOccupiedBlockIndex = i;
                 break;
