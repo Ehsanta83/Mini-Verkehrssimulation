@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * truck class
- *
- * @author Ehsan Tatasadi
  */
 public class CTruck extends IBaseVehicle
 {

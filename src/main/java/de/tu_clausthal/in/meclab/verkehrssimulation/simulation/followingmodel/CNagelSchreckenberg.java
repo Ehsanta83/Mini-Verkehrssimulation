@@ -6,8 +6,6 @@ import java.util.Random;
 
 /**
  * nagel-schreckenberg class
- *
- * @author Ehsan Tatasadi
  */
 public class CNagelSchreckenberg implements IFollowingModel
 {

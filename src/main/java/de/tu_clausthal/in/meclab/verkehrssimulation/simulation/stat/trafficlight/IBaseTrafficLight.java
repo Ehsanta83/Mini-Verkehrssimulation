@@ -5,8 +5,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.IStatic;
 
 /**
  * traffic light abstract class
- *
- * @author Ehsan Tatasadi
  */
 public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> implements IStatic
 {
@@ -71,7 +69,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     }
 
     @Override
-    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation)
+    public void spriteinitialize(final int p_xPosition, final int p_yPosition, final int p_rotation)
     {
         m_sprite = new Sprite( m_color.getTexture() );
         m_sprite.setPosition( p_xPosition, p_yPosition );

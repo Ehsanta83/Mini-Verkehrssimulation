@@ -14,8 +14,6 @@ import java.util.*;
 
 /**
  * common class
- *
- * @author Ehsan Tatasadi
  */
 public final class CCommon
 {

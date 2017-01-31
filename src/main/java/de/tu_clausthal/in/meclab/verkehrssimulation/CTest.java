@@ -5,7 +5,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight
 /**
  * just for test
  *
- * @author Ehsan Tatasadi
+
  */
 public final class CTest
 {

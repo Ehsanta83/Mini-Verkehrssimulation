@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 /**
  * pedestrian traffic light enumeration
- *
- * @author Ehsan Tatasadi
  */
 public enum EPedestrianTrafficLight implements IETrafficLight
 {

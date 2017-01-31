@@ -2,8 +2,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 
 /**
  * vehicles traffic light class
- *
- * @author Ehsan Tatasadi
  */
 public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLight>
 {

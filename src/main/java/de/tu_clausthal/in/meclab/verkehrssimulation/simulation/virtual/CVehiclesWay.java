@@ -2,8 +2,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
 /**
  * vehicles way class
- *
- * @author Ehsan Tatasadi
  */
 public class CVehiclesWay extends IBaseWay
 {

@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * car class
- *
- * @author Ehsan Tatasadi
  */
 public class CCar extends IBaseVehicle
 {

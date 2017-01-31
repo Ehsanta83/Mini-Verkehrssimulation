@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * bus class
- *
- * @author Ehsan Tatasadi
  */
 public class CBus extends IBaseVehicle
 {

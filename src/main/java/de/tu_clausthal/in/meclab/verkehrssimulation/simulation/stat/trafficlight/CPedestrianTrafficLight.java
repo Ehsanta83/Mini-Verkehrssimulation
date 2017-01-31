@@ -2,8 +2,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 
 /**
  * pedestrian traffic light class
- *
- * @author Ehsan Tatasadi
  */
 public class CPedestrianTrafficLight extends IBaseTrafficLight<EPedestrianTrafficLight>
 {

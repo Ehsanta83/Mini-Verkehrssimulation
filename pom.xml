@@ -24,14 +24,13 @@
 
 	<!-- defines any project dependencies, the items can be found on http://mvnrepository.com/ -->
 	<dependencies>
-		<!-- core dependencies -->
+		<!-- libgdx components -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
 			<version>1.9.4</version>
 		</dependency>
 
-		<!-- desktop-specific dependencies -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl</artifactId>
@@ -45,12 +44,22 @@
 			<classifier>natives-desktop</classifier>
 		</dependency>
 
+		<!-- base packages -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.17</version>
 		</dependency>
+
+		<!-- math structures -->
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 	</dependencies>
+
+
 
 	<!-- reporting plugins -->
 	<reporting>

@@ -1,11 +1,20 @@
 
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
 
+import cern.colt.matrix.DoubleMatrix1D;
+import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ISprite;
+
 /**
  * object interface
- *
- * @author Ehsan Tatasadi
  */
-public interface IObject extends IVisualize, IExecutable
+public interface IObject extends ISprite, IExecutable
 {
+
+    /**
+     * returns the current position of the object
+     *
+     * @return position tuple
+     */
+    DoubleMatrix1D position();
+
 }

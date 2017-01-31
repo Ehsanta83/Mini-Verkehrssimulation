@@ -1,7 +1,45 @@
+# enable / disable logger
+logging : false
+
+# show stacktrace on error
+stacktrace : true
+
+# number of simulation steps - optional if not set, Integer.Max_Value is used
+#steps : 2000
+
+# thread-sleep (in milliseconds) time to slow down the simulation speed
+threadsleeptime : 100
+
 # screen size of the window - optional with default 1024x1024
 window :
-    width : 1024
-    height : 1024
+  width : 1024
+  height : 1024
 
-environment:
-  vehiclescount : 20
+# object counts
+counts :
+  vehicles : 20
+
+# environment (grid) resolution - required
+environment :
+  cellsize : 20
+  rows     : 250
+  columns  : 250
+
+# traffic lights
+trafficlights:
+  - vehicles : #west
+      startcolor  : green
+      startcolorduration : 5
+      duration : [ 24, 1, 5, 2]
+  - vehicles : #south
+      startcolor  : red
+      startcolorduration : 7
+      duration : [ 24, 1, 5, 2]
+  - vehicles : #east
+      startcolor  : red
+      startcolorduration : 15
+      duration : [ 24, 1, 5, 2]
+  - vehicles : #north
+      startcolor  : red
+      startcolorduration : 23
+      duration : [ 24, 1, 5, 2]

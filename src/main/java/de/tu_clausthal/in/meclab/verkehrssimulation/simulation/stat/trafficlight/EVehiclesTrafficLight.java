@@ -6,8 +6,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
 /**
  * vehicle traffic light enumeration
- *
- * @author Ehsan Tatasadi
  */
 public enum EVehiclesTrafficLight implements IETrafficLight
 {

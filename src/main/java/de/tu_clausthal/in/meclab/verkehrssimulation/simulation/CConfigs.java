@@ -2,8 +2,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
 
 /**
  * configs class
- *
- * @author Ehsan Tatasadi
  */
 public final class CConfigs
 {

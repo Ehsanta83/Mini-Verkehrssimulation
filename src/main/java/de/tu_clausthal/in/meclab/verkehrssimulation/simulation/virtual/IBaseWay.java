@@ -4,8 +4,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 
 /**
  * Way abstract class
- *
- * @author Ehsan Tatasadi
  */
 public abstract class IBaseWay
 {

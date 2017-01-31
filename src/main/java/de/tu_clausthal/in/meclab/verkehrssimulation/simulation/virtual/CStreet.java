@@ -9,8 +9,6 @@ import java.util.HashMap;
 
 /**
  * street class
- *
- * @author Ehsan Tatasadi
  */
 public class CStreet implements IVirtual
 {
@@ -260,7 +258,7 @@ public class CStreet implements IVirtual
     }
 
     @Override
-    public void spriteInitialize( final int p_xPosition, final int p_yPosition, final int p_rotation)
+    public void spriteinitialize(final int p_xPosition, final int p_yPosition, final int p_rotation)
     {
     }
 }
