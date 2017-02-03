@@ -2,6 +2,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
 /**
  * pedestrian traffic light enumeration
@@ -14,21 +15,14 @@ public enum EPedestrianTrafficLight implements IETrafficLight
      */
     private Texture m_texture;
 
-    /**
-     * constructor
-     */
-    private EPedestrianTrafficLight()
+    @Override
+    public Texture getTexture()
     {
         if ( m_texture == null )
         {
             //ToDO: later change to pedestrian traffic light texture
-            m_texture = new Texture( Gdx.files.internal( "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
+            m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
         }
-    }
-
-    @Override
-    public Texture getTexture()
-    {
         return m_texture;
     }
 

@@ -100,6 +100,11 @@ public final class CConfiguration
         this.createTrafficLights( (List<Map<String, Object>>) l_data.getOrDefault( "trafficlights", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
         m_trafficlights = Collections.unmodifiableList( l_trafficlights );
 
+        // create static objects - static object are needed by the environment
+        final List<IBaseVehicle> l_vehicles = new LinkedList<>();
+
+        m_vehicles = Collections.unmodifiableList( l_vehicles );
+
         // create environment - static items must be exists
         m_environment = new CEnvironment(
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "rows", -1 ),
@@ -208,9 +213,11 @@ public final class CConfiguration
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
             .filter( Objects::nonNull )
             .map( i -> new CVehiclesTrafficLight(
+                (List<Integer>) i.get( "left" ),
+                (List<Integer>) i.get( "right" ),
                 i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLight.GREEN : EVehiclesTrafficLight.RED,
                 (int) i.get( "startcolorduration" ),
-                ( (List<Integer>) i.get( "startcolorduration" )).stream().mapToInt( j -> j ).toArray()
+                ( (List<Integer>) i.get( "duration" ) ).stream().mapToInt( j -> j ).toArray()
 
             ) )
             .forEach( p_trafficlights::add );

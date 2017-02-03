@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 
 import java.util.stream.IntStream;
@@ -163,41 +165,7 @@ public class CEnvironment implements IEnvironment
     @Override
     public final TiledMap map()
     {
-        // create background checkerboard with a tile map
-        final Pixmap l_pixmap = new Pixmap( 2 * m_cellsize, m_cellsize, Pixmap.Format.RGBA8888 );
-        l_pixmap.setColor( new Color( 0.8f, 0.1f, 0.1f, 0.5f ) );
-        l_pixmap.fillRectangle( 0, 0, m_cellsize, m_cellsize );
-        l_pixmap.setColor( new Color( 0.5f, 0.5f, 0.5f, 0.5f ) );
-        l_pixmap.fillRectangle( m_cellsize, 0, m_cellsize, m_cellsize );
-
-        final Texture l_texture = new Texture( l_pixmap );
-        final TiledMapTile l_region1 = new StaticTiledMapTile( new TextureRegion( l_texture, 0, 0, m_cellsize, m_cellsize ) );
-        final TiledMapTile l_region2 = new StaticTiledMapTile( new TextureRegion( l_texture, m_cellsize, 0, m_cellsize, m_cellsize ) );
-
-        // create tilemap
-        final TiledMap l_map = new TiledMap();
-        final TiledMapTileLayer l_layer = new TiledMapTileLayer( m_column, m_row, m_cellsize, m_cellsize );
-        l_map.getLayers().add( l_layer );
-
-        IntStream
-            .range( 0, m_column )
-            .forEach( x ->
-            {
-                IntStream
-                    .range( 0, m_row )
-                    .forEach( y ->
-                    {
-                        final TiledMapTileLayer.Cell l_cell = new TiledMapTileLayer.Cell();
-                        l_layer.setCell( x, y, l_cell );
-                        l_cell.setTile(
-                            y % 2 != 0
-                                ? x % 2 != 0 ? l_region1 : l_region2
-                                : x % 2 != 0 ? l_region2 : l_region1
-                        );
-                    } );
-            } );
-
-        return l_map;
+        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "roads.tmx" );
     }
     
 }

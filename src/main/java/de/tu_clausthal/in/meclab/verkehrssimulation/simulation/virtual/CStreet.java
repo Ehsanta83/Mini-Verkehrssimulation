@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
@@ -218,6 +219,7 @@ public class CStreet implements IVirtual
      */
     public int getDistanceBetweenVehicleAndStartPointInMovingAxis( final IBaseVehicle p_vehicle )
     {
+        /*
         final int l_xPosition = (int) p_vehicle.sprite().getX();
         final int l_yPosition = (int) p_vehicle.sprite().getY();
         final boolean l_isTurned = p_vehicle.isTurned();
@@ -241,7 +243,8 @@ public class CStreet implements IVirtual
                 l_distanceFromStartInMovingAxis = 1024 - l_yPosition;
                 break;
         }
-        return l_distanceFromStartInMovingAxis;
+        return l_distanceFromStartInMovingAxis;*/
+        return 0;
     }
 
     @Override
@@ -258,7 +261,13 @@ public class CStreet implements IVirtual
     }
 
     @Override
-    public void spriteinitialize(final int p_xPosition, final int p_yPosition, final int p_rotation)
+    public void spriteinitialize( final int p_cellsize, final float p_unit )
     {
+    }
+
+    @Override
+    public DoubleMatrix1D position()
+    {
+        return null;
     }
 }

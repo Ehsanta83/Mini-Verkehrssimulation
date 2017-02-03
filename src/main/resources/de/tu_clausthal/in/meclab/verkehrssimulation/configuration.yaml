@@ -21,9 +21,9 @@ counts :
 
 # environment (grid) resolution - required
 environment :
-  cellsize : 20
-  rows     : 250
-  columns  : 250
+  cellsize : 16
+  rows     : 64
+  columns  : 64
 
 # traffic lights
 trafficlights:
@@ -31,15 +31,27 @@ trafficlights:
       startcolor  : green
       startcolorduration : 5
       duration : [ 24, 1, 5, 2]
+      left : [ 10, 30 ]
+      right : [ 30, 50 ]
+      rotation: 0
   - vehicles : #south
       startcolor  : red
       startcolorduration : 7
       duration : [ 24, 1, 5, 2]
+      left : [ 30, 50 ]
+      right : [ 10, 30 ]
+      rotation: 0
   - vehicles : #east
       startcolor  : red
       startcolorduration : 15
       duration : [ 24, 1, 5, 2]
+      left : [ 20, 50 ]
+      right : [ 40, 60 ]
+      rotation: 0
   - vehicles : #north
       startcolor  : red
       startcolorduration : 23
       duration : [ 24, 1, 5, 2]
+      left : [ 40, 60 ]
+      right : [ 20, 50 ]
+      rotation: 0

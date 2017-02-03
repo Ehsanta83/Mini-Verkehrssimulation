@@ -49,10 +49,12 @@ public final class CMain
         // open window
         LOGGER.info( MessageFormat.format( "open window with size [{0}x{1}]", l_config.width, l_config.height ) );
         final CScreen l_screen = new CScreen(
-            Stream.concat(
+            /*Stream.concat(
                 CConfiguration.INSTANCE.trafficlights().parallelStream(),
                 CConfiguration.INSTANCE.vehicles().parallelStream()
-            ).collect( Collectors.toList() ),
+            ).collect( Collectors.toList() ),*/
+
+            CConfiguration.INSTANCE.trafficlights().parallelStream().collect( Collectors.toList() ),
             CConfiguration.INSTANCE.environment()
         );
         new LwjglApplication( l_screen, l_config );
@@ -75,10 +77,10 @@ public final class CMain
                         //CConfiguration.INSTANCE.evaluation(),
                         CConfiguration.INSTANCE.environment()
                     ),
-                    Stream.concat(
-                        CConfiguration.INSTANCE.trafficlights().parallelStream(),
-                        CConfiguration.INSTANCE.vehicles().parallelStream()
-                    )
+                    //Stream.concat(
+                        CConfiguration.INSTANCE.trafficlights().parallelStream()//,
+                    //    CConfiguration.INSTANCE.vehicles().parallelStream()
+                    //)
                 )
                     .parallel()
                     .forEach( j ->

@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
@@ -13,6 +14,10 @@ public abstract class IBaseHuman implements IMovable
      * sprite
      */
     private Sprite m_sprite;
+    /**
+     * defines the left upper position (row / column / height in cells / width in cells )
+     */
+    private final DoubleMatrix1D m_position = null;
 
     @Override
     public IBaseHuman call()
@@ -27,7 +32,13 @@ public abstract class IBaseHuman implements IMovable
     }
 
     @Override
-    public void spriteinitialize(final int p_xPosition, final int p_yPosition, final int p_rotation)
+    public void spriteinitialize( final int p_cellsize, final float p_unit )
     {
+    }
+
+    @Override
+    public final DoubleMatrix1D position()
+    {
+        return m_position;
     }
 }

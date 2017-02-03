@@ -70,7 +70,7 @@ public class CScreen extends ApplicationAdapter
         m_camera.zoom = m_environment.cellsize();
 
         // create sprites and particle systems
-        m_sprites.forEach( i -> i.spriteinitialize( m_environment.row(), m_environment.column(), m_environment.cellsize(), l_unit ) );
+        m_sprites.forEach( i -> i.spriteinitialize( m_environment.cellsize(), l_unit ) );
         m_render.setView( m_camera );
 
     }

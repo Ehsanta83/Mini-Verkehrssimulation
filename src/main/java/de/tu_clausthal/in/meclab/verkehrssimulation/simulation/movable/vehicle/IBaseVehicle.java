@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
@@ -50,6 +51,10 @@ public abstract class IBaseVehicle implements IMovable
      * if the vehicle is out of the screen
      */
     private boolean m_isOut;
+    /**
+     * defines the left upper position (row / column / height in cells / width in cells )
+     */
+    private final DoubleMatrix1D m_position;
 
     /**
      * constructor of vehicle
@@ -70,6 +75,7 @@ public abstract class IBaseVehicle implements IMovable
         m_coordinateInWay = new int[]{0, -1};
         m_turning = p_turning;
         m_isTurned = false;
+        m_position = null;
     }
 
     @Override
@@ -150,6 +156,7 @@ public abstract class IBaseVehicle implements IMovable
     @Override
     public IBaseVehicle call()
     {
+        /*
         int l_xPosition = (int) m_sprite.getX();
         int l_yPosition = (int) m_sprite.getY();
         final HashMap<String, CStreet> l_streets = CScreen.getStreets();
@@ -231,11 +238,18 @@ public abstract class IBaseVehicle implements IMovable
                 default:
             }
         }
+        */
         return this;
     }
 
     @Override
-    public void spriteinitialize(final int p_xPosition, final int p_yPosition, final int p_rotation )
+    public void spriteinitialize( final int p_cellsize, final float p_unit )
     {
+    }
+
+    @Override
+    public final DoubleMatrix1D position()
+    {
+        return m_position;
     }
 }
