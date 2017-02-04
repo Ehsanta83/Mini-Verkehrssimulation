@@ -78,25 +78,23 @@ public final class CMain
                         CConfiguration.INSTANCE.environment()
                     ),
                     //Stream.concat(
-                        CConfiguration.INSTANCE.trafficlights().parallelStream()//,
+                    CConfiguration.INSTANCE.trafficlights().parallelStream()//,
                     //    CConfiguration.INSTANCE.vehicles().parallelStream()
                     //)
                 )
                     .parallel()
-                    .forEach( j ->
+                    .forEach(j ->
                     {
                         try
                         {
                             j.call();
-                        }
-                        catch ( final Exception l_exception )
+                        } catch ( final Exception l_exception )
                         {
                             LOGGER.warning( l_exception.toString() );
                             if ( CConfiguration.INSTANCE.stackstrace() )
                                 l_exception.printStackTrace( System.err );
                         }
                     } );
-
                 // thread sleep for slowing down
                 if ( CConfiguration.INSTANCE.threadsleeptime() > 0 )
                     try

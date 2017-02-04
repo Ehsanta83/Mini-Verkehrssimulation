@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class CScreen extends ApplicationAdapter
      */
     private volatile boolean m_isdisposed;
 
+
     /**
      * constructor
      *
@@ -69,9 +71,12 @@ public class CScreen extends ApplicationAdapter
         m_camera.position.set( m_environment.column() / 2f, m_environment.row() / 2f, 0 );
         m_camera.zoom = m_environment.cellsize();
 
+        EVehiclesTrafficLight.initializeTextures();
+
         // create sprites and particle systems
-        m_sprites.forEach( i -> i.spriteinitialize( m_environment.cellsize(), l_unit ) );
+        m_sprites.forEach( i -> i.spriteinitialize( l_unit ) );
         m_render.setView( m_camera );
+
 
     }
 
@@ -88,7 +93,6 @@ public class CScreen extends ApplicationAdapter
         // environment tilemap painting
         m_render.setView( m_camera );
         m_render.render();
-
 
         // object sprite painting
         m_spritebatch.setProjectionMatrix( m_camera.combined );

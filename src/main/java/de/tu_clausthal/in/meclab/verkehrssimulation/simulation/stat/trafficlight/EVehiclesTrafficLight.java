@@ -16,13 +16,20 @@ public enum EVehiclesTrafficLight implements IETrafficLight
      */
     private Texture m_texture;
 
+    /**
+     * initialize textures
+     */
+    public static final void initializeTextures()
+    {
+        RED.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_red.png" ) );
+        REDYELLOW.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_redyellow.png" ) );
+        GREEN.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_green.png" ) );
+        YELLOW.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_yellow.png" ) );
+    }
+
     @Override
     public Texture getTexture()
     {
-        if ( m_texture == null )
-        {
-            m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
-        }
         return m_texture;
     }
 

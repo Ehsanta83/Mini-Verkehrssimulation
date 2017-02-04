@@ -243,7 +243,7 @@ public abstract class IBaseVehicle implements IMovable
     }
 
     @Override
-    public void spriteinitialize( final int p_cellsize, final float p_unit )
+    public void spriteinitialize( final float p_unit )
     {
     }
 

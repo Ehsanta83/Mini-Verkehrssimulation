@@ -261,7 +261,7 @@ public class CStreet implements IVirtual
     }
 
     @Override
-    public void spriteinitialize( final int p_cellsize, final float p_unit )
+    public void spriteinitialize( final float p_unit )
     {
     }
 

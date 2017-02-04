@@ -213,8 +213,8 @@ public final class CConfiguration
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
             .filter( Objects::nonNull )
             .map( i -> new CVehiclesTrafficLight(
-                (List<Integer>) i.get( "left" ),
-                (List<Integer>) i.get( "right" ),
+                (List<Integer>) i.get( "position" ),
+                (int) i.get( "rotation" ),
                 i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLight.GREEN : EVehiclesTrafficLight.RED,
                 (int) i.get( "startcolorduration" ),
                 ( (List<Integer>) i.get( "duration" ) ).stream().mapToInt( j -> j ).toArray()

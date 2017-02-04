@@ -15,14 +15,19 @@ public enum EPedestrianTrafficLight implements IETrafficLight
      */
     private Texture m_texture;
 
+    /**
+     * initialize textures
+     */
+    public static final void initializeTextures()
+    {
+        //ToDo: later change to pedestrian traffic light
+        RED.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_red.png" ) );
+        GREEN.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_green.png" ) );
+    }
+
     @Override
     public Texture getTexture()
     {
-        if ( m_texture == null )
-        {
-            //ToDO: later change to pedestrian traffic light texture
-            m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_" + this.toString().toLowerCase() + ".png" ) );
-        }
         return m_texture;
     }
 

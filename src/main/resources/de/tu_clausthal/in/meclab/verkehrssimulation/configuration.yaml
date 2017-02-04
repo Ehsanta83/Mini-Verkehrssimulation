@@ -29,29 +29,25 @@ environment :
 trafficlights:
   - vehicles : #west
       startcolor  : green
-      startcolorduration : 5
-      duration : [ 24, 1, 5, 2]
-      left : [ 10, 30 ]
-      right : [ 30, 50 ]
-      rotation: 0
+      startcolorduration : 50
+      duration : [ 240, 10, 50, 20]
+      position : [ 19, 7 ]
+      rotation: 270
   - vehicles : #south
       startcolor  : red
-      startcolorduration : 7
-      duration : [ 24, 1, 5, 2]
-      left : [ 30, 50 ]
-      right : [ 10, 30 ]
+      startcolorduration : 70
+      duration : [ 240, 10, 50, 20]
+      position : [ 28, 5 ]
       rotation: 0
   - vehicles : #east
       startcolor  : red
-      startcolorduration : 15
-      duration : [ 24, 1, 5, 2]
-      left : [ 20, 50 ]
-      right : [ 40, 60 ]
-      rotation: 0
+      startcolorduration : 150
+      duration : [ 240, 10, 50, 20]
+      position : [ 30, 14 ]
+      rotation: 90
   - vehicles : #north
       startcolor  : red
-      startcolorduration : 23
-      duration : [ 24, 1, 5, 2]
-      left : [ 40, 60 ]
-      right : [ 20, 50 ]
-      rotation: 0
+      startcolorduration : 230
+      duration : [ 240, 10, 50, 20]
+      position : [ 21, 15 ]
+      rotation: 180
