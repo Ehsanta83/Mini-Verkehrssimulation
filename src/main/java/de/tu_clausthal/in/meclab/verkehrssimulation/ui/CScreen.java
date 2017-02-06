@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class CScreen extends ApplicationAdapter
 
         EVehiclesTrafficLight.initializeTextures();
 
-        // create sprites and particle systems
+        // create sprites
         m_sprites.forEach( i -> i.spriteinitialize( l_unit ) );
         m_render.setView( m_camera );
 
@@ -111,6 +112,7 @@ public class CScreen extends ApplicationAdapter
         m_isdisposed = true;
         m_spritebatch.dispose();
         m_render.dispose();
+        EVehiclesTrafficLight.disposeTextures();
         super.dispose();
     }
 

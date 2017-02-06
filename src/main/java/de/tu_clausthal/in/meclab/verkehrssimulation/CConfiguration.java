@@ -6,6 +6,9 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.I
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -56,6 +59,10 @@ public final class CConfiguration
      */
     private List<IBaseTrafficLight> m_trafficlights;
     /**
+     * simulation ways
+     */
+    private List<IBaseWay> m_ways;
+    /**
      * simulation vehicles
      */
     private List<IBaseVehicle> m_vehicles;
@@ -95,14 +102,19 @@ public final class CConfiguration
         m_windowheight = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "height", 1024 );
         m_vehiclesCount = ( (Map<String, Integer>) l_data.getOrDefault( "counts", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "vehicles", 1024 );
 
-        // create static objects - static object are needed by the environment
+        // create traffic lights
         final List<IBaseTrafficLight> l_trafficlights = new LinkedList<>();
         this.createTrafficLights( (List<Map<String, Object>>) l_data.getOrDefault( "trafficlights", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
         m_trafficlights = Collections.unmodifiableList( l_trafficlights );
 
-        // create static objects - static object are needed by the environment
-        final List<IBaseVehicle> l_vehicles = new LinkedList<>();
+        // create ways
+        final List<IBaseWay> l_ways = new LinkedList<>();
+        this.createWays( (List<Map<String, Object>>) l_data.getOrDefault( "ways", Collections.<Map<String, Object>>emptyList() ), l_ways );
+        m_ways = Collections.unmodifiableList( l_ways );
 
+        // create vehicles
+        final List<IBaseVehicle> l_vehicles = new LinkedList<>();
+        //this.createVehicles( (List<Map<String, Object>>) l_data.getOrDefault( "vehicles", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
         m_vehicles = Collections.unmodifiableList( l_vehicles );
 
         // create environment - static items must be exists
@@ -187,9 +199,9 @@ public final class CConfiguration
     }
 
     /**
-     * return all static elements
+     * return all traffic lights
      *
-     * @return object list
+     * @return list of traffic lights
      */
     final List<IBaseTrafficLight> trafficlights()
     {
@@ -197,15 +209,31 @@ public final class CConfiguration
     }
 
     /**
+     * return all ways
+     *
+     * @return list of ways
+     */
+    final List<IBaseWay> ways()
+    {
+        return m_ways;
+    }
+
+    /**
      * return all vehicles
      *
-     * @return object list
+     * @return list of vehicles
      */
     final List<IBaseVehicle> vehicles()
     {
         return m_vehicles;
     }
 
+    /**
+     * create traffic lights
+     *
+     * @param p_trafficlightsConfiguration traffic light configuration
+     * @param p_trafficlights list of traffic lights
+     */
     private void createTrafficLights( final List<Map<String, Object>> p_trafficlightsConfiguration, final List<IBaseTrafficLight> p_trafficlights)
     {
         p_trafficlightsConfiguration
@@ -215,11 +243,34 @@ public final class CConfiguration
             .map( i -> new CVehiclesTrafficLight(
                 (List<Integer>) i.get( "position" ),
                 (int) i.get( "rotation" ),
+                (int) i.get( "width" ),
+                (int) i.get( "height" ),
                 i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLight.GREEN : EVehiclesTrafficLight.RED,
                 (int) i.get( "startcolorduration" ),
                 ( (List<Integer>) i.get( "duration" ) ).stream().mapToInt( j -> j ).toArray()
 
             ) )
             .forEach( p_trafficlights::add );
+    }
+
+    /**
+     * create ways
+     *
+     * @param p_waysConfiguration way configuration
+     * @param p_ways list of ways
+     */
+    private void createWays( final List<Map<String, Object>> p_waysConfiguration, final List<IBaseWay> p_ways )
+    {
+        p_waysConfiguration
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
+            .filter( Objects::nonNull )
+            .map( i -> new CVehiclesWay(
+                (List<Integer>) i.get( "position" ),
+                (int) i.get( "rotation" ),
+                (int) i.get( "width" ),
+                (int) i.get( "height" )
+            ) )
+            .forEach( p_ways::add );
     }
 }

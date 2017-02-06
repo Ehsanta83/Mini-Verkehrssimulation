@@ -20,6 +20,6 @@ public class CTruck extends IBaseVehicle
     protected CTruck( final Sprite p_sprite, final int p_velocity, final String p_currentStreet,
                       final String p_currentDrivingDirection, final EVehicleTurning p_turning )
     {
-        super( p_sprite, p_velocity, p_currentStreet, p_currentDrivingDirection, p_turning );
+        //super( p_sprite, p_velocity, p_currentStreet, p_currentDrivingDirection, p_turning );
     }
 }

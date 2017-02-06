@@ -165,7 +165,7 @@ public class CEnvironment implements IEnvironment
     @Override
     public final TiledMap map()
     {
-        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "roads.tmx" );
+        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "background.tmx" );
     }
     
 }

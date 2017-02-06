@@ -1,78 +1,75 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import java.util.List;
 
 /**
  * Way abstract class
  */
-public abstract class IBaseWay
+public abstract class IBaseWay implements IVirtual
 {
+
     /**
-     * array of blocks in an IBaseWay
-     * a block can be occupied with an IMovable object
+     * sprite
      */
-    private IMovable[][] m_blocks;
+    private Sprite m_sprite;
+    /**
+     * defines the left bottom position (row / column) / width / height
+     */
+    private final DoubleMatrix1D m_position;
+
+    /**
+     * rotation of the traffic light
+     */
+    private final int m_rotation;
 
     /**
      * constructor
      *
-     * @param p_lanesCount the count of the lanes
-     * @param p_blocksCountInALane the count of the blocks in a lane
+     * @param p_position position
+     * @param p_rotation rotation
+     * @param p_width width
+     * @param p_height height
      */
-    protected IBaseWay( final int p_lanesCount, final int p_blocksCountInALane )
+    protected IBaseWay( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height )
     {
-        m_blocks = new IMovable[p_lanesCount][p_blocksCountInALane];
+        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 0 ), p_position.get( 1 ), p_width, p_height} );
+        m_rotation = p_rotation;
     }
 
     /**
-     * occupy a block of a lane with an IMovable object
+     * sprite initialize
      *
-     * @param p_movable the IMovable object
-     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
+     * @param p_texture texture
      */
-    public void occupyBlock( final IMovable p_movable,  final int[] p_coordination )
+    public void spriteinitialize( final float p_unit, final Texture p_texture )
     {
-        m_blocks[p_coordination[0]][p_coordination[1]] = p_movable;
+        m_sprite = new Sprite( p_texture );
+        m_sprite.setPosition( (float) m_position.get( 0 ), (float) m_position.get( 1 ) );
+        m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
+        m_sprite.setOrigin( 0, 0 );
+        m_sprite.setRotation( m_rotation );
     }
 
-    /**
-     * empty a block of a lane
-     *
-     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
-     */
-    public void emptyBlock( final int[] p_coordination )
+    @Override
+    public Sprite sprite()
     {
-        m_blocks[p_coordination[0]][p_coordination[1]] = null;
+        return m_sprite;
     }
 
-    /**
-     * if the block is occupied
-     *
-     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
-     * @return if the block is occupied
-     */
-    public boolean isBlockOccupied( final int[] p_coordination )
+    @Override
+    public final DoubleMatrix1D position()
     {
-        return m_blocks[p_coordination[0]][p_coordination[1]] != null;
+        return m_position;
     }
 
-    /**
-     * get the next occupied block index from the current index in the driving direction in a lane
-     *
-     * @param p_coordination the coordination of the IMovable object in the way [indexOfLane, indexOfBlock]
-     * @return the next occupied block index in the lane
-     */
-    public int getNextOccupiedBlockIndexFromIndexInALane( final int[] p_coordination )
+    @Override
+    public IBaseWay call() throws Exception
     {
-        int nextOccupiedBlockIndex = -1;
-        for ( int i = ( p_coordination[1] == -1 ) ? 0 : p_coordination[1] + 1; i < m_blocks[p_coordination[0]].length; i++ )
-        {
-            if ( m_blocks[p_coordination[0]][i] != null )
-            {
-                nextOccupiedBlockIndex = i;
-                break;
-            }
-        }
-        return nextOccupiedBlockIndex;
+        return this;
     }
 }

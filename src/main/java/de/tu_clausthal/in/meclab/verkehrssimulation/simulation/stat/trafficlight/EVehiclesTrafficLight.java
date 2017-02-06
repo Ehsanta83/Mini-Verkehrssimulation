@@ -27,6 +27,17 @@ public enum EVehiclesTrafficLight implements IETrafficLight
         YELLOW.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_yellow.png" ) );
     }
 
+    /**
+     * dispose textures
+     */
+    public static final void disposeTextures()
+    {
+        RED.m_texture.dispose();
+        REDYELLOW.m_texture.dispose();
+        GREEN.m_texture.dispose();
+        YELLOW.m_texture.dispose();
+    }
+
     @Override
     public Texture getTexture()
     {

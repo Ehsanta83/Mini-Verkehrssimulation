@@ -10,7 +10,7 @@ stacktrace : true
 # thread-sleep (in milliseconds) time to slow down the simulation speed
 threadsleeptime : 100
 
-# screen size of the window - optional with default 1024x1024
+# screen size of the window - optional with default 1024x1024 pixel
 window :
   width : 1024
   height : 1024
@@ -21,33 +21,91 @@ counts :
 
 # environment (grid) resolution - required
 environment :
-  cellsize : 16
+  cellsize : 16 #pixel
   rows     : 64
   columns  : 64
 
 # traffic lights
+# position in row and col number of the left bottom of the sprite
+# durations in 0.1 second
+# rotation in degree
+# width and height in pixel
 trafficlights:
   - vehicles : #west
       startcolor  : green
       startcolorduration : 50
       duration : [ 240, 10, 50, 20]
-      position : [ 19, 7 ]
+      position : [ 23, 27 ]
       rotation: 270
+      width : 15
+      height : 43
   - vehicles : #south
       startcolor  : red
       startcolorduration : 70
       duration : [ 240, 10, 50, 20]
-      position : [ 28, 5 ]
+      position : [ 37, 23 ]
       rotation: 0
+      width : 15
+      height : 43
   - vehicles : #east
       startcolor  : red
       startcolorduration : 150
       duration : [ 240, 10, 50, 20]
-      position : [ 30, 14 ]
+      position : [ 41, 37 ]
       rotation: 90
+      width : 15
+      height : 43
   - vehicles : #north
       startcolor  : red
       startcolorduration : 230
       duration : [ 240, 10, 50, 20]
-      position : [ 21, 15 ]
+      position : [ 27, 41 ]
       rotation: 180
+      width : 15
+      height : 43
+
+# ways
+# position in row and col number of the left bottom of the sprite
+# rotation in degree
+# width and height in pixel
+ways:
+  - vehicles: #east - forward
+      position : [ 37, 32 ]
+      rotation : 0
+      width : 432
+      height : 64
+  - vehicles: #east - backward
+      position : [ 37, 28 ]
+      rotation : 0
+      width : 432
+      height : 64
+  - vehicles: #north - forward
+      position : [ 32, 37 ]
+      rotation : 90
+      width : 432
+      height : 64
+  - vehicles: #north - backward
+      position : [ 36, 37 ]
+      rotation : 90
+      width : 432
+      height : 64
+  - vehicles: #west - forward
+      position : [ 27, 36 ]
+      rotation : 180
+      width : 432
+      height : 64
+  - vehicles: #west - backward
+      position : [ 27, 32 ]
+      rotation : 180
+      width : 432
+      height : 64
+  - vehicles: #south - forward
+      position : [ 28, 27 ]
+      rotation : 270
+      width : 432
+      height : 64
+  - vehicles: #south - backward
+      position : [ 32, 27 ]
+      rotation : 270
+      width : 432
+      height : 64

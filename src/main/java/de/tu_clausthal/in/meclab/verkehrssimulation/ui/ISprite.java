@@ -18,7 +18,6 @@ public interface ISprite extends IVisualize
     /**
      * sprite initialize for correct painting initialization
      *
-     * @param p_unit unit scale
      */
     void spriteinitialize( final float p_unit );
 }

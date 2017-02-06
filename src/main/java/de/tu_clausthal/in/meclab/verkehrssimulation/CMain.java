@@ -21,6 +21,7 @@ public final class CMain
      * logger
      */
     private static final Logger LOGGER = Logger.getLogger( CMain.class.getName() );
+
     /**
      * constructor
      */
@@ -49,12 +50,14 @@ public final class CMain
         // open window
         LOGGER.info( MessageFormat.format( "open window with size [{0}x{1}]", l_config.width, l_config.height ) );
         final CScreen l_screen = new CScreen(
-            /*Stream.concat(
+            Stream.of(
+                CConfiguration.INSTANCE.ways().parallelStream(),
                 CConfiguration.INSTANCE.trafficlights().parallelStream(),
                 CConfiguration.INSTANCE.vehicles().parallelStream()
-            ).collect( Collectors.toList() ),*/
+            )
+                .flatMap( i -> i )
+                .collect( Collectors.toList() ),
 
-            CConfiguration.INSTANCE.trafficlights().parallelStream().collect( Collectors.toList() ),
             CConfiguration.INSTANCE.environment()
         );
         new LwjglApplication( l_screen, l_config );
@@ -77,10 +80,12 @@ public final class CMain
                         //CConfiguration.INSTANCE.evaluation(),
                         CConfiguration.INSTANCE.environment()
                     ),
-                    //Stream.concat(
-                    CConfiguration.INSTANCE.trafficlights().parallelStream()//,
-                    //    CConfiguration.INSTANCE.vehicles().parallelStream()
-                    //)
+                    Stream.concat(
+                        Stream.concat(
+                            CConfiguration.INSTANCE.ways().parallelStream(),
+                            CConfiguration.INSTANCE.trafficlights().parallelStream() ),
+                        CConfiguration.INSTANCE.vehicles().parallelStream()
+                    )
                 )
                     .parallel()
                     .forEach(j ->
@@ -88,7 +93,8 @@ public final class CMain
                         try
                         {
                             j.call();
-                        } catch ( final Exception l_exception )
+                        }
+                        catch ( final Exception l_exception )
                         {
                             LOGGER.warning( l_exception.toString() );
                             if ( CConfiguration.INSTANCE.stackstrace() )

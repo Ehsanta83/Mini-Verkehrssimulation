@@ -43,13 +43,16 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
      *
      * @param p_position left bottom position
      * @param p_rotation rotation
+     * @param p_width width
+     * @param p_height height
      * @param p_startColor start color of the traffic light
      * @param p_startColorDuration duration of the start color
      * @param p_duration duration of the traffic light colors
      */
-    protected IBaseTrafficLight( final List<Integer> p_position, final int p_rotation, final T p_startColor, final int p_startColorDuration, final int... p_duration )
+    protected IBaseTrafficLight( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height,
+                                 final T p_startColor, final int p_startColorDuration, final int... p_duration )
     {
-        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 0 ), p_position.get( 1 )} );
+        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 0 ), p_position.get( 1 ), p_width, p_height} );
         m_rotation = p_rotation;
         m_color = p_startColor;
         m_time = p_startColorDuration;
@@ -93,7 +96,8 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     {
         m_sprite = new Sprite( m_color.getTexture() );
         m_sprite.setPosition( (float) m_position.get( 0 ), (float) m_position.get( 1 ) );
-        m_sprite.setScale( p_unit );
+        m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
+        m_sprite.setOrigin( 0, 0 );
         m_sprite.setRotation( m_rotation );
     }
 
