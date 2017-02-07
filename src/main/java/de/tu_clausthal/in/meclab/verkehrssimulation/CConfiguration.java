@@ -6,7 +6,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.I
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CStreet;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import org.yaml.snakeyaml.Yaml;
@@ -234,7 +233,7 @@ public final class CConfiguration
      * @param p_trafficlightsConfiguration traffic light configuration
      * @param p_trafficlights list of traffic lights
      */
-    private void createTrafficLights( final List<Map<String, Object>> p_trafficlightsConfiguration, final List<IBaseTrafficLight> p_trafficlights)
+    private void createTrafficLights( final List<Map<String, Object>> p_trafficlightsConfiguration, final List<IBaseTrafficLight> p_trafficlights )
     {
         p_trafficlightsConfiguration
             .stream()

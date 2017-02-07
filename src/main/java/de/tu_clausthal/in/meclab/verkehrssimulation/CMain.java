@@ -88,7 +88,7 @@ public final class CMain
                     )
                 )
                     .parallel()
-                    .forEach(j ->
+                    .forEach( j ->
                     {
                         try
                         {

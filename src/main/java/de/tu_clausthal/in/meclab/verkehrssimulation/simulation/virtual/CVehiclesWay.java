@@ -12,6 +12,11 @@ import java.util.List;
 public class CVehiclesWay extends IBaseWay
 {
     /**
+     * filename of the texture pic
+     */
+    private static final String TEXTURE_FILE_NAME = CCommon.PACKAGEPATH + "vehicles_way.png";
+
+    /**
      * constructor
      *
      * @param p_position list of left bottom position
@@ -27,6 +32,6 @@ public class CVehiclesWay extends IBaseWay
     @Override
     public void spriteinitialize( final float p_unit )
     {
-        super.spriteinitialize(  p_unit, new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "street.png" ) ) );
+        super.spriteinitialize(  p_unit, new Texture( Gdx.files.internal( TEXTURE_FILE_NAME ) ) );
     }
 }

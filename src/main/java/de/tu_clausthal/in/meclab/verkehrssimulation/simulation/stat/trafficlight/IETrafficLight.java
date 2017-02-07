@@ -9,6 +9,11 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 public interface IETrafficLight extends IExecutable
 {
     /**
+     * set texture
+     */
+    void setTexture( Texture p_texture );
+
+    /**
      * get texture of the sprite
      * @return texture
      */

@@ -2,7 +2,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 
 /**

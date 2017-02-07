@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 
 import java.util.List;
 
@@ -72,8 +70,6 @@ public class CScreen extends ApplicationAdapter
         m_camera.position.set( m_environment.column() / 2f, m_environment.row() / 2f, 0 );
         m_camera.zoom = m_environment.cellsize();
 
-        EVehiclesTrafficLight.initializeTextures();
-
         // create sprites
         m_sprites.forEach( i -> i.spriteinitialize( l_unit ) );
         m_render.setView( m_camera );
@@ -112,7 +108,6 @@ public class CScreen extends ApplicationAdapter
         m_isdisposed = true;
         m_spritebatch.dispose();
         m_render.dispose();
-        EVehiclesTrafficLight.disposeTextures();
         super.dispose();
     }
 

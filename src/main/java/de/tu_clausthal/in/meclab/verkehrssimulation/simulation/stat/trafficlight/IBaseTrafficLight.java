@@ -2,10 +2,14 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.IStatic;
 
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * traffic light abstract class
@@ -94,6 +98,10 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     @Override
     public void spriteinitialize( final float p_unit )
     {
+        //initialize textures
+        Stream.of( EVehiclesTrafficLight.values() )
+            .forEach( i -> i.setTexture(  new Texture( Gdx.files.internal( MessageFormat.format( EVehiclesTrafficLight.TEXTURE_FILE_NAME, i.toString().toLowerCase() ) ) ) ) );
+
         m_sprite = new Sprite( m_color.getTexture() );
         m_sprite.setPosition( (float) m_position.get( 0 ), (float) m_position.get( 1 ) );
         m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );

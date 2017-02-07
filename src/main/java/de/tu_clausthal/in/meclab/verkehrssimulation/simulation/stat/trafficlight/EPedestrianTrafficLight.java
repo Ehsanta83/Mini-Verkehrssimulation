@@ -1,8 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
 /**
  * pedestrian traffic light enumeration
@@ -15,24 +13,12 @@ public enum EPedestrianTrafficLight implements IETrafficLight
      */
     private Texture m_texture;
 
-    /**
-     * initialize textures
-     */
-    public static final void initializeTextures()
+    @Override
+    public void setTexture( final Texture p_texture )
     {
-        //ToDo: later change to pedestrian traffic light
-        RED.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_red.png" ) );
-        GREEN.m_texture = new Texture( Gdx.files.internal( CCommon.PACKAGEPATH + "trafficlights/tl_green.png" ) );
+        m_texture = p_texture;
     }
 
-    /**
-     * dispose textures
-     */
-    public static final void disposeTextures()
-    {
-        RED.m_texture.dispose();
-        GREEN.m_texture.dispose();
-    }
     @Override
     public Texture getTexture()
     {
