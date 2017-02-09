@@ -2,19 +2,36 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.IBaseVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
+import org.apache.commons.io.FilenameUtils;
+import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.IBaseAction;
+import org.lightjason.agentspeak.common.CPath;
+import org.lightjason.agentspeak.common.IPath;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
+import org.lightjason.agentspeak.language.ITerm;
+import org.lightjason.agentspeak.language.execution.IContext;
+import org.lightjason.agentspeak.language.execution.fuzzy.CFuzzyValue;
+import org.lightjason.agentspeak.language.execution.fuzzy.IFuzzyValue;
+import org.lightjason.agentspeak.language.score.IAggregation;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.LogManager;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * configuration and initialization of all simulation objects
@@ -26,6 +43,10 @@ public final class CConfiguration
      */
     public static final CConfiguration INSTANCE = new CConfiguration();
     /**
+     * configuration path
+     */
+    private String m_configurationpath;
+    /**
      * window height
      */
     private int m_windowheight;
@@ -33,10 +54,6 @@ public final class CConfiguration
      * window width
      */
     private int m_windowwidth;
-    /**
-     * vehicles count in the simulation
-     */
-    private int m_vehiclesCount;
     /**
      * environment
      */
@@ -62,9 +79,9 @@ public final class CConfiguration
      */
     private List<IBaseWay> m_ways;
     /**
-     * simulation vehicles
+     * simulation agents
      */
-    private List<IBaseVehicle> m_vehicles;
+    private List<IAgent> m_agents;
 
     /**
      * constructor
@@ -89,6 +106,7 @@ public final class CConfiguration
 
         // read configuration
         final Map<String, Object> l_data = (Map<String, Object>) new Yaml().load( l_path.openStream() );
+        m_configurationpath = FilenameUtils.getPath( l_path.toString() );
 
         // get initial values
         m_stacktrace = (boolean) l_data.getOrDefault( "stacktrace", false );
@@ -99,7 +117,6 @@ public final class CConfiguration
 
         m_windowwidth = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "width", 1024 );
         m_windowheight = ( (Map<String, Integer>) l_data.getOrDefault( "window", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "height", 1024 );
-        m_vehiclesCount = ( (Map<String, Integer>) l_data.getOrDefault( "counts", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "vehicles", 1024 );
 
         // create traffic lights
         final List<IBaseTrafficLight> l_trafficlights = new LinkedList<>();
@@ -111,10 +128,14 @@ public final class CConfiguration
         this.createWays( (List<Map<String, Object>>) l_data.getOrDefault( "ways", Collections.<Map<String, Object>>emptyList() ), l_ways );
         m_ways = Collections.unmodifiableList( l_ways );
 
-        // create vehicles
-        final List<IBaseVehicle> l_vehicles = new LinkedList<>();
-        //this.createVehicles( (List<Map<String, Object>>) l_data.getOrDefault( "vehicles", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
-        m_vehicles = Collections.unmodifiableList( l_vehicles );
+        // create agents
+        final List<IAgent> l_agents = new LinkedList<>();
+        this.createAgents(
+            (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
+            l_agents,
+            (boolean) l_data.getOrDefault( "agentprint", true )
+        );
+        m_agents = Collections.unmodifiableList( l_agents );
 
         // create environment - static items must be exists
         m_environment = new CEnvironment(
@@ -145,16 +166,6 @@ public final class CConfiguration
     public final int windowWidth()
     {
         return m_windowwidth;
-    }
-
-    /**
-     * return vehicles count in the simulation
-     *
-     * @return vehicles count
-     */
-    public final int vehiclesCount()
-    {
-        return m_vehiclesCount;
     }
 
     /**
@@ -218,13 +229,13 @@ public final class CConfiguration
     }
 
     /**
-     * return all vehicles
+     * return all agents
      *
-     * @return list of vehicles
+     * @return list of agents
      */
-    final List<IBaseVehicle> vehicles()
+    final List<IAgent> agents()
     {
-        return m_vehicles;
+        return m_agents;
     }
 
     /**
@@ -271,5 +282,96 @@ public final class CConfiguration
                 (int) i.get( "height" )
             ) )
             .forEach( p_ways::add );
+    }
+
+    /**
+     * creates the moving agent based on the configuration
+     *
+     * @param p_agentsConfiguration subsection for movable configuration
+     * @param p_elements agents list
+     * @throws IOException thrown on ASL reading error
+     */
+    @SuppressWarnings( "unchecked" )
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
+    {
+        final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
+        final Set<IAction> l_action = Collections.unmodifiableSet(
+            Stream.concat(
+                p_agentprint ? Stream.of() : Stream.of( new CEmptyPrint() ),
+                Stream.concat(
+                    org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
+                    org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( CVehicle.class )
+                )
+            ).collect( Collectors.toSet() ) );
+
+        p_agentsConfiguration
+            .entrySet()
+            .forEach( i ->
+            {
+                final Map<String, Object> l_parameter = (Map<String, Object>) i.getValue();
+
+                // read ASL item from configuration and get the path relative to configuration
+                final String l_asl = m_configurationpath + ( (String) l_parameter.getOrDefault( "asl", "" ) ).trim();
+
+                try (
+                    // open filestream of ASL content
+                    final InputStream l_stream = new URL( l_asl ).openStream();
+                )
+                {
+                    // get existing agent generator or create a new one based on the ASL
+                    // and push it back if generator does not exists
+                    final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
+                        l_asl,
+                        new CVehicleGenerator(
+                            m_environment,
+                            l_stream,
+                            l_action,
+                            IAggregation.EMPTY
+                        )
+                    );
+                    l_agentgenerator.putIfAbsent( l_asl, l_generator );
+
+                    // generate agents and put it to the list
+                    l_generator.generatemultiple(
+                        (int) l_parameter.getOrDefault( "number", 0 )
+
+                        //EForceFactory.valueOf( ( (String) l_parameter.getOrDefault( "force", "" ) ).trim().toUpperCase() ).get(),
+
+                        //(String) l_parameter.getOrDefault( "pokemon", "" )
+
+                    ).sequential().forEach( p_elements::add );
+                }
+                catch ( final Exception l_exception )
+                {
+                    System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
+                }
+
+            } );
+    }
+
+    /**
+     * creates an empty print action to supress output
+     */
+    private static final class CEmptyPrint extends IBaseAction
+    {
+        @Override
+        public final IPath name()
+        {
+            return CPath.from( "generic/print" );
+        }
+
+        @Override
+        public final int minimalArgumentNumber()
+        {
+            return 0;
+        }
+
+        @Override
+        public IFuzzyValue<Boolean> execute( final IContext p_context, final boolean p_parallel, final List<ITerm> p_argument, final List<ITerm> p_return,
+                                            final List<ITerm> p_annotation
+        )
+        {
+            return CFuzzyValue.from( true );
+        }
     }
 }

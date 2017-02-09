@@ -18,7 +18,7 @@ public abstract class IBaseWay implements IVirtual
      */
     private Sprite m_sprite;
     /**
-     * defines the left bottom position (row / column) / width / height
+     * defines the left bottom position (row / column), width, height
      */
     private final DoubleMatrix1D m_position;
 
@@ -37,7 +37,7 @@ public abstract class IBaseWay implements IVirtual
      */
     protected IBaseWay( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height )
     {
-        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 0 ), p_position.get( 1 ), p_width, p_height} );
+        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 1 ), p_position.get( 0 ), p_width, p_height} );
         m_rotation = p_rotation;
     }
 
@@ -49,7 +49,7 @@ public abstract class IBaseWay implements IVirtual
     public void spriteinitialize( final float p_unit, final Texture p_texture )
     {
         m_sprite = new Sprite( p_texture );
-        m_sprite.setPosition( (float) m_position.get( 0 ), (float) m_position.get( 1 ) );
+        m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
         m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
         m_sprite.setOrigin( 0, 0 );
         m_sprite.setRotation( m_rotation );

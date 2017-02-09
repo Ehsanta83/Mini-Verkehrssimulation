@@ -2,33 +2,30 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseAgent;
 
 /**
- * vehicle abstract class
+ * vehicle class
  */
-public abstract class IBaseVehicle implements IMovable
+public class CVehicle extends IBaseAgent
 {
-
     /**
      * sprite
      */
     private Sprite m_sprite;
     /**
-     * defines the left upper position (row / column / height / width  )
+     * defines the left bottom position (column / row / height / width  )
      */
     private final DoubleMatrix1D m_position;
 
-
-    protected IBaseVehicle()
+    protected CVehicle()
     {
        m_position = null;
     }
 
     @Override
-    public IBaseVehicle call()
+    public CVehicle call()
     {
-
         return this;
     }
 

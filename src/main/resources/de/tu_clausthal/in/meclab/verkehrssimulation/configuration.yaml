@@ -4,6 +4,9 @@ logging : false
 # show stacktrace on error
 stacktrace : true
 
+# agent print call will be shown
+agentprint : false
+
 # number of simulation steps - optional if not set, Integer.Max_Value is used
 #steps : 2000
 
@@ -14,10 +17,6 @@ threadsleeptime : 100
 window :
   width : 1024
   height : 1024
-
-# object counts
-counts :
-  vehicles : 20
 
 # environment (grid) resolution - required
 environment :
@@ -109,3 +108,8 @@ ways:
       rotation : 270
       width : 432
       height : 64
+
+agents :
+  vehicle :
+    number : 20
+    asl : "vehicle.asl"

@@ -53,7 +53,7 @@ public final class CMain
             Stream.of(
                 CConfiguration.INSTANCE.ways().parallelStream(),
                 CConfiguration.INSTANCE.trafficlights().parallelStream(),
-                CConfiguration.INSTANCE.vehicles().parallelStream()
+                CConfiguration.INSTANCE.agents().parallelStream()
             )
                 .flatMap( i -> i )
                 .collect( Collectors.toList() ),
@@ -84,7 +84,7 @@ public final class CMain
                         Stream.concat(
                             CConfiguration.INSTANCE.ways().parallelStream(),
                             CConfiguration.INSTANCE.trafficlights().parallelStream() ),
-                        CConfiguration.INSTANCE.vehicles().parallelStream()
+                        CConfiguration.INSTANCE.agents().parallelStream()
                     )
                 )
                     .parallel()

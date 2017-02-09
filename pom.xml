@@ -24,6 +24,16 @@
 
 	<!-- defines any project dependencies, the items can be found on http://mvnrepository.com/ -->
 	<dependencies>
+
+		<!-- must installed manually into the local Maven repository
+             https://github.com/LightJason/AgentSpeak
+        -->
+		<dependency>
+			<groupId>org.lightjason</groupId>
+			<artifactId>AgentSpeak</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 		<!-- libgdx components -->
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>

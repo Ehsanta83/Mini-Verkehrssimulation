@@ -7,7 +7,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ISprite;
 /**
  * object interface
  */
-public interface IObject extends ISprite, IExecutable
+public interface IObject extends ISprite
 {
 
     /**

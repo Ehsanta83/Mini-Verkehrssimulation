@@ -33,7 +33,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
      */
     private Sprite m_sprite;
     /**
-     * defines the left bottom position (row / column)
+     * defines the left bottom position (row / column), width, height
      */
     private final DoubleMatrix1D m_position;
 
@@ -56,7 +56,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     protected IBaseTrafficLight( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height,
                                  final T p_startColor, final int p_startColorDuration, final int... p_duration )
     {
-        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 0 ), p_position.get( 1 ), p_width, p_height} );
+        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 1 ), p_position.get( 0 ), p_width, p_height} );
         m_rotation = p_rotation;
         m_color = p_startColor;
         m_time = p_startColorDuration;
@@ -103,7 +103,7 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
             .forEach( i -> i.setTexture(  new Texture( Gdx.files.internal( MessageFormat.format( EVehiclesTrafficLight.TEXTURE_FILE_NAME, i.toString().toLowerCase() ) ) ) ) );
 
         m_sprite = new Sprite( m_color.getTexture() );
-        m_sprite.setPosition( (float) m_position.get( 0 ), (float) m_position.get( 1 ) );
+        m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
         m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
         m_sprite.setOrigin( 0, 0 );
         m_sprite.setRotation( m_rotation );
