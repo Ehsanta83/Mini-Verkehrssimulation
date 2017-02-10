@@ -129,15 +129,6 @@ public final class CConfiguration
         this.createWays( (List<Map<String, Object>>) l_data.getOrDefault( "ways", Collections.<Map<String, Object>>emptyList() ), l_ways );
         m_ways = Collections.unmodifiableList( l_ways );
 
-        // create agents
-        final List<IAgent> l_agents = new LinkedList<>();
-        this.createAgents(
-            (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
-            l_agents,
-            (boolean) l_data.getOrDefault( "agentprint", true )
-        );
-        m_agents = Collections.unmodifiableList( l_agents );
-
         // create environment - static items must be exists
         m_environment = new CEnvironment(
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "rows", -1 ),
@@ -147,6 +138,15 @@ public final class CConfiguration
             ERoutingFactory.valueOf( ( (String) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
                 .getOrDefault( "routing", "" ) ).trim().toUpperCase() ).get()
         );
+
+        // create agents
+        final List<IAgent> l_agents = new LinkedList<>();
+        this.createAgents(
+            (List<Map<String, Object>>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
+            l_agents,
+            (boolean) l_data.getOrDefault( "agentprint", true )
+        );
+        m_agents = Collections.unmodifiableList( l_agents );
 
         return this;
     }
@@ -295,7 +295,7 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final List<Map<String, Object>> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
     {
         final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
@@ -308,13 +308,13 @@ public final class CConfiguration
             ).collect( Collectors.toSet() ) );
 
         p_agentsConfiguration
-            .entrySet()
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
+            .filter( Objects::nonNull )
             .forEach( i ->
             {
-                final Map<String, Object> l_parameter = (Map<String, Object>) i.getValue();
-
                 // read ASL item from configuration and get the path relative to configuration
-                final String l_asl = m_configurationpath + ( (String) l_parameter.getOrDefault( "asl", "" ) ).trim();
+                final String l_asl = m_configurationpath + ( (String) i.getOrDefault( "asl", "" ) ).trim();
 
                 try (
                     // open filestream of ASL content
@@ -336,16 +336,15 @@ public final class CConfiguration
 
                     // generate agents and put it to the list
                     l_generator.generatemultiple(
-                        (int) l_parameter.getOrDefault( "number", 0 )
-
-                        //EForceFactory.valueOf( ( (String) l_parameter.getOrDefault( "force", "" ) ).trim().toUpperCase() ).get(),
-
-                        //(String) l_parameter.getOrDefault( "pokemon", "" )
-
+                        (int) i.getOrDefault( "number", 0 ),
+                        i.get( "randomgeneratepositions" ),
+                        i.get( "width" ),
+                        i.get( "height" )
                     ).sequential().forEach( p_elements::add );
                 }
                 catch ( final Exception l_exception )
                 {
+                    l_exception.printStackTrace( System.out );
                     System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
                 }
 

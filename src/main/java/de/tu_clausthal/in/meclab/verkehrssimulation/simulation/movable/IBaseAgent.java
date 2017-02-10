@@ -46,11 +46,13 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
      */
     protected final DoubleMatrix1D m_position;
     /**
+     * rotation of the agent
+     */
+    protected final int m_rotation;
+    /**
      * route
      */
-    private final List<DoubleMatrix1D> m_route = Collections.synchronizedList( new LinkedList<>() );
-
-
+     private final List<DoubleMatrix1D> m_route = Collections.synchronizedList( new LinkedList<>() );
 
     /**
      * ctor
@@ -59,12 +61,13 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
      * @param p_agentconfiguration agent configuration
      * @param p_position initialize position
      */
-    protected IBaseAgent( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position )
+    protected IBaseAgent( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position, final int p_rotation )
     {
         super( p_agentconfiguration );
 
         m_position = p_position;
         m_environment = p_environment;
+        m_rotation = p_rotation;
     }
 
     @Override

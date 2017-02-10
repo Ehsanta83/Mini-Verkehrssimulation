@@ -327,6 +327,7 @@ final class CJPSPlus implements IRouting
          * parent node of current JumpPoint
          */
         private CJumpPoint m_parent;
+
         /**
          * position
          */

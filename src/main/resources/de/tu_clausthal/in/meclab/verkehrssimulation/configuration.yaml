@@ -111,6 +111,17 @@ ways:
       height : 64
 
 agents :
-  vehicle :
-    number : 20
-    asl : "vehicle.asl"
+  - vehicles :
+      number : 20
+      asl : "vehicle.asl"
+      width : 32
+      height: 16
+      randomgeneratepositions : #the vehicles will be generated randomly on these coordinations
+        - position : [ 0, 0 ]
+          rotation: 0
+        - position : [ 0, 0 ]
+          rotation: 90
+        - position : [ 0, 0 ]
+          rotation: 180
+        - position : [ 0, 0 ]
+          rotation: 270

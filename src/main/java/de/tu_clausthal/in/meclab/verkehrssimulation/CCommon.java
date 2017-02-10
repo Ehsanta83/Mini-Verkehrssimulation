@@ -14,6 +14,7 @@ public final class CCommon
      * package path
      */
     public static final String PACKAGEPATH = "de/tu_clausthal/in/meclab/verkehrssimulation/";
+
     /**
      * constructor
      */

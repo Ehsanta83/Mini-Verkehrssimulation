@@ -19,10 +19,7 @@ import org.lightjason.agentspeak.language.instantiable.rule.IRule;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * agent generator for dynamic / moving agents
@@ -69,17 +66,33 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
     @Override
     public IAgent generatesingle( final Object... p_data )
     {
-        final DenseDoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{m_random.nextInt( m_environment.row() ), m_random.nextInt( m_environment.column() )} );
+        final List<Map<String, Object>> l_randomgeneratepositions = (List<Map<String, Object>>) p_data[0];
+        int l_random = m_random.nextInt( 4 );
+        final DenseDoubleMatrix1D l_position = new DenseDoubleMatrix1D(
+            new double[]
+                {
+                    //row
+                    ( (List<Integer>) l_randomgeneratepositions.get( l_random ).get( "position" ) ).get( 1 ),
+                    //col
+                    ( (List<Integer>) l_randomgeneratepositions.get( l_random ).get( "position" ) ).get( 0 ),
+                    //width
+                    (int) p_data[1],
+                    //height
+                    (int) p_data[2]
+                }
+        );
         while ( !m_environment.empty( l_position ) )
         {
-            l_position.setQuick( 0, m_random.nextInt( m_environment.row() ) );
-            l_position.setQuick( 1, m_random.nextInt( m_environment.column() ) );
+            l_random = m_random.nextInt( 4 );
+            l_position.setQuick( 0, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 1 ) );
+            l_position.setQuick( 1, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 0 ) );
         }
 
         return new CVehicle(
             m_environment,
             m_configuration,
-            l_position
+            l_position,
+            (int) l_randomgeneratepositions.get( l_random ).get( "rotation" )
         );
     }
 
