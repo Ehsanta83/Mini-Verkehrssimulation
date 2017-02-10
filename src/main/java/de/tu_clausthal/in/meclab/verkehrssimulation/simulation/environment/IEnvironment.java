@@ -5,6 +5,9 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ITileMap;
 import cern.colt.matrix.DoubleMatrix1D;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  * environment interface
  */
@@ -45,6 +48,24 @@ public interface IEnvironment extends IExecutable, ITileMap
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * calculate route
+     *
+     * @param p_start start position
+     * @param p_end target position
+     * @return list of tuples of the cellindex
+     */
+    List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end );
+
+    /**
+     * calculate estimated time of a route
+     *
+     * @param p_route current route
+     * @param p_speed current speed
+     * @return estimated time
+     */
+
+    double routestimatedtime( final Stream<DoubleMatrix1D> p_route, final double p_speed );
     /**
      * sets an object to the position and changes the object position
      *

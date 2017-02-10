@@ -1,5 +1,8 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CMath;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.EDirection;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.EQuadrant;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -87,7 +90,7 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
         final DenseDoubleMatrix1D l_position = new DenseDoubleMatrix1D( m_position.toArray() );
         final EQuadrant l_quadrant = EQuadrant.quadrant( this.goal(), l_position );
 
-        // --- visualization -----------------------------------------------------------------------
+        // --- visualization ----------------------------------------------------------------------
 
         // update sprite for painting (sprit position is x/y position, but position storing is row / column)
         if ( m_sprite != null )

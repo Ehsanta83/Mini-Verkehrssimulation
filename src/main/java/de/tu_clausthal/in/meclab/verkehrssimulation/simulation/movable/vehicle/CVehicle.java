@@ -1,48 +1,44 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseAgent;
+import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 
 /**
  * vehicle class
  */
 public class CVehicle extends IBaseAgent
 {
+
     /**
-     * sprite
+     * ctor
+     *
+     * @param p_environment        environment
+     * @param p_agentconfiguration agent configuration
+     * @param p_position           initialize position
      */
-    private Sprite m_sprite;
-    /**
-     * defines the left bottom position (column / row / height / width  )
-     */
-    private final DoubleMatrix1D m_position;
-
-    protected CVehicle()
+    protected CVehicle( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position)
     {
-       m_position = null;
+        super( p_environment, p_agentconfiguration, p_position );
     }
 
     @Override
-    public CVehicle call()
+    public void spriteinitialize( float p_unit )
     {
-        return this;
+
     }
 
     @Override
-    public Sprite sprite()
+    protected int speed()
     {
-        return m_sprite;
+        return 0;
     }
 
     @Override
-    public void spriteinitialize( final float p_unit )
+    protected double nearby()
     {
-    }
-
-    @Override
-    public final DoubleMatrix1D position()
-    {
-        return m_position;
+        return 0;
     }
 }

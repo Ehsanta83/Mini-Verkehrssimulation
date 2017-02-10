@@ -5,17 +5,34 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
+
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * environment class
  */
 public class CEnvironment implements IEnvironment
 {
-
+    /**
+     * logger
+     */
+    private static final Logger LOGGER = Logger.getLogger( CEnvironment.class.getName() );
+    /**
+     * algebra object
+     */
+    private static final Algebra ALGEBRA = new Algebra();
+    /**
+     * routing algorithm
+     */
+    private final IRouting m_routing;
     /**
      * row number
      */
@@ -41,7 +58,7 @@ public class CEnvironment implements IEnvironment
      * @param p_cellcolumns number of column cells
      * @param p_cellsize cell size
      */
-    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize )
+    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing )
     {
         if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
@@ -49,6 +66,7 @@ public class CEnvironment implements IEnvironment
         m_row = p_cellrows;
         m_column = p_cellcolumns;
         m_cellsize = p_cellsize;
+        m_routing = p_routing;
         m_positions = new SparseObjectMatrix2D( m_row, m_column );
 
     }
@@ -75,6 +93,20 @@ public class CEnvironment implements IEnvironment
     public final int cellsize()
     {
         return m_cellsize;
+    }
+
+    // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
+    {
+        return m_routing.route( m_positions, p_start, p_end );
+    }
+
+    @Override
+    public final double routestimatedtime( final Stream<DoubleMatrix1D> p_route, final double p_speed )
+    {
+        return m_routing.estimatedtime( p_route, p_speed );
     }
 
     @Override

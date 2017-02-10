@@ -79,10 +79,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
         return new CVehicle(
             m_environment,
             m_configuration,
-
-            l_position,
-
-            (String) p_data[0]
+            l_position
         );
     }
 

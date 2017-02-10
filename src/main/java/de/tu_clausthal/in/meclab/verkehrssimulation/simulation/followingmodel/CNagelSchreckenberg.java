@@ -1,7 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.followingmodel;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CConfigs;
-
 import java.util.Random;
 
 /**
@@ -19,12 +17,12 @@ public class CNagelSchreckenberg implements IFollowingModel
     {
         int l_newVelocity = p_velocity;
         //1. rule in Nagel-Schreckenberg-Modell
-        if ( l_newVelocity < CConfigs.MAX_VELOCITY_OF_VEHICLES )
+        if ( l_newVelocity < 20 )
             l_newVelocity++;
         //2. rule in Nagel-Schreckenberg-Modell
         if ( p_nextOccupiedBlockIndex != -1 )
         {
-            if ( p_blockIndex == -1 && p_nextOccupiedBlockIndex <= CConfigs.MAX_VELOCITY_OF_VEHICLES )
+            if ( p_blockIndex == -1 && p_nextOccupiedBlockIndex <= 20 )
             {
                 l_newVelocity = p_nextOccupiedBlockIndex;
             }

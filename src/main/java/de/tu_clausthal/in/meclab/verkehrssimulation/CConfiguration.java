@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
@@ -142,7 +143,9 @@ public final class CConfiguration
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "rows", -1 ),
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "columns", -1 ),
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
-                .getOrDefault( "cellsize", -1 )
+                .getOrDefault( "cellsize", -1 ),
+            ERoutingFactory.valueOf( ( (String) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
+                .getOrDefault( "routing", "" ) ).trim().toUpperCase() ).get()
         );
 
         return this;

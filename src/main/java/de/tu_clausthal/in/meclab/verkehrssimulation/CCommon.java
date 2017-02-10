@@ -1,14 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CConfigs;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
 
 /**
  * common class

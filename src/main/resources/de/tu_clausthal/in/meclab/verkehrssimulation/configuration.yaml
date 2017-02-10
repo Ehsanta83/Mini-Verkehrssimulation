@@ -23,6 +23,7 @@ environment :
   cellsize : 16 #pixel
   rows     : 64
   columns  : 64
+  routing  : "jpsplus"
 
 # traffic lights
 # position in row and col number of the left bottom of the sprite
