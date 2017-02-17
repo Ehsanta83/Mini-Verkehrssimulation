@@ -3,6 +3,8 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -60,8 +62,21 @@ public final class CMain
 
             CConfiguration.INSTANCE.environment()
         );
-        new LwjglApplication( l_screen, l_config );
-        CMain.execute( l_screen );
+        //new LwjglApplication( l_screen, l_config );
+        //CMain.execute( l_screen );
+
+
+        final Server l_server = new Server( 8080 );
+        final ServletContextHandler l_handler = new ServletContextHandler( l_server, "/" );
+        l_handler.addServlet( CServlet.class, "/" );
+        try
+        {
+            l_server.start();
+            l_server.join();
+        } catch ( final Exception e )
+        {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -74,11 +74,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
                     //row
                     ( (List<Integer>) l_randomgeneratepositions.get( l_random ).get( "position" ) ).get( 1 ),
                     //col
-                    ( (List<Integer>) l_randomgeneratepositions.get( l_random ).get( "position" ) ).get( 0 ),
-                    //width
-                    (int) p_data[1],
-                    //height
-                    (int) p_data[2]
+                    ( (List<Integer>) l_randomgeneratepositions.get( l_random ).get( "position" ) ).get( 0 )
                 }
         );
         while ( !m_environment.empty( l_position ) )
@@ -92,7 +88,11 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
             m_environment,
             m_configuration,
             l_position,
-            (int) l_randomgeneratepositions.get( l_random ).get( "rotation" )
+            (int) l_randomgeneratepositions.get( l_random ).get( "rotation" ),
+            //width
+            (int) p_data[1],
+            //height
+            (int) p_data[2]
         );
     }
 

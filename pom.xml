@@ -20,6 +20,8 @@
 
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<jetty.version>9.4.1.v20170120</jetty.version>
 	</properties>
 
 	<!-- defines any project dependencies, the items can be found on http://mvnrepository.com/ -->
@@ -32,6 +34,19 @@
 			<groupId>org.lightjason</groupId>
 			<artifactId>AgentSpeak</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!--Jetty  dependencies start here-->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>${jetty.version}</version>
 		</dependency>
 
 		<!-- libgdx components -->
@@ -103,6 +118,9 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/webapp</directory>
 			</resource>
 		</resources>
 
