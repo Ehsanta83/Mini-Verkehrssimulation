@@ -196,8 +196,8 @@ public class CEnvironment implements IEnvironment
     public List<DenseDoubleMatrix1D> positionsOfVehiclesWays()
     {
         final List<DenseDoubleMatrix1D> l_positionsOfVehiclesWays = new LinkedList<>();
-        IntStream.range( 0, m_positions.rows() )
-            .forEach( i -> IntStream.range( 0, m_positions.columns() )
+        IntStream.rangeClosed( 1, m_positions.rows() )
+            .forEach( i -> IntStream.rangeClosed( 1, m_positions.columns() )
                 .forEach( j ->
                     {
                         if ( m_positions.getQuick( i, j ) instanceof CVehiclesWay )

@@ -38,8 +38,8 @@ public final class CCommon
     public static Stream<Pair<Integer, Integer>> inttupelstream( final IObject p_object )
     {
         return CCommon.inttupelstream(
-            (int) p_object.position().get( 0 ), (int) ( p_object.position().get( 0 ) + p_object.position().get( 2 ) ),
-            (int) p_object.position().get( 1 ), (int) ( p_object.position().get( 1 ) + p_object.position().get( 3 ) )
+            (int) p_object.position().get( 0 ), (int) ( p_object.position().get( 0 ) + p_object.position().get( 2 ) - 1 ),
+            (int) p_object.position().get( 1 ), (int) ( p_object.position().get( 1 ) + p_object.position().get( 3 ) - 1 )
         );
     }
 
