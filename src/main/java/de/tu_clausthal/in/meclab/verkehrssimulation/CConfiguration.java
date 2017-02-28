@@ -136,7 +136,8 @@ public final class CConfiguration
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
                 .getOrDefault( "cellsize", -1 ),
             ERoutingFactory.valueOf( ( (String) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
-                .getOrDefault( "routing", "" ) ).trim().toUpperCase() ).get()
+                .getOrDefault( "routing", "" ) ).trim().toUpperCase() ).get(),
+            m_ways
         );
 
         // create agents
@@ -279,10 +280,10 @@ public final class CConfiguration
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
             .filter( Objects::nonNull )
             .map( i -> new CVehiclesWay(
-                (List<Integer>) i.get( "position" ),
-                (int) i.get( "rotation" ),
-                (int) i.get( "width" ),
-                (int) i.get( "height" )
+                (List<Integer>) i.get( "spriteposition" ),
+                (List<Integer>) i.get( "leftbottom" ),
+                (List<Integer>) i.get( "righttop" ),
+                (int) i.get( "rotation" )
             ) )
             .forEach( p_ways::add );
     }
@@ -297,6 +298,7 @@ public final class CConfiguration
     @SuppressWarnings( "unchecked" )
     private void createAgents( final List<Map<String, Object>> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
     {
+        /*
         final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
@@ -348,7 +350,7 @@ public final class CConfiguration
                     System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
                 }
 
-            } );
+            } );*/
     }
 
     /**

@@ -65,50 +65,56 @@ trafficlights:
       height : 43
 
 # ways
-# position in row and col number of the left bottom of the sprite
+# spriteposition is the left bottom of the sprite [col, row]. It is different from leftbottom and righttop,
+# because we rotate the sprite. That will be deleted after changing to new game engine.
+# leftbottom and righttop is for the positions in the grid in the environment [col, row]
 # rotation in degree
-# width and height in pixel
 ways:
   - vehicles: #east - forward
-      position : [ 37, 32 ]
+      spriteposition : [ 36, 32 ]
+      leftbottom : [ 37, 33]
+      righttop : [ 64, 36]
       rotation : 0
-      width : 432
-      height : 64
   - vehicles: #east - backward
-      position : [ 37, 28 ]
+      spriteposition : [ 36, 28 ]
+      leftbottom : [ 37, 29]
+      righttop : [ 64, 32]
       rotation : 0
-      width : 432
-      height : 64
   - vehicles: #north - forward
-      position : [ 32, 37 ]
+      spriteposition : [ 32, 36 ]
+      leftbottom : [ 29, 37]
+      righttop : [ 32, 64]
       rotation : 90
-      width : 432
-      height : 64
   - vehicles: #north - backward
-      position : [ 36, 37 ]
+      spriteposition : [ 36, 36 ]
+      leftbottom : [ 33, 37]
+      righttop : [ 36, 64]
       rotation : 90
-      width : 432
-      height : 64
   - vehicles: #west - forward
-      position : [ 27, 36 ]
+      spriteposition : [ 28, 36 ]
+      leftbottom : [ 1, 29]
+      righttop : [ 28, 32]
       rotation : 180
-      width : 432
-      height : 64
   - vehicles: #west - backward
-      position : [ 27, 32 ]
+      spriteposition : [ 28, 32 ]
+      leftbottom : [ 1, 33]
+      righttop : [ 28, 36]
       rotation : 180
-      width : 432
-      height : 64
   - vehicles: #south - forward
-      position : [ 28, 27 ]
+      spriteposition : [ 28, 28 ]
+      leftbottom : [ 33, 1]
+      righttop : [ 36, 28]
       rotation : 270
-      width : 432
-      height : 64
   - vehicles: #south - backward
-      position : [ 32, 27 ]
+      spriteposition : [ 32, 28 ]
+      leftbottom : [ 29, 1]
+      righttop : [ 32, 28]
       rotation : 270
-      width : 432
-      height : 64
+
+# leftbottom and righttop of the intersection for the positions in the grid in the environment [col, row]
+intersection :
+  leftbottom : [ 29, 29]
+  righttop : [ 36, 36]
 
 agents :
   - vehicles :

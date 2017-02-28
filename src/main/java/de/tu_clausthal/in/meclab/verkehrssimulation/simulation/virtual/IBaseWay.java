@@ -17,8 +17,15 @@ public abstract class IBaseWay implements IVirtual
      * sprite
      */
     private Sprite m_sprite;
+
     /**
-     * defines the left bottom position (row / column), width, height
+     * defines the left bottom position of the sprite (row / column)
+     * ToDO: we will be thinking of deleting this after changing to another game engine
+     */
+    private final DoubleMatrix1D m_spriteposition;
+
+    /**
+     * defines the left bottom position in grid (row / column), width, height,
      */
     private final DoubleMatrix1D m_position;
 
@@ -30,14 +37,30 @@ public abstract class IBaseWay implements IVirtual
     /**
      * constructor
      *
-     * @param p_position position
+     * @param p_spriteposition position
+     * @param p_leftbottom leftbottom position in grid
+     * @param p_righttop righttop position in grid
      * @param p_rotation rotation
-     * @param p_width width
-     * @param p_height height
      */
-    protected IBaseWay( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height )
+    protected IBaseWay( final List<Integer> p_spriteposition, final List<Integer> p_leftbottom, final List<Integer> p_righttop, final int p_rotation )
     {
-        m_position = new DenseDoubleMatrix1D( new double[]{p_position.get( 1 ), p_position.get( 0 ), p_width, p_height} );
+        m_spriteposition = new DenseDoubleMatrix1D( new double[]{
+            p_spriteposition.get( 0 ),
+            p_spriteposition.get( 1 )
+        } );
+
+        if ( ( p_leftbottom == null ) || ( p_leftbottom.size() != 2 ) )
+            throw new RuntimeException( "left-bottom corner is not set" );
+        if ( ( p_righttop == null ) || ( p_righttop.size() != 2 ) )
+            throw new RuntimeException( "right-top corner is not set" );
+
+        m_position = new DenseDoubleMatrix1D( new double[]{
+            Math.min( p_leftbottom.get( 0 ), p_righttop.get( 0 ) ),
+            Math.min( p_leftbottom.get( 1 ), p_righttop.get( 1 ) ),
+
+            Math.abs( p_righttop.get( 0 ) - p_leftbottom.get( 0 ) + 1 ),
+            Math.abs( p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1 )
+        } );
         m_rotation = p_rotation;
     }
 
@@ -49,10 +72,11 @@ public abstract class IBaseWay implements IVirtual
     public void spriteinitialize( final float p_unit, final Texture p_texture )
     {
         m_sprite = new Sprite( p_texture );
-        m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
-        m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
+        m_sprite.setPosition( (float) m_spriteposition.get( 0 ), (float) m_spriteposition.get( 1 ) );
         m_sprite.setOrigin( 0, 0 );
         m_sprite.setRotation( m_rotation );
+        //ToDO: I will change this after changing to another game engine
+        m_sprite.setSize( 28, 4 );
     }
 
     @Override

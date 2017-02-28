@@ -11,9 +11,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -53,12 +57,12 @@ public class CEnvironment implements IEnvironment
 
     /**
      * create environment
-     *
-     * @param p_cellrows number of row cells
+     *  @param p_cellrows number of row cells
      * @param p_cellcolumns number of column cells
      * @param p_cellsize cell size
+     * @param p_ways list of all ways
      */
-    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing )
+    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends IBaseWay> p_ways )
     {
         if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
@@ -69,6 +73,7 @@ public class CEnvironment implements IEnvironment
         m_routing = p_routing;
         m_positions = new SparseObjectMatrix2D( m_row, m_column );
 
+        p_ways.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_positions.setQuick( j.getLeft(), j.getRight(), i ) ) );
     }
 
     @Override
@@ -181,6 +186,28 @@ public class CEnvironment implements IEnvironment
     private static double clip( final double p_value, final double p_max )
     {
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
+    }
+
+    /**
+     * get positions of vehicles ways
+     *
+     * @return list of positions of vehicles ways
+     */
+    public List<DenseDoubleMatrix1D> positionsOfVehiclesWays()
+    {
+        final List<DenseDoubleMatrix1D> l_positionsOfVehiclesWays = new LinkedList<>();
+        IntStream.range( 0, m_positions.rows() )
+            .forEach( i -> IntStream.range( 0, m_positions.columns() )
+                .forEach( j ->
+                    {
+                        if ( m_positions.getQuick( i, j ) instanceof CVehiclesWay )
+                        {
+                            l_positionsOfVehiclesWays.add( new DenseDoubleMatrix1D( new double[]{i, j} ) );
+                        }
+                    }
+                )
+            );
+        return l_positionsOfVehiclesWays;
     }
 
 

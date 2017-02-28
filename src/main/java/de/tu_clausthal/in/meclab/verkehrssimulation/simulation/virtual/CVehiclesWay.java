@@ -19,14 +19,14 @@ public class CVehiclesWay extends IBaseWay
     /**
      * constructor
      *
-     * @param p_position list of left bottom position
+     * @param p_spriteposition list of left bottom position of the sprite
+     * @param p_leftbottom leftbottom position in grid
+     * @param p_righttop righttop position in grid
      * @param p_rotation rotation
-     * @param p_width width
-     * @param p_height height
      */
-    public CVehiclesWay( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height )
+    public CVehiclesWay( final List<Integer> p_spriteposition, final List<Integer> p_leftbottom, final List<Integer> p_righttop, final int p_rotation )
     {
-        super( p_position, p_rotation, p_width, p_height );
+        super( p_spriteposition, p_leftbottom, p_righttop, p_rotation );
     }
 
     @Override

@@ -1,9 +1,16 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * common class
@@ -20,6 +27,36 @@ public final class CCommon
      */
     private CCommon()
     {
+    }
+
+    /**
+     * creates an int-pair-stream of an element
+     *
+     * @param p_object object but position must be return a vector with 4 elements
+     * @return int-pair-stream
+     */
+    public static Stream<Pair<Integer, Integer>> inttupelstream( final IObject p_object )
+    {
+        return CCommon.inttupelstream(
+            (int) p_object.position().get( 0 ), (int) ( p_object.position().get( 0 ) + p_object.position().get( 2 ) ),
+            (int) p_object.position().get( 1 ), (int) ( p_object.position().get( 1 ) + p_object.position().get( 3 ) )
+        );
+    }
+
+
+    /**
+     * creates an int-pair-stream
+     *
+     * @param p_firststart start value of first component
+     * @param p_firstend end (inclusive) of first component
+     * @param p_secondstart start value of second component
+     * @param p_secondend end (inclusive) of second component
+     * @return int-pair-sream
+     */
+    public static Stream<Pair<Integer, Integer>> inttupelstream( final int p_firststart, final int p_firstend, final int p_secondstart, final int p_secondend )
+    {
+        final Supplier<IntStream> l_inner = () -> IntStream.rangeClosed( p_secondstart, p_secondend );
+        return IntStream.rangeClosed( p_firststart, p_firstend ).boxed().flatMap( i -> l_inner.get().mapToObj( j -> new ImmutablePair<>( i, j ) ) );
     }
 
     /**
