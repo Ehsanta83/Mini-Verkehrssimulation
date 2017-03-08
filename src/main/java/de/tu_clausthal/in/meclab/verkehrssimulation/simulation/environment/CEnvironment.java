@@ -11,13 +11,10 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -50,9 +47,13 @@ public class CEnvironment implements IEnvironment
      */
     private final int m_cellsize;
     /**
-     * matrix with object positions
+     * matrix with ways positions
      */
-    private final ObjectMatrix2D m_positions;
+    private final ObjectMatrix2D m_lanespositions;
+    /**
+     * matrix with agents positions
+     */
+    private final ObjectMatrix2D m_agentspostions;
 
 
     /**
@@ -71,9 +72,10 @@ public class CEnvironment implements IEnvironment
         m_column = p_cellcolumns;
         m_cellsize = p_cellsize;
         m_routing = p_routing;
-        m_positions = new SparseObjectMatrix2D( m_row, m_column );
+        m_lanespositions = new SparseObjectMatrix2D( m_row, m_column );
+        m_agentspostions = new SparseObjectMatrix2D( m_row, m_column );
 
-        p_ways.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_positions.setQuick( j.getLeft(), j.getRight(), i ) ) );
+        p_ways.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_lanespositions.setQuick( j.getLeft(), j.getRight(), i ) ) );
     }
 
     @Override
@@ -101,11 +103,12 @@ public class CEnvironment implements IEnvironment
     }
 
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
+    //ToDo: change all methods with two matrices
 
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_positions, p_start, p_end );
+        return m_routing.route(m_lanespositions, p_start, p_end );
     }
 
     @Override
@@ -121,13 +124,13 @@ public class CEnvironment implements IEnvironment
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
 
         // check of the target position is free, if not return object, which blocks the cell
-        final IObject l_object = (IObject) m_positions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
+        final IObject l_object = (IObject) m_agentspostions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
         if ( l_object != null )
             return l_object;
 
         // cell is free, move the position and return updated object
-        m_positions.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
-        m_positions.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
+        m_agentspostions.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
+        m_agentspostions.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
         p_object.position().setQuick( 0, l_position.getQuick( 0 ) );
         p_object.position().setQuick( 1, l_position.getQuick( 1 ) );
 
@@ -138,14 +141,14 @@ public class CEnvironment implements IEnvironment
     @SuppressWarnings( "unchecked" )
     public final synchronized IObject get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_positions.getQuick( (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
+        return (IObject) m_agentspostions.getQuick( (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
     }
 
     @Override
     public final synchronized IObject remove( final IObject p_object )
     {
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
-        m_positions.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
+        m_agentspostions.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
 
         return p_object;
     }
@@ -154,7 +157,7 @@ public class CEnvironment implements IEnvironment
     public final synchronized boolean empty( final DoubleMatrix1D p_position )
     {
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
-        return m_positions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
+        return m_agentspostions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
     }
 
     @Override
@@ -187,29 +190,6 @@ public class CEnvironment implements IEnvironment
     {
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
     }
-
-    /**
-     * get positions of vehicles ways
-     *
-     * @return list of positions of vehicles ways
-     */
-    public List<DenseDoubleMatrix1D> positionsOfVehiclesWays()
-    {
-        final List<DenseDoubleMatrix1D> l_positionsOfVehiclesWays = new LinkedList<>();
-        IntStream.range( 0, m_positions.rows() )
-            .forEach( i -> IntStream.range( 0, m_positions.columns() )
-                .forEach( j ->
-                    {
-                        if ( m_positions.getQuick( i, j ) instanceof CVehiclesWay )
-                        {
-                            l_positionsOfVehiclesWays.add( new DenseDoubleMatrix1D( new double[]{i, j} ) );
-                        }
-                    }
-                )
-            );
-        return l_positionsOfVehiclesWays;
-    }
-
 
     // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
 
