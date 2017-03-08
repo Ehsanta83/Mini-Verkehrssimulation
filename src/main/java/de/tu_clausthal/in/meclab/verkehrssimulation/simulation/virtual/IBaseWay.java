@@ -55,11 +55,10 @@ public abstract class IBaseWay implements IVirtual
             throw new RuntimeException( "right-top corner is not set" );
 
         m_position = new DenseDoubleMatrix1D( new double[]{
-            Math.min( p_leftbottom.get( 0 ), p_righttop.get( 0 ) ),
-            Math.min( p_leftbottom.get( 1 ), p_righttop.get( 1 ) ),
-
-            Math.abs( p_righttop.get( 0 ) - p_leftbottom.get( 0 ) + 1 ),
-            Math.abs( p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1 )
+            p_leftbottom.get( 0 ),
+            p_leftbottom.get( 1 ),
+            p_righttop.get( 0 ) - p_leftbottom.get( 0 ) + 1,
+            p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1
         } );
         m_rotation = p_rotation;
     }
