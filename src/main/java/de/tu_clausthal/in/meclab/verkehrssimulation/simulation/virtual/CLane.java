@@ -29,4 +29,10 @@ public class CLane implements ILane
             p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1
         } );
     }
+
+    @Override
+    public DoubleMatrix1D position()
+    {
+        return m_position;
+    }
 }

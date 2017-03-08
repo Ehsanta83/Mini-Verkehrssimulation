@@ -3,36 +3,29 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.apache.commons.io.FilenameUtils;
-import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
 import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.common.IPath;
-import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.ITerm;
 import org.lightjason.agentspeak.language.execution.IContext;
 import org.lightjason.agentspeak.language.execution.fuzzy.CFuzzyValue;
 import org.lightjason.agentspeak.language.execution.fuzzy.IFuzzyValue;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.LogManager;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * configuration and initialization of all simulation objects
@@ -79,6 +72,10 @@ public final class CConfiguration
      * simulation ways
      */
     private List<IBaseWay> m_ways;
+    /**
+     * simulation lanes
+     */
+    private List<ILane> m_lanes;
     /**
      * simulation agents
      */
@@ -129,6 +126,11 @@ public final class CConfiguration
         this.createWays( (List<Map<String, Object>>) l_data.getOrDefault( "ways", Collections.<Map<String, Object>>emptyList() ), l_ways );
         m_ways = Collections.unmodifiableList( l_ways );
 
+        // create lanes
+        final List<ILane> l_lanes = new LinkedList<>();
+        this.createLanes( (List<Map<String, Object>>) l_data.getOrDefault( "lane", Collections.<Map<String, Object>>emptyList() ), l_lanes );
+        m_lanes = Collections.unmodifiableList( l_lanes );
+
         // create environment - static items must be exists
         m_environment = new CEnvironment(
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "rows", -1 ),
@@ -137,7 +139,7 @@ public final class CConfiguration
                 .getOrDefault( "cellsize", -1 ),
             ERoutingFactory.valueOf( ( (String) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) )
                 .getOrDefault( "routing", "" ) ).trim().toUpperCase() ).get(),
-            m_ways
+            m_lanes
         );
 
         // create agents
@@ -233,6 +235,15 @@ public final class CConfiguration
     }
 
     /**
+     * return all lanes
+     *
+     * @return list of lanes
+     */
+    final List<ILane> lanes()
+    {
+        return m_lanes;
+    }
+    /**
      * return all agents
      *
      * @return list of agents
@@ -286,6 +297,25 @@ public final class CConfiguration
                 (int) i.get( "rotation" )
             ) )
             .forEach( p_ways::add );
+    }
+
+    /**
+     * create lanes
+     *
+     * @param p_lanesConfiguration way configuration
+     * @param p_lanes list of ways
+     */
+    private void createLanes( final List<Map<String, Object>> p_lanesConfiguration, final List<ILane> p_lanes)
+    {
+        p_lanesConfiguration
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
+            .filter( Objects::nonNull )
+            .map( i -> new CLane(
+                (List<Integer>) i.get( "leftbottom" ),
+                (List<Integer>) i.get( "righttop" )
+            ) )
+            .forEach( p_lanes::add );
     }
 
     /**

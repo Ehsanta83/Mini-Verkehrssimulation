@@ -113,7 +113,12 @@ ways:
 
 #lanes
 lanes :
-
+  - vehicles: #east - forward
+      leftbottom : [ 37, 35 ]
+      righttop : [ 64, 36 ]
+  - vehicles: #east - forward - leftturnlane
+      leftbottom : [ 37, 33 ]
+      righttop : [ 64, 34 ]
 
 # leftbottom and righttop of the intersection for the positions in the grid in the environment [col, row]
 intersection :
