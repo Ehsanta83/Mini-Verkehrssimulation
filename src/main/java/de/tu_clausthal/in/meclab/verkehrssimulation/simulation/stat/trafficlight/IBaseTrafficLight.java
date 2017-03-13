@@ -19,11 +19,11 @@ public abstract class IBaseTrafficLight<T extends Enum<T> & IETrafficLight> impl
     /**
      * color of traffic light
      */
-    private T m_color;
+    protected T m_color;
     /**
      * duration of each color
      */
-    private final int[] m_duration;
+    protected final int[] m_duration;
     /**
      * duration of current color
      */

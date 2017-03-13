@@ -3,8 +3,14 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
+import org.lightjason.agentspeak.language.CLiteral;
+import org.lightjason.agentspeak.language.CRawTerm;
+import org.lightjason.agentspeak.language.ILiteral;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * vehicles way class
@@ -33,5 +39,17 @@ public class CVehiclesWay extends IBaseWay
     public void spriteinitialize( final float p_unit )
     {
         super.spriteinitialize(  p_unit, new Texture( Gdx.files.internal( TEXTURE_FILE_NAME ) ) );
+    }
+
+    @Override
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    {
+        return this.literal( Arrays.stream( p_object ) );
+    }
+
+    @Override
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    {
+        return null;
     }
 }

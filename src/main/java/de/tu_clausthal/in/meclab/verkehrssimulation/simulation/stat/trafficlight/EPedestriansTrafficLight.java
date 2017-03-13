@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 /**
  * pedestrian traffic light enumeration
  */
-public enum EPedestrianTrafficLight implements IETrafficLight
+public enum EPedestriansTrafficLight implements IETrafficLight
 {
     RED, GREEN;
     /**
@@ -26,7 +26,7 @@ public enum EPedestrianTrafficLight implements IETrafficLight
     }
 
     @Override
-    public EPedestrianTrafficLight call() throws Exception
+    public EPedestriansTrafficLight call() throws Exception
     {
         switch ( this )
         {

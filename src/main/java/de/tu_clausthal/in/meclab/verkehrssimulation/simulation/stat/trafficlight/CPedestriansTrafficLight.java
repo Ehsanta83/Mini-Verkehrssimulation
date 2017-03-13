@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * vehicles traffic light class
+ * pedestrian traffic light class
  */
-public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLight>
+public class CPedestriansTrafficLight extends IBaseTrafficLight<EPedestriansTrafficLight>
 {
     /**
-     * number of cars in line, that wait behind the traffic light
+     * the number of persons, who wait behind the traffic light
      * ToDo: implementing the code for this
      */
-    private int m_numberofcarsinline;
+    private int m_numberofpersons;
     /**
      * traffic light constructor
      *
@@ -30,8 +30,8 @@ public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLig
      * @param p_startColorDuration duration of the start color
      * @param p_duration duration of the traffic light colors
      */
-    public CVehiclesTrafficLight( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height,
-                                  final EVehiclesTrafficLight p_startColor, final int p_startColorDuration, final int... p_duration )
+    public CPedestriansTrafficLight(final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height,
+                                    final EPedestriansTrafficLight p_startColor, final int p_startColorDuration, final int... p_duration )
     {
         super( p_position, p_rotation, p_width, p_height, p_startColor, p_startColorDuration, p_duration );
     }
@@ -45,10 +45,10 @@ public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLig
     @Override
     public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
     {
-        return Stream.of( CLiteral.from( "vehicletrafficlight",
+        return Stream.of( CLiteral.from( "pedestrianstrafficlight",
                 CLiteral.from( "color", CRawTerm.from( m_color ) ),
                 CLiteral.from( "duration", CRawTerm.from( m_duration ) ),
-                CLiteral.from( "numberofcarsinline", CRawTerm.from( m_numberofcarsinline ) )
+                CLiteral.from( "numberofpersons", CRawTerm.from( m_numberofpersons ) )
         ) );
     }
 }

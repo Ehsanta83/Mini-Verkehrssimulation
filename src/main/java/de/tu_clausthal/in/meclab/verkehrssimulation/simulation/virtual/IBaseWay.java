@@ -27,7 +27,7 @@ public abstract class IBaseWay implements IVirtual
     /**
      * defines the left bottom position in grid (row / column), width, height,
      */
-    private final DoubleMatrix1D m_position;
+    protected final DoubleMatrix1D m_position;
 
     /**
      * rotation of the traffic light

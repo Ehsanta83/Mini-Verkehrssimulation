@@ -5,12 +5,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EPedestriansTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
+import org.lightjason.agentspeak.language.CLiteral;
+import org.lightjason.agentspeak.language.CRawTerm;
+import org.lightjason.agentspeak.language.ILiteral;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * vehicle class
@@ -31,6 +39,18 @@ public class CVehicle extends IBaseAgent
      * height
      */
     private int m_height;
+    /**
+     * speed
+     */
+    private int m_speed;
+    /**
+     * vehicle type
+     */
+    private String m_type;
+    /**
+     * visibility
+     */
+    private double m_visibility;
 
     /**
      * ctor
@@ -54,7 +74,6 @@ public class CVehicle extends IBaseAgent
         {
             m_texture = new Texture( Gdx.files.internal( MessageFormat.format( TEXTURE_FILE_NAME, "car" ) ) );
         }
-        // ToDo: later change car to vehicle type
         m_sprite = new Sprite( m_texture );
         m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
         m_sprite.setSize( m_width * p_unit, m_height * p_unit );
@@ -72,5 +91,41 @@ public class CVehicle extends IBaseAgent
     protected double nearby()
     {
         return 0;
+    }
+
+    @Override
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    {
+        return this.literal( Arrays.stream( p_object ) );
+    }
+
+    @Override
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    {
+        return Stream.of( CLiteral.from( "vehicle",
+                CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
+                CLiteral.from( "type", CRawTerm.from( m_type ) ),
+                CLiteral.from( "visibility", CRawTerm.from( m_visibility ) ),
+                CLiteral.from( "vehiclestrafficlightcolor", CRawTerm.from( vehiclestrafficlightcolor() ) ),
+                CLiteral.from( "pedestrianstrafficlightcolor", CRawTerm.from( pedestrianstrafficlightcolor() ) )
+        ) );
+    }
+
+    /**
+     * get related vehicles traffic light color
+     * @return traffic light color
+     */
+    private EVehiclesTrafficLight vehiclestrafficlightcolor()
+    {
+        return EVehiclesTrafficLight.RED;
+    }
+
+    /**
+     * get related pedestrian traffic light color
+     * @return traffic light color
+     */
+    private EPedestriansTrafficLight pedestrianstrafficlightcolor()
+    {
+        return EPedestriansTrafficLight.RED;
     }
 }
