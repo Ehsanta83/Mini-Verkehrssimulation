@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,7 +36,7 @@ public final class CCommon
      * @param p_object object but position must be return a vector with 4 elements
      * @return int-pair-stream
      */
-    public static Stream<Pair<Integer, Integer>> inttupelstream( final IObject p_object )
+    public static Stream<Pair<Integer, Integer>> inttupelstream( final ILane p_object )
     {
         return CCommon.inttupelstream(
             (int) p_object.position().get( 0 ), (int) ( p_object.position().get( 0 ) + p_object.position().get( 2 ) - 1 ),

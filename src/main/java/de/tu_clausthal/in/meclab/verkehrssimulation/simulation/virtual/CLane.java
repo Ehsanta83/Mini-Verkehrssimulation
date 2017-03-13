@@ -47,4 +47,10 @@ public class CLane extends IBaseLane
                 CLiteral.from( "type", CRawTerm.from( m_type ) )
         ) );
     }
+
+    @Override
+    public DoubleMatrix1D position()
+    {
+        return m_position;
+    }
 }

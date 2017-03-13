@@ -1,4 +1,3 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -61,9 +60,9 @@ public class CEnvironment implements IEnvironment
      *  @param p_cellrows number of row cells
      * @param p_cellcolumns number of column cells
      * @param p_cellsize cell size
-     * @param p_ways list of all ways
+     * @param p_lanes list of all lanes
      */
-    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends IBaseWay> p_ways )
+    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends ILane> p_lanes )
     {
         if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
@@ -75,7 +74,7 @@ public class CEnvironment implements IEnvironment
         m_lanespositions = new SparseObjectMatrix2D( m_row, m_column );
         m_agentspostions = new SparseObjectMatrix2D( m_row, m_column );
 
-        p_ways.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_lanespositions.setQuick( j.getLeft(), j.getRight(), i ) ) );
+        p_lanes.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_lanespositions.setQuick( j.getLeft(), j.getRight(), i ) ) );
     }
 
     @Override
@@ -108,7 +107,7 @@ public class CEnvironment implements IEnvironment
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route(m_lanespositions, p_start, p_end );
+        return m_routing.route( m_agentspostions, p_start, p_end );
     }
 
     @Override
