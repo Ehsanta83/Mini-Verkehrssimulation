@@ -4,6 +4,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human.CPedestrianGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
@@ -362,12 +363,12 @@ public final class CConfiguration
             .forEach( i ->
             {
                 // read ASL item from configuration and get the path relative to configuration
-                final String l_asl = m_configurationpath + ( (String) i.getOrDefault( "asl", "" ) ).trim();
+                final String l_asl = m_configurationpath + "asl/" + ( (String) i.getOrDefault( "asl", "" ) ).trim();
 
                 try (
                     // open filestream of ASL content
                     final InputStream l_stream = new URL( l_asl ).openStream();
-                )
+                    )
                 {
                     // get existing agent generator or create a new one based on the ASL
                     // and push it back if generator does not exists
@@ -398,6 +399,46 @@ public final class CConfiguration
                 }
 
             } );
+
+        p_agentsConfiguration
+                .stream()
+                .map( i -> (Map<String, Object>) i.get( "pedestrians" ) )
+                .filter( Objects::nonNull )
+                .forEach( i ->
+                {
+                    // read ASL item from configuration and get the path relative to configuration
+                    final String l_asl = m_configurationpath + "asl/" + ( (String) i.getOrDefault( "asl", "" ) ).trim();
+
+                    try (
+                            // open filestream of ASL content
+                            final InputStream l_stream = new URL( l_asl ).openStream();
+                        )
+                    {
+                        // get existing agent generator or create a new one based on the ASL
+                        // and push it back if generator does not exists
+                        final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
+                                l_asl,
+                                new CPedestrianGenerator(
+                                        m_environment,
+                                        l_stream,
+                                        l_action,
+                                        IAggregation.EMPTY
+                                )
+                        );
+                        l_agentgenerator.putIfAbsent( l_asl, l_generator );
+
+                        // generate agents and put it to the list
+                        l_generator.generatemultiple(
+                                (int) i.getOrDefault( "number", 0 )
+                        ).sequential().forEach( p_elements::add );
+                    }
+                    catch ( final Exception l_exception )
+                    {
+                        l_exception.printStackTrace( System.out );
+                        System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
+                    }
+
+                } );
     }
 
     /**

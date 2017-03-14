@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
@@ -11,12 +12,16 @@ import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * human class
  */
-public class CHuman extends IBaseAgent {
+public class CPedestrian extends IBaseAgent
+{
 
     /**
      * gender
@@ -40,25 +45,46 @@ public class CHuman extends IBaseAgent {
      *
      * @param p_environment        environment
      * @param p_agentconfiguration agent configuration
-     * @param p_position           initialize position
-     * @param p_rotation           rotation
      */
-    protected CHuman(IEnvironment p_environment, IAgentConfiguration<IAgent> p_agentconfiguration, DoubleMatrix1D p_position, int p_rotation) {
-        super(p_environment, p_agentconfiguration, p_position, p_rotation);
+    protected CPedestrian( IEnvironment p_environment, IAgentConfiguration<IAgent> p_agentconfiguration )
+    {
+        //ToDo: later change position and rotation
+        super(p_environment, p_agentconfiguration, new DenseDoubleMatrix1D(new double[]{0, 0}), 0);
+        //ToDo: is there a better way to choose random from a list
+        m_gender = Stream.of("man", "woman")
+            .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
+            {
+                Collections.shuffle( collected );
+                return collected.stream();
+            }
+            ) ).collect( Collectors.toList() ).get( 0 );
+        final Random l_randomGenerator = new Random();
+        m_speed = l_randomGenerator.nextInt(10) + 1;
+        m_type = Stream.of("adult", "child", "eldery", "mother")
+                .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
+                        {
+                            Collections.shuffle( collected );
+                            return collected.stream();
+                        }
+                ) ).collect( Collectors.toList() ).get( 0 );
+        //ToDo: implement visibility
     }
 
     @Override
-    public void spriteinitialize(float p_unit) {
+    public void spriteinitialize( float p_unit )
+    {
 
     }
 
     @Override
-    protected int speed() {
+    protected int speed()
+    {
         return 0;
     }
 
     @Override
-    protected double nearby() {
+    protected double nearby()
+    {
         return 0;
     }
 

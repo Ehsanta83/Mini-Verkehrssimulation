@@ -18,6 +18,7 @@ import org.lightjason.agentspeak.language.ILiteral;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.stream.Stream;
 
 /**
@@ -66,6 +67,9 @@ public class CVehicle extends IBaseAgent
         m_type = p_type;
         m_width = p_width;
         m_height = p_height;
+        final Random l_randomGenerator = new Random();
+        m_speed = l_randomGenerator.nextInt(70) + 1;
+        //ToDo: calculate visibility
     }
 
     @Override
@@ -118,6 +122,7 @@ public class CVehicle extends IBaseAgent
      */
     private EVehiclesTrafficLight vehiclestrafficlightcolor()
     {
+        //ToDo: implement this later
         return EVehiclesTrafficLight.RED;
     }
 
@@ -127,6 +132,7 @@ public class CVehicle extends IBaseAgent
      */
     private EPedestriansTrafficLight pedestrianstrafficlightcolor()
     {
+        // ToDo: implement this later
         return EPedestriansTrafficLight.RED;
     }
 }
