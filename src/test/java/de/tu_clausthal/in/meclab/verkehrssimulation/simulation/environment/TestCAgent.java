@@ -4,21 +4,16 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.agentspeak.action.IAction;
-import org.lightjason.agentspeak.agent.IBaseAgent;
-import org.lightjason.agentspeak.common.CCommon;
-import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Set;
 import java.util.logging.LogManager;
@@ -53,7 +48,7 @@ public final class TestCAgent
     @Before
     public void initialize()
     {
-        m_environment = new CEnvironment( 100, 100, 25, ERoutingFactory.JPSPLUS.get(), Collections.<IBaseWay>emptyList() );
+        m_environment = new CEnvironment( 100, 100, 25, ERoutingFactory.JPSPLUS.get(), Collections.<ILane>emptyList() );
 
         m_actions = Collections.unmodifiableSet( Stream.concat(
                 org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
@@ -62,25 +57,26 @@ public final class TestCAgent
 
         Assume.assumeNotNull( m_environment );
         Assume.assumeNotNull( m_actions );
-        try {
-            new CVehicleGenerator(
-                    m_environment,
-                    TestCAgent.class.getResourceAsStream("src/test/resources/agent.asl"),
-                    m_actions,
-                    IAggregation.EMPTY
-            ).generatesingle();
-        } catch ( final Exception l_exception )
-        {
-            assertTrue( l_exception.getMessage() , false );
-        }
     }
 
     @Test
-    public void test1()
+    public void testCreateVehicle()
     {
-        try {
+
+        try
+            (
+                final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
+            )
+        {
+            m_vehicle = (CVehicle) new CVehicleGenerator(
+                m_environment,
+                l_stream,
+                m_actions,
+                IAggregation.EMPTY )
+                .generatesingle();
             m_vehicle.call();
         } catch (final Exception l_exception) {
+            l_exception.printStackTrace();
             assertTrue( l_exception.getMessage() , false );
         }
     }
@@ -115,12 +111,13 @@ public final class TestCAgent
         final TestCAgent l_test = new TestCAgent();
 
         l_test.initialize();
-        l_test.test1();
+        l_test.testCreateVehicle();
 
-        l_test.initialize();
-        l_test.test2();
+        //l_test.initialize();
+        //l_test.test2();
     }
 
+    /*
     static final class MyAgent extends IBaseAgent<MyAgent>
     {
 
@@ -151,5 +148,5 @@ public final class TestCAgent
         {
             return new MyAgent( m_configuration );
         }
-    }
+    }*/
 }

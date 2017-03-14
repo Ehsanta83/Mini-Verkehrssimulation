@@ -4,6 +4,8 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
@@ -12,20 +14,27 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehicles
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.apache.commons.io.FilenameUtils;
+import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
 import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.common.IPath;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.ITerm;
 import org.lightjason.agentspeak.language.execution.IContext;
 import org.lightjason.agentspeak.language.execution.fuzzy.CFuzzyValue;
 import org.lightjason.agentspeak.language.execution.fuzzy.IFuzzyValue;
+import org.lightjason.agentspeak.language.score.IAggregation;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.LogManager;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * configuration and initialization of all simulation objects
@@ -328,7 +337,7 @@ public final class CConfiguration
     @SuppressWarnings( "unchecked" )
     private void createAgents( final List<Map<String, Object>> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
     {
-        /*
+
         final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
@@ -370,8 +379,7 @@ public final class CConfiguration
                     l_generator.generatemultiple(
                         (int) i.getOrDefault( "number", 0 ),
                         i.get( "randomgeneratepositions" ),
-                        i.get( "width" ),
-                        i.get( "height" )
+                        i.get( "type" )
                     ).sequential().forEach( p_elements::add );
                 }
                 catch ( final Exception l_exception )
@@ -380,7 +388,7 @@ public final class CConfiguration
                     System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
                 }
 
-            } );*/
+            } );
     }
 
     /**

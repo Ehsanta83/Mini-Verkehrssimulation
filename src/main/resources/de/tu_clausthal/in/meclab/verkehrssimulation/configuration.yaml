@@ -129,8 +129,13 @@ agents :
   - vehicles :
       number : 20
       asl : "vehicle.asl"
-      width : 32
-      height: 16
+      type :
+        - car :
+            width : 32
+            height: 16
+        - bus :
+            width : 64
+            height: 16
       randomgeneratepositions : #the vehicles will be generated randomly on these coordinations
         - position : [ 0, 0 ]
           rotation: 0

@@ -26,6 +26,8 @@
 !src/site/*.css
 !src/site/*.xml
 
+!src/test/resources/**/*.asl
+
 target/**
 
 /bin/

@@ -67,7 +67,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
     public IAgent generatesingle( final Object... p_data )
     {
         final List<Map<String, Object>> l_randomgeneratepositions = (List<Map<String, Object>>) p_data[0];
-        int l_random = m_random.nextInt( 4 );
+        int l_random = m_random.nextInt( l_randomgeneratepositions.size() );
         final DenseDoubleMatrix1D l_position = new DenseDoubleMatrix1D(
             new double[]
                 {
@@ -83,7 +83,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
             l_position.setQuick( 0, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 1 ) );
             l_position.setQuick( 1, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 0 ) );
         }
-
+        final List<Map<String, Object>> l_type = (List<Map<String, Object>>) p_data[1];
         return new CVehicle(
             m_environment,
             m_configuration,

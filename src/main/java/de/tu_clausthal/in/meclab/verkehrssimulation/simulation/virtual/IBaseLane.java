@@ -22,7 +22,7 @@ public abstract class IBaseLane implements ILane
     /**
      * defines the left upper position (row / column / height in cells / width in cells )
      */
-    private final DoubleMatrix1D m_position;
+    protected final DoubleMatrix1D m_position;
 
     /**
      * ctor
