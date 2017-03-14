@@ -1,10 +1,8 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.CConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.junit.Assume;
 import org.junit.Before;
@@ -25,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public final class TestCAgent
+public final class TestCVehicle
 {
     /**
      * environment reference
@@ -70,7 +68,7 @@ public final class TestCAgent
         l_vehiclerandomgeneratepositions.add(l_map);
         try
             (
-                final FileInputStream l_stream = new FileInputStream( "src/test/resources/agent.asl" );
+                final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
             )
         {
             m_vehicle = (CVehicle) new CVehicleGenerator(
@@ -107,7 +105,7 @@ public final class TestCAgent
 
     public static void main( final String[] p_args )
     {
-        final TestCAgent l_test = new TestCAgent();
+        final TestCVehicle l_test = new TestCVehicle();
 
         l_test.initialize();
         l_test.testVehicleGenerator();
@@ -115,37 +113,4 @@ public final class TestCAgent
         l_test.initialize();
         l_test.testVehicleLiteral();
     }
-
-    /*
-    static final class MyAgent extends IBaseAgent<MyAgent>
-    {
-
-        MyAgent( final IAgentConfiguration<MyAgent> p_configuration )
-        {
-            super( p_configuration );
-        }
-    }
-
-    static final class MyAgentGenerator extends IBaseAgentGenerator<MyAgent>
-    {
-
-        MyAgentGenerator( final InputStream p_stream ) throws Exception
-        {
-            super(
-
-                    p_stream,
-
-                    CCommon.actionsFromPackage().collect( Collectors.toSet() ),
-
-
-                    IAggregation.EMPTY
-            );
-        }
-
-        @Override
-        public final MyAgent generatesingle( final Object... p_data )
-        {
-            return new MyAgent( m_configuration );
-        }
-    }*/
 }
