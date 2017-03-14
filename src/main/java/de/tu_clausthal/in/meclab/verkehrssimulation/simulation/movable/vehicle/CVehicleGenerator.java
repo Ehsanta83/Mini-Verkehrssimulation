@@ -83,16 +83,18 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
             l_position.setQuick( 0, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 1 ) );
             l_position.setQuick( 1, ( (List<List<Integer>>) p_data[0] ).get( l_random ).get( 0 ) );
         }
-        final List<Map<String, Object>> l_type = (List<Map<String, Object>>) p_data[1];
+
         return new CVehicle(
             m_environment,
             m_configuration,
             l_position,
             (int) l_randomgeneratepositions.get( l_random ).get( "rotation" ),
+            //type
+            (String) p_data[1],
             //width
-            (int) p_data[1],
+            (int) p_data[2],
             //height
-            (int) p_data[2]
+            (int) p_data[3]
         );
     }
 

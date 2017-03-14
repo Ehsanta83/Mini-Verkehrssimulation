@@ -348,6 +348,13 @@ public final class CConfiguration
                 )
             ).collect( Collectors.toSet() ) );
 
+        List<Map<String, Object>> l_vehiclesrandomgeneratepositions = new LinkedList<>();
+        p_agentsConfiguration
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "vehiclesrandomgeneratepositions" ) )
+            .filter( Objects::nonNull )
+            .collect(Collectors.toCollection( () -> l_vehiclesrandomgeneratepositions ));
+
         p_agentsConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
@@ -378,8 +385,10 @@ public final class CConfiguration
                     // generate agents and put it to the list
                     l_generator.generatemultiple(
                         (int) i.getOrDefault( "number", 0 ),
-                        i.get( "randomgeneratepositions" ),
-                        i.get( "type" )
+                        l_vehiclesrandomgeneratepositions,
+                        i.get( "type" ),
+                        i.get( "width" ),
+                        i.get( "height" )
                     ).sequential().forEach( p_elements::add );
                 }
                 catch ( final Exception l_exception )

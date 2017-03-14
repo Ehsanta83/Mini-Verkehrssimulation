@@ -60,9 +60,10 @@ public class CVehicle extends IBaseAgent
      * @param p_position           initialize position
      */
     protected CVehicle( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position,
-                        final int p_rotation, final int p_width, final int p_height )
+                        final int p_rotation, final String p_type, final int p_width, final int p_height )
     {
         super( p_environment, p_agentconfiguration, p_position, p_rotation );
+        m_type = p_type;
         m_width = p_width;
         m_height = p_height;
     }

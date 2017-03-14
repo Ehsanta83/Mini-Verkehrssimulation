@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.CConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
@@ -14,8 +15,7 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.FileInputStream;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,12 +60,17 @@ public final class TestCAgent
     }
 
     @Test
-    public void testCreateVehicle()
+    public void testVehicleGenerator()
     {
-
+        List<Map<String, Object>> l_vehiclerandomgeneratepositions = new LinkedList<>();
+        Map<String, Object> l_map = new HashMap<String, Object>() {{
+            put("position", Stream.of(1,2).collect(Collectors.toList()));
+            put("rotation", 0);
+        }};
+        l_vehiclerandomgeneratepositions.add(l_map);
         try
             (
-                final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
+                final FileInputStream l_stream = new FileInputStream( "src/test/resources/agent.asl" );
             )
         {
             m_vehicle = (CVehicle) new CVehicleGenerator(
@@ -73,7 +78,7 @@ public final class TestCAgent
                 l_stream,
                 m_actions,
                 IAggregation.EMPTY )
-                .generatesingle();
+                .generatesingle( l_vehiclerandomgeneratepositions, "car", 32, 16);
             m_vehicle.call();
         } catch (final Exception l_exception) {
             l_exception.printStackTrace();
@@ -82,19 +87,13 @@ public final class TestCAgent
     }
 
     @Test
-    public void test2()
+    public void testVehicleLiteral()
     {
         try {
-
-
             m_vehicle.trigger(
                     CTrigger.from(
                             ITrigger.EType.ADDGOAL,
-                            new CVehiclesWay(
-                                    Stream.of(1,2).collect(Collectors.toList()),
-                                    Stream.of(3,4).collect(Collectors.toList()),
-                                    Stream.of(3,4).collect(Collectors.toList()),30
-                            ).literal().findFirst().get() )
+                            m_vehicle.literal().findFirst().get() )
             );
 
             m_vehicle.call();
@@ -111,10 +110,10 @@ public final class TestCAgent
         final TestCAgent l_test = new TestCAgent();
 
         l_test.initialize();
-        l_test.testCreateVehicle();
+        l_test.testVehicleGenerator();
 
-        //l_test.initialize();
-        //l_test.test2();
+        l_test.initialize();
+        l_test.testVehicleLiteral();
     }
 
     /*
