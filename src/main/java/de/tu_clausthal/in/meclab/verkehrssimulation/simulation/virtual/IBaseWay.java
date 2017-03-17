@@ -12,7 +12,10 @@ import java.util.List;
  */
 public abstract class IBaseWay implements IVirtual
 {
-
+    /**
+     * defines the left bottom position in grid (row / column), width, height,
+     */
+    protected final DoubleMatrix1D m_position;
     /**
      * sprite
      */
@@ -23,11 +26,6 @@ public abstract class IBaseWay implements IVirtual
      * ToDO: we will be thinking of deleting this after changing to another game engine
      */
     private final DoubleMatrix1D m_spriteposition;
-
-    /**
-     * defines the left bottom position in grid (row / column), width, height,
-     */
-    protected final DoubleMatrix1D m_position;
 
     /**
      * rotation of the traffic light

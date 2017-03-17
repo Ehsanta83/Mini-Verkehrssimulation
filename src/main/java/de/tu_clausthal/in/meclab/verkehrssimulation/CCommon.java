@@ -1,6 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

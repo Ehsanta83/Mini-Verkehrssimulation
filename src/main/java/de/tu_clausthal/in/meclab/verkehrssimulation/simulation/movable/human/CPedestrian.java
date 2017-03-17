@@ -1,6 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
 
-import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
@@ -46,12 +45,12 @@ public class CPedestrian extends IBaseAgent
      * @param p_environment        environment
      * @param p_agentconfiguration agent configuration
      */
-    protected CPedestrian( IEnvironment p_environment, IAgentConfiguration<IAgent> p_agentconfiguration )
+    protected CPedestrian( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration )
     {
         //ToDo: later change position and rotation
-        super(p_environment, p_agentconfiguration, new DenseDoubleMatrix1D(new double[]{0, 0}), 0);
+        super( p_environment, p_agentconfiguration, new DenseDoubleMatrix1D( new double[]{0, 0} ), 0 );
         //ToDo: is there a better way to choose random from a list
-        m_gender = Stream.of("man", "woman")
+        m_gender = Stream.of( "man", "woman" )
             .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
             {
                 Collections.shuffle( collected );
@@ -59,8 +58,8 @@ public class CPedestrian extends IBaseAgent
             }
             ) ).collect( Collectors.toList() ).get( 0 );
         final Random l_randomGenerator = new Random();
-        m_speed = l_randomGenerator.nextInt(10) + 1;
-        m_type = Stream.of("adult", "child", "eldery", "mother")
+        m_speed = l_randomGenerator.nextInt( 10 ) + 1;
+        m_type = Stream.of( "adult", "child", "eldery", "mother" )
                 .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
                         {
                             Collections.shuffle( collected );
@@ -89,13 +88,13 @@ public class CPedestrian extends IBaseAgent
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
         return Stream.of( CLiteral.from( "human",
                 CLiteral.from( "gender", CRawTerm.from( m_gender ) ),

@@ -68,7 +68,7 @@ public class CVehicle extends IBaseAgent
         m_width = p_width;
         m_height = p_height;
         final Random l_randomGenerator = new Random();
-        m_speed = l_randomGenerator.nextInt(70) + 1;
+        m_speed = l_randomGenerator.nextInt( 70 ) + 1;
         //ToDo: calculate visibility
     }
 
@@ -99,13 +99,13 @@ public class CVehicle extends IBaseAgent
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
         return Stream.of( CLiteral.from( "vehicle",
                 CLiteral.from( "speed", CRawTerm.from( m_speed ) ),

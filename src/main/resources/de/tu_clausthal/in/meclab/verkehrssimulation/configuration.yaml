@@ -64,7 +64,7 @@ trafficlights:
       width : 15
       height : 43
 
-# ways
+# ways //ToDo: ways are defined just for sprites in libGDX, later we can delete them when we use another game framework
 # spriteposition is the left bottom of the sprite [col, row]. It is different from leftbottom and righttop,
 # because we rotate the sprite. That will be deleted after changing to new game engine.
 # leftbottom and righttop is for the positions in the grid in the environment [col, row]
@@ -113,12 +113,17 @@ ways:
 
 #lanes
 lanes :
-  - vehicles: #east - forward
+  - lane: #east - forward
       leftbottom : [ 37, 35 ]
       righttop : [ 64, 36 ]
-  - vehicles: #east - forward - leftturnlane
+      type : direct
+  - lane: #east - forward - leftturnlane
       leftbottom : [ 37, 33 ]
       righttop : [ 64, 34 ]
+      type : turnleft
+  - sidewalk: #east - north
+      leftbottom : [ 37, 37 ]
+      righttop : [ 64, 64 ]
 
 # leftbottom and righttop of the intersection for the positions in the grid in the environment [col, row]
 intersection :

@@ -3,8 +3,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

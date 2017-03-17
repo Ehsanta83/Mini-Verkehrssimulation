@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
-import org.lightjason.agentspeak.language.CLiteral;
-import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.Arrays;
@@ -42,13 +40,13 @@ public class CVehiclesWay extends IBaseWay
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
         return null;
     }

@@ -20,6 +20,21 @@ public interface IObject extends ISprite
      */
     DoubleMatrix1D position();
 
+    /**
+     * get literal of the object
+     *
+     * @param p_object objects
+     * @param <T> type of object
+     * @return stream of literal
+     */
     <T extends IObject> Stream<ILiteral> literal( final T... p_object );
+
+    /**
+     * get literal of the object
+     *
+     * @param p_object objects
+     * @param <T> type of object
+     * @return stream of literal
+     */
     <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object );
 }

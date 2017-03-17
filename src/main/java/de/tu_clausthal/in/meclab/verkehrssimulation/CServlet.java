@@ -14,8 +14,7 @@ import java.io.IOException;
 public class CServlet extends HttpServlet
 {
     @Override
-    protected void doGet( final HttpServletRequest p_req, final HttpServletResponse p_resp )
-    throws ServletException, IOException
+    protected void doGet( final HttpServletRequest p_req, final HttpServletResponse p_resp ) throws ServletException, IOException
     {
         p_resp.setStatus( HttpStatus.OK_200 );
         p_resp.getWriter().println( "Heeeeeeeeeeeeey" );

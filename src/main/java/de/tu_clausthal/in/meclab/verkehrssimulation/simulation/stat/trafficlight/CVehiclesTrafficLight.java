@@ -19,6 +19,7 @@ public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLig
      * ToDo: implementing the code for this
      */
     private int m_numberofcarsinline;
+
     /**
      * traffic light constructor
      *
@@ -37,13 +38,13 @@ public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLig
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
         return Stream.of( CLiteral.from( "vehicletrafficlight",
                 CLiteral.from( "color", CRawTerm.from( m_color ) ),

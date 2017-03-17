@@ -21,19 +21,19 @@ public class CSidewalk extends IBaseLane
      * @param p_leftbottom left-bottom position
      * @param p_righttop   right-up position
      */
-    public CSidewalk( List<Integer> p_leftbottom, List<Integer> p_righttop)
+    public CSidewalk( final List<Integer> p_leftbottom, final List<Integer> p_righttop )
     {
-        super(p_leftbottom, p_righttop);
+        super( p_leftbottom, p_righttop );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal(final T... p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object)
+    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
         return Stream.of( CLiteral.from( "lane",
                 CLiteral.from( "passable", CRawTerm.from( m_passable ) )

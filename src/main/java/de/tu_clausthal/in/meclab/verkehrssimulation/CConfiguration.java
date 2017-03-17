@@ -14,6 +14,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
 import org.apache.commons.io.FilenameUtils;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
@@ -253,6 +254,7 @@ public final class CConfiguration
     {
         return m_lanes;
     }
+
     /**
      * return all agents
      *
@@ -315,17 +317,27 @@ public final class CConfiguration
      * @param p_lanesConfiguration way configuration
      * @param p_lanes list of ways
      */
-    private void createLanes( final List<Map<String, Object>> p_lanesConfiguration, final List<ILane> p_lanes)
+    private void createLanes( final List<Map<String, Object>> p_lanesConfiguration, final List<ILane> p_lanes )
     {
         p_lanesConfiguration
             .stream()
-            .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
+            .map( i -> (Map<String, Object>) i.get( "lane" ) )
             .filter( Objects::nonNull )
             .map( i -> new CLane(
                 (List<Integer>) i.get( "leftbottom" ),
-                (List<Integer>) i.get( "righttop" )
+                (List<Integer>) i.get( "righttop" ),
+                    (String) i.get( "type" )
             ) )
             .forEach( p_lanes::add );
+        p_lanesConfiguration
+                .stream()
+                .map( i -> (Map<String, Object>) i.get( "sidewalk" ) )
+                .filter( Objects::nonNull )
+                .map( i -> new CSidewalk(
+                        (List<Integer>) i.get( "leftbottom" ),
+                        (List<Integer>) i.get( "righttop" )
+                ) )
+                .forEach( p_lanes::add );
     }
 
     /**
@@ -349,12 +361,12 @@ public final class CConfiguration
                 )
             ).collect( Collectors.toSet() ) );
 
-        List<Map<String, Object>> l_vehiclesrandomgeneratepositions = new LinkedList<>();
+        final List<Map<String, Object>> l_vehiclesrandomgeneratepositions = new LinkedList<>();
         p_agentsConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "vehiclesrandomgeneratepositions" ) )
             .filter( Objects::nonNull )
-            .collect(Collectors.toCollection( () -> l_vehiclesrandomgeneratepositions ));
+            .collect( Collectors.toCollection( () -> l_vehiclesrandomgeneratepositions ) );
 
         p_agentsConfiguration
             .stream()

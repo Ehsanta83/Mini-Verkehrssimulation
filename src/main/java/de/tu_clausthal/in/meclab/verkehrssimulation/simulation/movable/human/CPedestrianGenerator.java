@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- *
+ * pedestrian generator
  */
 public class CPedestrianGenerator extends IBaseAgentGenerator<IAgent>
 {
@@ -35,16 +35,16 @@ public class CPedestrianGenerator extends IBaseAgentGenerator<IAgent>
      * @param p_aggregation aggregation set
      * @throws Exception on any error
      */
-    public CPedestrianGenerator(final IEnvironment p_environment, final InputStream p_stream,
-                             final Set<IAction> p_actions, final IAggregation p_aggregation
-    ) throws Exception
+    public CPedestrianGenerator( final IEnvironment p_environment, final InputStream p_stream,
+                             final Set<IAction> p_actions, final IAggregation p_aggregation ) throws Exception
     {
         super( p_stream, p_actions, p_aggregation, Collections.emptySet(), IVariableBuilder.EMPTY );
         m_environment = p_environment;
     }
 
     @Override
-    public IAgent generatesingle(Object... p_data) {
+    public IAgent generatesingle( final Object... p_data )
+    {
         return new CPedestrian(
                 m_environment,
                 m_configuration
