@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 /**
  * general tests
+ * 
  */
 public final class TestGeneral
 {
