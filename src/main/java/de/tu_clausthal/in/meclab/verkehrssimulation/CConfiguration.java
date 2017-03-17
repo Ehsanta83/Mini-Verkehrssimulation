@@ -139,7 +139,7 @@ public final class CConfiguration
 
         // create lanes
         final List<ILane> l_lanes = new LinkedList<>();
-        this.createLanes( (List<Map<String, Object>>) l_data.getOrDefault( "lane", Collections.<Map<String, Object>>emptyList() ), l_lanes );
+        this.createLanes( (List<Map<String, Object>>) l_data.getOrDefault( "lanes", Collections.<Map<String, Object>>emptyList() ), l_lanes );
         m_lanes = Collections.unmodifiableList( l_lanes );
 
         // create environment - static items must be exists
@@ -156,7 +156,7 @@ public final class CConfiguration
         // create agents
         final List<IAgent> l_agents = new LinkedList<>();
         this.createAgents(
-            (List<Map<String, Object>>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
+            (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
             l_agents,
             (boolean) l_data.getOrDefault( "agentprint", true )
         );
@@ -348,7 +348,7 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final List<Map<String, Object>> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
     {
 
         final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
@@ -361,16 +361,10 @@ public final class CConfiguration
                 )
             ).collect( Collectors.toSet() ) );
 
-        final List<Map<String, Object>> l_vehiclesrandomgeneratepositions = new LinkedList<>();
-        p_agentsConfiguration
-            .stream()
-            .map( i -> (Map<String, Object>) i.get( "vehiclesrandomgeneratepositions" ) )
-            .filter( Objects::nonNull )
-            .collect( Collectors.toCollection( () -> l_vehiclesrandomgeneratepositions ) );
+        final List<Map<String, Object>> l_vehiclesrandomgeneratepositions = (List<Map<String, Object>>) p_agentsConfiguration.get( "vehiclesrandomgeneratepositions" );
 
-        p_agentsConfiguration
+        ( (List<Map<String, Object>>) p_agentsConfiguration.get( "vehicles" ) )
             .stream()
-            .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
             .filter( Objects::nonNull )
             .forEach( i ->
             {
@@ -412,45 +406,39 @@ public final class CConfiguration
 
             } );
 
-        p_agentsConfiguration
-                .stream()
-                .map( i -> (Map<String, Object>) i.get( "pedestrians" ) )
-                .filter( Objects::nonNull )
-                .forEach( i ->
-                {
-                    // read ASL item from configuration and get the path relative to configuration
-                    final String l_asl = m_configurationpath + "asl/" + ( (String) i.getOrDefault( "asl", "" ) ).trim();
+        final Map<String, Object> l_pedestrianconfigurations = (Map<String, Object>) p_agentsConfiguration.get( "pedestrians" );
+        // read ASL item from configuration and get the path relative to configuration
+        final String l_asl = m_configurationpath + "asl/" + ( (String) l_pedestrianconfigurations.getOrDefault( "asl", "" ) ).trim();
 
-                    try (
-                            // open filestream of ASL content
-                            final InputStream l_stream = new URL( l_asl ).openStream();
-                        )
-                    {
-                        // get existing agent generator or create a new one based on the ASL
-                        // and push it back if generator does not exists
-                        final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
-                                l_asl,
-                                new CPedestrianGenerator(
-                                        m_environment,
-                                        l_stream,
-                                        l_action,
-                                        IAggregation.EMPTY
-                                )
-                        );
-                        l_agentgenerator.putIfAbsent( l_asl, l_generator );
+        try (
+                // open filestream of ASL content
+                final InputStream l_stream = new URL( l_asl ).openStream();
+            )
+        {
+            // get existing agent generator or create a new one based on the ASL
+            // and push it back if generator does not exists
+            final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
+                    l_asl,
+                    new CPedestrianGenerator(
+                            m_environment,
+                            l_stream,
+                            l_action,
+                            IAggregation.EMPTY
+                    )
+            );
+            l_agentgenerator.putIfAbsent( l_asl, l_generator );
 
-                        // generate agents and put it to the list
-                        l_generator.generatemultiple(
-                                (int) i.getOrDefault( "number", 0 )
-                        ).sequential().forEach( p_elements::add );
-                    }
-                    catch ( final Exception l_exception )
-                    {
-                        l_exception.printStackTrace( System.out );
-                        System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
-                    }
+            // generate agents and put it to the list
+            l_generator.generatemultiple(
+                    (int) l_pedestrianconfigurations.getOrDefault( "number", 0 )
+            ).sequential().forEach( p_elements::add );
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace( System.out );
+            System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
+        }
 
-                } );
     }
 
     /**

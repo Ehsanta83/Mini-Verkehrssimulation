@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
+import cern.colt.matrix.ObjectMatrix2D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ITileMap;
@@ -44,6 +45,13 @@ public interface IEnvironment extends IExecutable, ITileMap
      * @return cell size
      */
     int cellsize();
+
+    /**
+     * returns lanes positions
+     *
+     * @return matrix of lane positions
+     */
+    ObjectMatrix2D lanespositions();
 
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------

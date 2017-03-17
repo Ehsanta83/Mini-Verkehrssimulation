@@ -42,6 +42,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
         m_environment = p_environment;
     }
 
+    @SuppressWarnings( "unchecked" )
     @Override
     public IAgent generatesingle( final Object... p_data )
     {

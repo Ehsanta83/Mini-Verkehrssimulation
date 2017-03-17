@@ -30,8 +30,8 @@ public abstract class IBaseLane implements ILane
     public IBaseLane( final List<Integer> p_leftbottom, final List<Integer> p_righttop )
     {
         m_position = new DenseDoubleMatrix1D( new double[]{
-                p_leftbottom.get( 0 ), p_righttop.get( 0 ),
-                p_leftbottom.get( 1 ), p_righttop.get( 1 ),
+                p_leftbottom.get( 0 ),
+                p_leftbottom.get( 1 ),
                 p_righttop.get( 0 ) - p_leftbottom.get( 0 ) + 1,
                 p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1
         } );
@@ -54,12 +54,12 @@ public abstract class IBaseLane implements ILane
     @Override
     public DoubleMatrix1D position()
     {
-        return null;
+        return m_position;
     }
 
     @Override
     public IExecutable call() throws Exception
     {
-        return null;
+        return this;
     }
 }

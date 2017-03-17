@@ -101,6 +101,11 @@ public class CEnvironment implements IEnvironment
         return m_cellsize;
     }
 
+    public final ObjectMatrix2D lanespositions()
+    {
+        return m_lanespositions;
+    }
+
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
     //ToDo: change all methods with two matrices
 
