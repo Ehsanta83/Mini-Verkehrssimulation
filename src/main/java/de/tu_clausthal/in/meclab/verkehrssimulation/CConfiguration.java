@@ -230,7 +230,7 @@ public final class CConfiguration
      *
      * @return list of traffic lights
      */
-    final List<IBaseTrafficLight> trafficlights()
+    public final List<IBaseTrafficLight> trafficlights()
     {
         return m_trafficlights;
     }

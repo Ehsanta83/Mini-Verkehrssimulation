@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
-
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human.CPedestrian;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human.CPedestrianGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
@@ -18,26 +19,19 @@ import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
- *
+ * Created by Nina on 17.03.2017.
  */
-public final class TestCVehicle
-{
+public class TestCPedestrians {
 
-    /**
-     * environment reference
-     */
+    private CPedestrian m_pedestrian;
+
     private IEnvironment m_environment;
-    /**
-     * action references
-     */
+
     private Set<IAction> m_actions;
-    /**
-     * vehicle agent
-     */
-    private CVehicle m_vehicle;
+
 
     static
     {
@@ -51,7 +45,7 @@ public final class TestCVehicle
 
         m_actions = Collections.unmodifiableSet( Stream.concat(
                 org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
-                org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( CVehicle.class )
+                org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( CPedestrian.class )
         ).collect( Collectors.toSet() ) );
 
         Assume.assumeNotNull( m_environment );
@@ -59,59 +53,48 @@ public final class TestCVehicle
     }
 
     @Test
-    public void testVehicleGenerator()
-    {
-        List<Map<String, Object>> l_vehiclerandomgeneratepositions = new LinkedList<>();
-        Map<String, Object> l_map = new HashMap<String, Object>() {{
-            put("position", Stream.of(1,2).collect(Collectors.toList()));
-            put("rotation", 0);
-        }};
-        l_vehiclerandomgeneratepositions.add(l_map);
-        try
-            (
-                final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
-            )
+    public void testPedestrianGenerator()
+    {    try
+                (
+                        final FileInputStream l_stream = new FileInputStream( "src/test/resources/pedestrian.asl" );
+                )
         {
-            m_vehicle = (CVehicle) new CVehicleGenerator(
-                m_environment,
-                l_stream,
-                m_actions,
-                IAggregation.EMPTY )
-                .generatesingle( l_vehiclerandomgeneratepositions, "car", 32, 16);
-            m_vehicle.call();
+            m_pedestrian = (CPedestrian) new CPedestrianGenerator(
+                    m_environment,
+                    l_stream,
+                    m_actions,
+                    IAggregation.EMPTY )
+                    .generatesingle();
+            m_pedestrian.call();
         } catch (final Exception l_exception) {
             l_exception.printStackTrace();
             assertTrue( l_exception.getMessage() , false );
         }
     }
-
-    @Test
-    public void testVehicleLiteral()
-    {
-        try {
-            m_vehicle.trigger(
+    public void testPedestrianLiteral(){
+        try{
+            m_pedestrian.trigger(
                     CTrigger.from(
                             ITrigger.EType.ADDGOAL,
-                            m_vehicle.literal().findFirst().get() )
+                            m_pedestrian.literal().findFirst().get() )
             );
-
-            m_vehicle.call();
+            m_pedestrian.call();
         }
-        catch ( final Exception l_exception )
-        {
+        catch(final Exception l_exception){
+            l_exception.printStackTrace();
             assertTrue( l_exception.getMessage() , false );
-        }
 
+        }
     }
 
     public static void main( final String[] p_args )
     {
-        final TestCVehicle l_test = new TestCVehicle();
+        final TestCPedestrians l_test = new TestCPedestrians();
 
         l_test.initialize();
-        l_test.testVehicleGenerator();
+        l_test.testPedestrianGenerator();
 
         l_test.initialize();
-        l_test.testVehicleLiteral();
+        l_test.testPedestrianLiteral();
     }
 }
