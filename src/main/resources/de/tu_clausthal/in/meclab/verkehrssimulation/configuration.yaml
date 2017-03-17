@@ -34,7 +34,7 @@ trafficlights:
   - vehicles : #west
       startcolor  : green
       startcolorduration : 50
-      duration : [ 240, 10, 50, 20]
+      duration : [ 240, 10, 50, 20 ]
       position : [ 23, 27 ]
       rotation: 270
       width : 15
@@ -42,7 +42,7 @@ trafficlights:
   - vehicles : #south
       startcolor  : red
       startcolorduration : 70
-      duration : [ 240, 10, 50, 20]
+      duration : [ 240, 10, 50, 20 ]
       position : [ 37, 23 ]
       rotation: 0
       width : 15
@@ -50,7 +50,7 @@ trafficlights:
   - vehicles : #east
       startcolor  : red
       startcolorduration : 150
-      duration : [ 240, 10, 50, 20]
+      duration : [ 240, 10, 50, 20 ]
       position : [ 41, 37 ]
       rotation: 90
       width : 15
@@ -58,7 +58,7 @@ trafficlights:
   - vehicles : #north
       startcolor  : red
       startcolorduration : 230
-      duration : [ 240, 10, 50, 20]
+      duration : [ 240, 10, 50, 20 ]
       position : [ 27, 41 ]
       rotation: 180
       width : 15
@@ -194,12 +194,10 @@ lanes :
   - sidewalk: #east - south
       leftbottom : [ 37, 1 ]
       righttop : [ 64, 28 ]
-  #ToDo: define intersection as lane
-
-# leftbottom and righttop of the intersection for the positions in the grid in the environment [col, row]
-intersection :
-  leftbottom : [ 29, 29]
-  righttop : [ 36, 36]
+  #------------------------------------------- intersection ---------------------------------------------
+  - intersection :
+      leftbottom : [ 29, 29 ]
+      righttop : [ 36, 36 ]
 
 agents :
   vehicles :

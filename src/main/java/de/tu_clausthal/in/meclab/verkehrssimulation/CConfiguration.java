@@ -10,11 +10,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.C
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.*;
 import org.apache.commons.io.FilenameUtils;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
@@ -230,7 +226,7 @@ public final class CConfiguration
      *
      * @return list of traffic lights
      */
-    public final List<IBaseTrafficLight> trafficlights()
+    final List<IBaseTrafficLight> trafficlights()
     {
         return m_trafficlights;
     }
@@ -319,6 +315,7 @@ public final class CConfiguration
      */
     private void createLanes( final List<Map<String, Object>> p_lanesConfiguration, final List<ILane> p_lanes )
     {
+        //ToDo: is there a better way to do this?
         p_lanesConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "lane" ) )
@@ -338,6 +335,15 @@ public final class CConfiguration
                         (List<Integer>) i.get( "righttop" )
                 ) )
                 .forEach( p_lanes::add );
+        p_lanesConfiguration
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "intersection" ) )
+            .filter( Objects::nonNull )
+            .map( i -> new CIntersection(
+                (List<Integer>) i.get( "leftbottom" ),
+                (List<Integer>) i.get( "righttop" )
+            ) )
+            .forEach( p_lanes::add );
     }
 
     /**
