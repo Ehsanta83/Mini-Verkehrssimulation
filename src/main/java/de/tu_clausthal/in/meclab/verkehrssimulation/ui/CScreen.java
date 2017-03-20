@@ -97,7 +97,7 @@ public class CScreen extends ApplicationAdapter
 
         m_sprites.forEach( i -> i.sprite().draw( m_spritebatch ) );
 
-        renderFPS();
+        this.renderFPS();
         m_spritebatch.end();
     }
 

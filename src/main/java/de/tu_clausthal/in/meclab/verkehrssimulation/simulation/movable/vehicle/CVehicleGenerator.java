@@ -2,7 +2,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.execution.IVariableBuilder;
@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * agent generator for dynamic / moving agents
  */
-public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
+public class CVehicleGenerator extends IBaseAgentGenerator<IMovableAgent>
 {
     /**
      * environment reference
@@ -44,7 +44,7 @@ public class CVehicleGenerator extends IBaseAgentGenerator<IAgent>
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public IAgent generatesingle( final Object... p_data )
+    public CVehicle generatesingle( final Object... p_data )
     {
         final List<Map<String, Object>> l_randomgeneratepositions = (List<Map<String, Object>>) p_data[0];
         int l_random = m_random.nextInt( l_randomgeneratepositions.size() );

@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EPedestriansTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * vehicle class
  */
-public class CVehicle extends IBaseAgent
+public class CVehicle extends IMovableAgent
 {
     public static final String TEXTURE_FILE_NAME = CCommon.PACKAGEPATH + "vehicles/{0}.png";
 
@@ -60,7 +59,7 @@ public class CVehicle extends IBaseAgent
      * @param p_agentconfiguration agent configuration
      * @param p_position           initialize position
      */
-    protected CVehicle( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position,
+    protected CVehicle( final IEnvironment p_environment, final IAgentConfiguration<IMovableAgent> p_agentconfiguration, final DoubleMatrix1D p_position,
                         final int p_rotation, final String p_type, final int p_width, final int p_height )
     {
         super( p_environment, p_agentconfiguration, p_position, p_rotation );
@@ -111,8 +110,8 @@ public class CVehicle extends IBaseAgent
                 CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
                 CLiteral.from( "type", CRawTerm.from( m_type ) ),
                 CLiteral.from( "visibility", CRawTerm.from( m_visibility ) ),
-                CLiteral.from( "vehiclestrafficlightcolor", CRawTerm.from( vehiclestrafficlightcolor() ) ),
-                CLiteral.from( "pedestrianstrafficlightcolor", CRawTerm.from( pedestrianstrafficlightcolor() ) )
+                CLiteral.from( "vehiclestrafficlightcolor", CRawTerm.from( this.vehiclestrafficlightcolor() ) ),
+                CLiteral.from( "pedestrianstrafficlightcolor", CRawTerm.from( this.pedestrianstrafficlightcolor() ) )
         ) );
     }
 

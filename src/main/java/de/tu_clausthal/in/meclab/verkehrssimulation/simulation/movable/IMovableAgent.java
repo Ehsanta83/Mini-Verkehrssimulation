@@ -1,6 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CMath;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.EDirection;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.EQuadrant;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
@@ -17,7 +18,6 @@ import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 
-import java.util.Random;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 @IAgentAction
 @SuppressFBWarnings( "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS" )
-public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAgent<IAgent> implements IAgent
+public abstract class IMovableAgent extends org.lightjason.agentspeak.agent.IBaseAgent<IMovableAgent> implements IObject
 {
     /**
      * sprite
@@ -54,7 +54,7 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
     /**
      * route
      */
-     private final List<DoubleMatrix1D> m_route = Collections.synchronizedList( new LinkedList<>() );
+    private final List<DoubleMatrix1D> m_route = Collections.synchronizedList( new LinkedList<>() );
 
     /**
      * ctor
@@ -63,7 +63,8 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
      * @param p_agentconfiguration agent configuration
      * @param p_position initialize position
      */
-    protected IBaseAgent( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration, final DoubleMatrix1D p_position, final int p_rotation )
+    protected IMovableAgent( final IEnvironment p_environment, final IAgentConfiguration<IMovableAgent> p_agentconfiguration,
+                             final DoubleMatrix1D p_position, final int p_rotation )
     {
         super( p_agentconfiguration );
 
@@ -89,7 +90,7 @@ public abstract class IBaseAgent extends org.lightjason.agentspeak.agent.IBaseAg
     }
 
     @Override
-    public IAgent call() throws Exception
+    public IMovableAgent call() throws Exception
     {
         // cache current position to generate non-moving and targte-beyond trigger
         final DenseDoubleMatrix1D l_position = new DenseDoubleMatrix1D( m_position.toArray() );

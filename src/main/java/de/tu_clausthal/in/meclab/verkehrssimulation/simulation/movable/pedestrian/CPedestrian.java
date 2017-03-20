@@ -1,10 +1,9 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
@@ -17,9 +16,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * human class
+ * pedestrian class
  */
-public class CPedestrian extends IBaseAgent
+public class CPedestrian extends IMovableAgent
 {
 
     /**
@@ -45,7 +44,7 @@ public class CPedestrian extends IBaseAgent
      * @param p_environment        environment
      * @param p_agentconfiguration agent configuration
      */
-    protected CPedestrian( final IEnvironment p_environment, final IAgentConfiguration<IAgent> p_agentconfiguration )
+    protected CPedestrian( final IEnvironment p_environment, final IAgentConfiguration<IMovableAgent> p_agentconfiguration )
     {
         //ToDo: later change position and rotation
         super( p_environment, p_agentconfiguration, new DenseDoubleMatrix1D( new double[]{0, 0} ), 0 );
@@ -61,11 +60,10 @@ public class CPedestrian extends IBaseAgent
         m_speed = l_randomGenerator.nextInt( 10 ) + 1;
         m_type = Stream.of( "adult", "child", "eldery", "mother" )
                 .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
-                        {
-                            Collections.shuffle( collected );
-                            return collected.stream();
-                        }
-                ) ).collect( Collectors.toList() ).get( 0 );
+                {
+                    Collections.shuffle( collected );
+                    return collected.stream();
+                } ) ).collect( Collectors.toList() ).get( 0 );
         //ToDo: implement visibility
     }
 
@@ -96,7 +94,7 @@ public class CPedestrian extends IBaseAgent
     @Override
     public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
     {
-        return Stream.of( CLiteral.from( "human",
+        return Stream.of( CLiteral.from( "pedestrian",
                 CLiteral.from( "gender", CRawTerm.from( m_gender ) ),
                 CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
                 CLiteral.from( "type", CRawTerm.from( m_type ) ),

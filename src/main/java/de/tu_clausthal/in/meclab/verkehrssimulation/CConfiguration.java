@@ -3,14 +3,19 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IAgent;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.human.CPedestrianGenerator;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian.CPedestrianGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.*;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
 import org.apache.commons.io.FilenameUtils;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
@@ -86,7 +91,7 @@ public final class CConfiguration
     /**
      * simulation agents
      */
-    private List<IAgent> m_agents;
+    private List<IMovableAgent> m_agents;
 
     /**
      * constructor
@@ -150,7 +155,7 @@ public final class CConfiguration
         );
 
         // create agents
-        final List<IAgent> l_agents = new LinkedList<>();
+        final List<IMovableAgent> l_agents = new LinkedList<>();
         this.createAgents(
             (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
             l_agents,
@@ -256,7 +261,7 @@ public final class CConfiguration
      *
      * @return list of agents
      */
-    final List<IAgent> agents()
+    final List<IMovableAgent> agents()
     {
         return m_agents;
     }
@@ -354,10 +359,10 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IAgent> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IMovableAgent> p_elements, final boolean p_agentprint ) throws IOException
     {
 
-        final Map<String, IAgentGenerator<IAgent>> l_agentgenerator = new HashMap<>();
+        final Map<String, IAgentGenerator<IMovableAgent>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
                 p_agentprint ? Stream.of() : Stream.of( new CEmptyPrint() ),
@@ -384,7 +389,7 @@ public final class CConfiguration
                 {
                     // get existing agent generator or create a new one based on the ASL
                     // and push it back if generator does not exists
-                    final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
+                    final IAgentGenerator<IMovableAgent> l_generator = l_agentgenerator.getOrDefault(
                         l_asl,
                         new CVehicleGenerator(
                             m_environment,
@@ -423,13 +428,13 @@ public final class CConfiguration
         {
             // get existing agent generator or create a new one based on the ASL
             // and push it back if generator does not exists
-            final IAgentGenerator<IAgent> l_generator = l_agentgenerator.getOrDefault(
+            final IAgentGenerator<IMovableAgent> l_generator = l_agentgenerator.getOrDefault(
                     l_asl,
                     new CPedestrianGenerator(
-                            m_environment,
-                            l_stream,
-                            l_action,
-                            IAggregation.EMPTY
+                        l_stream,
+                        l_action,
+                        IAggregation.EMPTY,
+                        m_environment
                     )
             );
             l_agentgenerator.putIfAbsent( l_asl, l_generator );
