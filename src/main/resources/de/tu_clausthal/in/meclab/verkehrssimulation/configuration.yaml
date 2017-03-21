@@ -199,28 +199,25 @@ lanes :
       leftbottom : [ 29, 29 ]
       righttop : [ 36, 36 ]
 
-agents :
-  vehicles :
-    - type : car
-      number : 15
-      width : 32
-      height: 16
-      asl : "vehicle.asl"
-    - type : bus
-      number : 5
-      width : 64
-      height: 16
-      asl : "vehicle.asl"
-  vehiclesrandomgeneratepositions : #the vehicles will be generated randomly on these coordinations
-    - position : [ 0, 0 ]
-      rotation: 0
-    - position : [ 0, 0 ]
-      rotation: 90
-    - position : [ 0, 0 ]
-      rotation: 180
-    - position : [ 0, 0 ]
-      rotation: 270
 
-  pedestrians :
-    number : 20
-    asl : "pedestrian.asl"
+vehiclesrandomgeneratepositions : #the vehicles will be generated randomly on these coordinations
+  - position : [ 0, 0 ]
+    rotation: 0
+  - position : [ 0, 0 ]
+    rotation: 90
+  - position : [ 0, 0 ]
+    rotation: 180
+  - position : [ 0, 0 ]
+    rotation: 270
+
+agents :
+  - type : pedestrian
+    asl : "male.asl"
+    distribution :
+      type : normal
+      arguments :
+        - 0.7 # mean for normal distribution
+        - 0.1 # sd for normal distribution
+    configuration :
+      gender : male
+      type : adult

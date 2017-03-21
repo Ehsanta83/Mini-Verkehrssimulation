@@ -11,6 +11,7 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,7 +24,7 @@ public class CPedestrianGenerator extends IBaseAgentGenerator<IMovableAgent>
      */
     private final IEnvironment m_environment;
     /**
-     * random generator
+     * abstract distribution
      */
     private final AbstractRealDistribution m_distribution;
 
@@ -51,7 +52,8 @@ public class CPedestrianGenerator extends IBaseAgentGenerator<IMovableAgent>
             ? null
             : new CPedestrian(
                 m_environment,
-                m_configuration );
+                m_configuration
+            );
     }
 
 }

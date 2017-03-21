@@ -15,7 +15,7 @@ public class TestCDistributionFactory
     public void test()
     {
         final AbstractRealDistribution l_distribution = EDistributionFactory.from( "normal" ).generate( 0.5, 0.2 );
-        System.out.println( l_distribution.sample() );
+        System.out.println( l_distribution.sample() + ", " + l_distribution.getNumericalMean() );
     }
 
     /**

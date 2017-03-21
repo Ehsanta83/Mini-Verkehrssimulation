@@ -61,7 +61,7 @@ public class TestCPedestrians
     {
         try
         (
-            final FileInputStream l_stream = new FileInputStream( "src/test/resources/pedestrian.asl" );
+            final FileInputStream l_stream = new FileInputStream( "src/test/resources/male.asl" );
         )
         {
             m_pedestrian = new CPedestrianGenerator(

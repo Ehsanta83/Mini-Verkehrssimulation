@@ -1,9 +1,11 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import de.tu_clausthal.in.meclab.verkehrssimulation.math.EDistributionFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
+import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
@@ -20,7 +22,6 @@ import java.util.stream.Stream;
  */
 public class CPedestrian extends IMovableAgent
 {
-
     /**
      * gender
      */

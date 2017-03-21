@@ -13,8 +13,7 @@ import java.util.Locale;
 public enum EMovableFactory
 {
     PEDESTRIAN,
-    CAR,
-    BUS;
+    VEHICLE;
 
     /**
      * get generator
@@ -29,9 +28,7 @@ public enum EMovableFactory
         {
             case PEDESTRIAN: return new CPedestrianGenerator( p_asl, null, null, null );
 
-            case CAR: return null;
-
-            case BUS: return null;
+            case VEHICLE: return null;
 
             default:
                 throw new RuntimeException( MessageFormat.format( "not set {0}", this ) );
