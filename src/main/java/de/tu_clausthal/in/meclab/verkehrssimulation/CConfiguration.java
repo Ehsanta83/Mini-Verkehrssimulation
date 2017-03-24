@@ -416,7 +416,7 @@ public final class CConfiguration
                 }
 
             } );
-
+        /*
         final Map<String, Object> l_pedestrianconfigurations = (Map<String, Object>) p_agentsConfiguration.get( "pedestrians" );
         // read ASL item from configuration and get the path relative to configuration
         final String l_asl = m_configurationpath + "asl/" + ( (String) l_pedestrianconfigurations.getOrDefault( "asl", "" ) ).trim();
@@ -448,7 +448,7 @@ public final class CConfiguration
         {
             l_exception.printStackTrace( System.out );
             System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
-        }
+        }*/
 
     }
 

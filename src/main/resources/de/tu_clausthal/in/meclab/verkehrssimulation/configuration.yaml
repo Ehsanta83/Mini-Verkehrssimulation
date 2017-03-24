@@ -216,8 +216,8 @@ agents :
     distribution :
       type : normal
       arguments :
-        - 0.7 # mean for normal distribution
-        - 0.1 # sd for normal distribution
+        - 0.99 # mean for normal distribution
+        - 0.01 # sd for normal distribution
     configuration :
       gender : male
       type : adult

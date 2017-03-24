@@ -1,15 +1,15 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import de.tu_clausthal.in.meclab.verkehrssimulation.math.EDistributionFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
-import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,6 +49,15 @@ public class CPedestrian extends IMovableAgent
     {
         //ToDo: later change position and rotation
         super( p_environment, p_agentconfiguration, new DenseDoubleMatrix1D( new double[]{0, 0} ), 0 );
+
+        this.trigger(
+            CTrigger.from(
+                ITrigger.EType.ADDBELIEF,
+                CLiteral.from( "gender", CRawTerm.from( "man" ) )
+            )
+        );
+
+        /*
         //ToDo: is there a better way to choose random from a list
         m_gender = Stream.of( "man", "woman" )
             .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
@@ -57,6 +66,7 @@ public class CPedestrian extends IMovableAgent
                 return collected.stream();
             }
             ) ).collect( Collectors.toList() ).get( 0 );
+        */
         final Random l_randomGenerator = new Random();
         m_speed = l_randomGenerator.nextInt( 10 ) + 1;
         m_type = Stream.of( "adult", "child", "eldery", "mother" )

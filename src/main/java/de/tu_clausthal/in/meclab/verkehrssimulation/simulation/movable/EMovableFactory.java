@@ -6,6 +6,7 @@ import org.lightjason.agentspeak.generator.IGenerator;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * movable factory
@@ -22,11 +23,11 @@ public enum EMovableFactory
      * @return generator
      * @throws Exception exception
      */
-    public final IGenerator<IMovableAgent> generate( final InputStream p_asl ) throws Exception
+    public final IGenerator<IMovableAgent> generate( final InputStream p_asl, final Map<String, Object> p_distributionconfiguration, final Map<String, Object> p_agentconfiguration) throws Exception
     {
         switch ( this )
         {
-            case PEDESTRIAN: return new CPedestrianGenerator( p_asl, null, null, null );
+            case PEDESTRIAN: return new CPedestrianGenerator( p_asl, p_distributionconfiguration, p_agentconfiguration, null, null, null );
 
             case VEHICLE: return null;
 
