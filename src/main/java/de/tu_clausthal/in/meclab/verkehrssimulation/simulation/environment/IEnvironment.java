@@ -1,10 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ITileMap;
-import cern.colt.matrix.DoubleMatrix1D;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -12,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * environment interface
  */
-public interface IEnvironment extends IExecutable, ITileMap
+public interface IEnvironment<T extends IEnvironment<?>> extends IObject<T>, ITileMap
 {
 
     // --- main elements ---------------------------------------------------------------------------------------------------------------------------------------

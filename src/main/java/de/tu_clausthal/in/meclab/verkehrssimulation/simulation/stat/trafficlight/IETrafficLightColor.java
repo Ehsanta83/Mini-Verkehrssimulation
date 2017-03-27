@@ -1,12 +1,12 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
 import com.badlogic.gdx.graphics.Texture;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IExecutable;
+
 
 /**
  * traffic light enumeration interface
  */
-public interface IETrafficLight extends IExecutable
+public interface IETrafficLightColor
 {
     /**
      * set texture
@@ -18,4 +18,13 @@ public interface IETrafficLight extends IExecutable
      * @return texture
      */
     Texture getTexture();
+
+    /**
+     * returns the path of the light texture
+     * @return
+     */
+    String path();
+
+    IETrafficLightColor next();
+
 }

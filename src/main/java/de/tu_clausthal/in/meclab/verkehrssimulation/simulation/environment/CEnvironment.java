@@ -11,7 +11,11 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
+import org.lightjason.agentspeak.agent.IBaseAgent;
+import org.lightjason.agentspeak.configuration.IAgentConfiguration;
+import org.lightjason.agentspeak.language.ILiteral;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -19,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * environment class
  */
-public class CEnvironment implements IEnvironment
+public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironment<CEnvironment>
 {
     /**
      * logger
@@ -54,16 +58,22 @@ public class CEnvironment implements IEnvironment
      */
     private final ObjectMatrix2D m_agentspostions;
 
-
     /**
-     * create environment
-     *  @param p_cellrows number of row cells
+     * ctor
+     *
+     * @param p_configuration agent configuration
+     * @param p_cellrows number of row cells
      * @param p_cellcolumns number of column cells
      * @param p_cellsize cell size
      * @param p_lanes list of all lanes
      */
-    public CEnvironment( final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends ILane> p_lanes )
+    public CEnvironment(
+        final IAgentConfiguration<CEnvironment> p_configuration,
+        final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends ILane> p_lanes
+    )
     {
+        super( p_configuration );
+
         if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
 
@@ -77,11 +87,7 @@ public class CEnvironment implements IEnvironment
         p_lanes.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_lanespositions.setQuick( j.getLeft(), j.getRight(), i ) ) );
     }
 
-    @Override
-    public final IEnvironment call()
-    {
-        return this;
-    }
+
 
     @Override
     public final int row()
@@ -121,6 +127,13 @@ public class CEnvironment implements IEnvironment
         return m_routing.estimatedtime( p_route, p_speed );
     }
 
+    /**
+     *
+     * @param p_object object, which should be moved (must store the current position)
+     * @param p_position new position
+     * @return object reference
+     * @bug check parameter and generics
+     */
     @Override
     @SuppressWarnings( "unchecked" )
     public final synchronized IObject move( final IObject p_object, final DoubleMatrix1D p_position )
@@ -133,10 +146,12 @@ public class CEnvironment implements IEnvironment
             return l_object;
 
         // cell is free, move the position and return updated object
+        /*
         m_agentspostions.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
         m_agentspostions.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
         p_object.position().setQuick( 0, l_position.getQuick( 0 ) );
         p_object.position().setQuick( 1, l_position.getQuick( 1 ) );
+        */
 
         return p_object;
     }
@@ -148,11 +163,17 @@ public class CEnvironment implements IEnvironment
         return (IObject) m_agentspostions.getQuick( (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
     }
 
+    /**
+     *
+     * @param p_object element
+     * @return
+     * @bug check parameter
+     */
     @Override
     public final synchronized IObject remove( final IObject p_object )
     {
-        final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
-        m_agentspostions.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
+        //final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
+        //m_agentspostions.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
 
         return p_object;
     }
@@ -181,6 +202,18 @@ public class CEnvironment implements IEnvironment
         p_position.setQuick( 1, CEnvironment.clip( p_position.getQuick( 1 ), m_column ) );
 
         return p_position;
+    }
+
+    @Override
+    public final Stream<ILiteral> literal( final IObject<?>... p_object )
+    {
+        return this.literal( Arrays.stream( p_object ) );
+    }
+
+    @Override
+    public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
+    {
+        return Stream.of();
     }
 
     /**

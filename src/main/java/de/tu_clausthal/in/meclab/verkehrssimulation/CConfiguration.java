@@ -3,19 +3,19 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian.CPedestrianGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLightColor;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
 import org.apache.commons.io.FilenameUtils;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
@@ -34,7 +34,13 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,7 +97,7 @@ public final class CConfiguration
     /**
      * simulation agents
      */
-    private List<IMovableAgent> m_agents;
+    private List<IMovable> m_agents;
 
     /**
      * constructor
@@ -155,7 +161,7 @@ public final class CConfiguration
         );
 
         // create agents
-        final List<IMovableAgent> l_agents = new LinkedList<>();
+        final List<IMovable> l_agents = new LinkedList<>();
         this.createAgents(
             (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
             l_agents,
@@ -261,7 +267,7 @@ public final class CConfiguration
      *
      * @return list of agents
      */
-    final List<IMovableAgent> agents()
+    final List<IMovable> agents()
     {
         return m_agents;
     }
@@ -283,7 +289,7 @@ public final class CConfiguration
                 (int) i.get( "rotation" ),
                 (int) i.get( "width" ),
                 (int) i.get( "height" ),
-                i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLight.GREEN : EVehiclesTrafficLight.RED,
+                i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLightColor.GREEN : EVehiclesTrafficLightColor.RED,
                 (int) i.get( "startcolorduration" ),
                 ( (List<Integer>) i.get( "duration" ) ).stream().mapToInt( j -> j ).toArray()
 
@@ -359,10 +365,10 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IMovableAgent> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IMovable> p_elements, final boolean p_agentprint ) throws IOException
     {
 
-        final Map<String, IAgentGenerator<IMovableAgent>> l_agentgenerator = new HashMap<>();
+        final Map<String, IAgentGenerator<IMovable>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
                 p_agentprint ? Stream.of() : Stream.of( new CEmptyPrint() ),
@@ -389,7 +395,7 @@ public final class CConfiguration
                 {
                     // get existing agent generator or create a new one based on the ASL
                     // and push it back if generator does not exists
-                    final IAgentGenerator<IMovableAgent> l_generator = l_agentgenerator.getOrDefault(
+                    final IAgentGenerator<IMovable> l_generator = l_agentgenerator.getOrDefault(
                         l_asl,
                         new CVehicleGenerator(
                             m_environment,
@@ -428,7 +434,7 @@ public final class CConfiguration
         {
             // get existing agent generator or create a new one based on the ASL
             // and push it back if generator does not exists
-            final IAgentGenerator<IMovableAgent> l_generator = l_agentgenerator.getOrDefault(
+            final IAgentGenerator<IMovable> l_generator = l_agentgenerator.getOrDefault(
                     l_asl,
                     new CPedestrianGenerator(
                         l_stream,

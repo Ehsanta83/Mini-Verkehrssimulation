@@ -23,7 +23,7 @@ public enum EMovableFactory
      * @return generator
      * @throws Exception exception
      */
-    public final IGenerator<IMovableAgent> generate( final InputStream p_asl ) throws Exception
+    public final IGenerator<IMovable> generate( final InputStream p_asl ) throws Exception
     {
         switch ( this )
         {

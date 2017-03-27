@@ -4,13 +4,13 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
-import java.util.List;
+import org.lightjason.agentspeak.agent.IBaseAgent;
+import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 
 /**
  * Way abstract class
  */
-public abstract class IBaseWay implements IVirtual
+public abstract class IBaseWay<T extends IBaseWay<?>> extends IBaseAgent<T> implements IVirtual<T>
 {
     /**
      * defines the left bottom position in grid (row / column), width, height,
@@ -20,13 +20,6 @@ public abstract class IBaseWay implements IVirtual
      * sprite
      */
     private Sprite m_sprite;
-
-    /**
-     * defines the left bottom position of the sprite (row / column)
-     * ToDO: we will be thinking of deleting this after changing to another game engine
-     */
-    private final DoubleMatrix1D m_spriteposition;
-
     /**
      * rotation of the traffic light
      */
@@ -35,17 +28,15 @@ public abstract class IBaseWay implements IVirtual
     /**
      * constructor
      *
-     * @param p_spriteposition position
+     * @param p_configuration agent configuration
      * @param p_leftbottom leftbottom position in grid
      * @param p_righttop righttop position in grid
      * @param p_rotation rotation
+     * @bug check parameter
      */
-    protected IBaseWay( final List<Integer> p_spriteposition, final List<Integer> p_leftbottom, final List<Integer> p_righttop, final int p_rotation )
+    protected IBaseWay( final IAgentConfiguration<T> p_configuration, final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop, final int p_rotation )
     {
-        m_spriteposition = new DenseDoubleMatrix1D( new double[]{
-            p_spriteposition.get( 0 ),
-            p_spriteposition.get( 1 )
-        } );
+        super( p_configuration );
 
         if ( ( p_leftbottom == null ) || ( p_leftbottom.size() != 2 ) )
             throw new RuntimeException( "left-bottom corner is not set" );
@@ -61,15 +52,17 @@ public abstract class IBaseWay implements IVirtual
         m_rotation = p_rotation;
     }
 
+
     /**
      * sprite initialize
      *
      * @param p_texture texture
+     * @bug incomplete
      */
     public void spriteinitialize( final float p_unit, final Texture p_texture )
     {
         m_sprite = new Sprite( p_texture );
-        m_sprite.setPosition( (float) m_spriteposition.get( 0 ), (float) m_spriteposition.get( 1 ) );
+        //m_sprite.setPosition( (float) m_spriteposition.get( 0 ), (float) m_spriteposition.get( 1 ) );
         m_sprite.setOrigin( 0, 0 );
         m_sprite.setRotation( m_rotation );
         //ToDO: I will change this after changing to another game engine
@@ -82,15 +75,4 @@ public abstract class IBaseWay implements IVirtual
         return m_sprite;
     }
 
-    @Override
-    public final DoubleMatrix1D position()
-    {
-        return m_position;
-    }
-
-    @Override
-    public IBaseWay call() throws Exception
-    {
-        return this;
-    }
 }

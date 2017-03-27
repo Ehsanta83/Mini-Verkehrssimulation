@@ -3,14 +3,16 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 import com.badlogic.gdx.graphics.Texture;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
+import java.text.MessageFormat;
+import java.util.Locale;
+
+
 /**
  * vehicle traffic light enumeration
  */
-public enum EVehiclesTrafficLight implements IETrafficLight
+public enum EVehiclesTrafficLightColor implements IETrafficLightColor
 {
     RED, REDYELLOW, GREEN, YELLOW;
-
-    public static final String TEXTURE_FILE_NAME = CCommon.PACKAGEPATH + "trafficlights/vehicles_{0}.png";
 
     /**
      * texture of the sprite
@@ -23,6 +25,8 @@ public enum EVehiclesTrafficLight implements IETrafficLight
         m_texture = p_texture;
     }
 
+
+
     @Override
     public Texture getTexture()
     {
@@ -30,7 +34,13 @@ public enum EVehiclesTrafficLight implements IETrafficLight
     }
 
     @Override
-    public EVehiclesTrafficLight call() throws Exception
+    public String path()
+    {
+        return MessageFormat.format( CCommon.PACKAGEPATH + "trafficlights/vehicles_{0}.png", this.name().toLowerCase( Locale.ROOT ) );
+    }
+
+    @Override
+    public EVehiclesTrafficLightColor next()
     {
         switch ( this )
         {

@@ -1,7 +1,7 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.lightjason.agentspeak.action.IAction;
@@ -15,8 +15,10 @@ import java.util.Set;
 
 /**
  * pedestrian generator
+ *
+ * @todo build with an agent
  */
-public class CPedestrianGenerator extends IBaseAgentGenerator<IMovableAgent>
+public class CPedestrianGenerator extends IBaseAgentGenerator<IMovable<?>>
 {
     /**
      * environment reference
@@ -47,11 +49,7 @@ public class CPedestrianGenerator extends IBaseAgentGenerator<IMovableAgent>
     @Override
     public CPedestrian generatesingle( final Object... p_data )
     {
-        return m_distribution.sample() < m_distribution.getNumericalMean()
-            ? null
-            : new CPedestrian(
-                m_environment,
-                m_configuration );
+        return null;
     }
 
 }

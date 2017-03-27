@@ -1,55 +1,50 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
+import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * vehicles traffic light class
  */
-public class CVehiclesTrafficLight extends IBaseTrafficLight<EVehiclesTrafficLight>
+public class CVehiclesTrafficLight extends IBaseTrafficLight<CVehiclesTrafficLight, EVehiclesTrafficLightColor>
 {
     /**
-     * number of cars in line, that wait behind the traffic light
-     * ToDo: implementing the code for this
-     */
-    private int m_numberofcarsinline;
-
-    /**
-     * traffic light constructor
+     * ctor
      *
-     * @param p_position left bottom position
-     * @param p_rotation rotation
-     * @param p_width width
-     * @param p_height height
-     * @param p_startColor start color of the traffic light
-     * @param p_startColorDuration duration of the start color
-     * @param p_duration duration of the traffic light colors
+     * @param p_configuration agent configuration
+     * @param p_light
+     * @param p_position
+     * @param p_rotation
      */
-    public CVehiclesTrafficLight( final List<Integer> p_position, final int p_rotation, final int p_width, final int p_height,
-                                  final EVehiclesTrafficLight p_startColor, final int p_startColorDuration, final int... p_duration )
+    public CVehiclesTrafficLight(
+        final IAgentConfiguration<CVehiclesTrafficLight> p_configuration,
+        final Class<EVehiclesTrafficLightColor> p_light,
+        final DoubleMatrix1D p_position,
+        final int p_rotation
+    )
     {
-        super( p_position, p_rotation, p_width, p_height, p_startColor, p_startColorDuration, p_duration );
+        super( p_configuration, p_light, p_position, p_rotation );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
+    public final Stream<ILiteral> literal( final IObject<?>... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
+    public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
         return Stream.of( CLiteral.from( "vehicletrafficlight",
-                CLiteral.from( "color", CRawTerm.from( m_color ) ),
-                CLiteral.from( "duration", CRawTerm.from( m_duration ) ),
-                CLiteral.from( "numberofcarsinline", CRawTerm.from( m_numberofcarsinline ) )
+                CLiteral.from( "color", CRawTerm.from( m_color ) )
         ) );
     }
+
 }

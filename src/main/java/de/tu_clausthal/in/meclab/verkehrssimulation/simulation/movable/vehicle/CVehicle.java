@@ -1,21 +1,16 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovableAgent;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EPedestriansTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -23,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * vehicle class
  */
-public class CVehicle extends IMovableAgent
+public class CVehicle extends IMovable<CVehicle>
 {
     public static final String TEXTURE_FILE_NAME = CCommon.PACKAGEPATH + "vehicles/{0}.png";
 
@@ -55,14 +50,23 @@ public class CVehicle extends IMovableAgent
     /**
      * ctor
      *
-     * @param p_environment        environment
      * @param p_agentconfiguration agent configuration
-     * @param p_position           initialize position
+     * @param p_environment environment
+     * @param p_position initialize position
+     * @param p_rotation
+     * @bug check parameter
+     * @bug replace type with enum
      */
-    protected CVehicle( final IEnvironment p_environment, final IAgentConfiguration<IMovableAgent> p_agentconfiguration, final DoubleMatrix1D p_position,
-                        final int p_rotation, final String p_type, final int p_width, final int p_height )
+    protected CVehicle(
+        final IAgentConfiguration<CVehicle> p_agentconfiguration,
+        final IEnvironment p_environment,
+        final DoubleMatrix1D p_position,
+        final int p_rotation,
+        final String p_type, final int p_width, final int p_height
+    )
     {
-        super( p_environment, p_agentconfiguration, p_position, p_rotation );
+        super( p_agentconfiguration, p_environment, p_position, p_rotation );
+
         m_type = p_type;
         m_width = p_width;
         m_height = p_height;
@@ -72,66 +76,20 @@ public class CVehicle extends IMovableAgent
     }
 
     @Override
-    public void spriteinitialize( float p_unit )
-    {
-        if ( m_texture == null )
-        {
-            m_texture = new Texture( Gdx.files.internal( MessageFormat.format( TEXTURE_FILE_NAME, "car" ) ) );
-        }
-        m_sprite = new Sprite( m_texture );
-        m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
-        m_sprite.setSize( m_width * p_unit, m_height * p_unit );
-        m_sprite.setOrigin( 0, 0 );
-        m_sprite.setRotation( m_rotation );
-    }
-
-    @Override
-    protected int speed()
-    {
-        return 0;
-    }
-
-    @Override
-    protected double nearby()
-    {
-        return 0;
-    }
-
-    @Override
-    public <T extends IObject> Stream<ILiteral> literal( final T... p_object )
+    public final Stream<ILiteral> literal( final IObject<?>... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );
     }
 
     @Override
-    public <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object )
+    public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
         return Stream.of( CLiteral.from( "vehicle",
-                CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
-                CLiteral.from( "type", CRawTerm.from( m_type ) ),
-                CLiteral.from( "visibility", CRawTerm.from( m_visibility ) ),
-                CLiteral.from( "vehiclestrafficlightcolor", CRawTerm.from( this.vehiclestrafficlightcolor() ) ),
-                CLiteral.from( "pedestrianstrafficlightcolor", CRawTerm.from( this.pedestrianstrafficlightcolor() ) )
+                                         CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
+                                         CLiteral.from( "type", CRawTerm.from( m_type ) ),
+                                         CLiteral.from( "visibility", CRawTerm.from( m_visibility ) )
         ) );
     }
 
-    /**
-     * get related vehicles traffic light color
-     * @return traffic light color
-     */
-    private EVehiclesTrafficLight vehiclestrafficlightcolor()
-    {
-        //ToDo: implement this later
-        return EVehiclesTrafficLight.RED;
-    }
 
-    /**
-     * get related pedestrian traffic light color
-     * @return traffic light color
-     */
-    private EPedestriansTrafficLight pedestrianstrafficlightcolor()
-    {
-        // ToDo: implement this later
-        return EPedestriansTrafficLight.RED;
-    }
 }

@@ -1,13 +1,19 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
 
 import com.badlogic.gdx.graphics.Texture;
+import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
+
+import java.text.MessageFormat;
+import java.util.Locale;
+
 
 /**
  * pedestrian traffic light enumeration
  */
-public enum EPedestriansTrafficLight implements IETrafficLight
+public enum EPedestriansTrafficLightColor implements IETrafficLightColor
 {
     RED, GREEN;
+
     /**
      * texture of the sprite
      */
@@ -26,7 +32,13 @@ public enum EPedestriansTrafficLight implements IETrafficLight
     }
 
     @Override
-    public EPedestriansTrafficLight call() throws Exception
+    public String path()
+    {
+        return MessageFormat.format( CCommon.PACKAGEPATH + "trafficlights/vehicles_{0}.png", this.name().toLowerCase( Locale.ROOT ) );
+    }
+
+    @Override
+    public EPedestriansTrafficLightColor next()
     {
         switch ( this )
         {

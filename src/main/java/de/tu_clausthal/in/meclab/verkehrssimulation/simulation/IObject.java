@@ -1,8 +1,7 @@
 
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
 
-import cern.colt.matrix.DoubleMatrix1D;
-import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ISprite;
+import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.stream.Stream;
@@ -10,32 +9,23 @@ import java.util.stream.Stream;
 /**
  * object interface
  */
-public interface IObject extends ISprite
+public interface IObject<T extends IAgent<?>> extends IAgent<T>
 {
 
     /**
-     * returns the current position of the object
+     * get literal of the object
      *
-     * @return position tuple
+     * @param p_object objects
+     * @return stream of literal
      */
-    @Deprecated
-    DoubleMatrix1D position();
+    Stream<ILiteral> literal( final IObject<?>... p_object );
 
     /**
      * get literal of the object
      *
      * @param p_object objects
-     * @param <T> type of object
      * @return stream of literal
      */
-    <T extends IObject> Stream<ILiteral> literal( final T... p_object );
+    Stream<ILiteral> literal( final Stream<IObject<?>> p_object );
 
-    /**
-     * get literal of the object
-     *
-     * @param p_object objects
-     * @param <T> type of object
-     * @return stream of literal
-     */
-    <T extends IObject> Stream<ILiteral> literal( final Stream<T> p_object );
 }
