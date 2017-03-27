@@ -5,10 +5,9 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvi
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian.CPedestrianGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CVehiclesTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.EVehiclesTrafficLightColor;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CTrafficLightVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ELightColorVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
@@ -284,12 +283,12 @@ public final class CConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
             .filter( Objects::nonNull )
-            .map( i -> new CVehiclesTrafficLight(
+            .map( i -> new CTrafficLightVehicle(
                 (List<Integer>) i.get( "position" ),
                 (int) i.get( "rotation" ),
                 (int) i.get( "width" ),
                 (int) i.get( "height" ),
-                i.get( "startcolor" ).equals( "green" ) ? EVehiclesTrafficLightColor.GREEN : EVehiclesTrafficLightColor.RED,
+                i.get( "startcolor" ).equals( "green" ) ? ELightColorVehicle.GREEN : ELightColorVehicle.RED,
                 (int) i.get( "startcolorduration" ),
                 ( (List<Integer>) i.get( "duration" ) ).stream().mapToInt( j -> j ).toArray()
 
@@ -374,7 +373,7 @@ public final class CConfiguration
                 p_agentprint ? Stream.of() : Stream.of( new CEmptyPrint() ),
                 Stream.concat(
                     org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
-                    org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( CVehicle.class )
+                    org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle.class )
                 )
             ).collect( Collectors.toSet() ) );
 

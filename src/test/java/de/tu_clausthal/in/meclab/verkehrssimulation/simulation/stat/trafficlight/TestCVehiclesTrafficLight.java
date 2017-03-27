@@ -6,7 +6,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficligh
 public class TestCVehiclesTrafficLight
 {
 
-    private CPedestriansTrafficLight m_pedestrianTrafficLight;
+    private CTrafficLightPedestrian m_pedestrianTrafficLight;
 
 
 

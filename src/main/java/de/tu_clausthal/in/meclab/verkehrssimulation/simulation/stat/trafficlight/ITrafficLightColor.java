@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 /**
  * traffic light enumeration interface
+ * @bug remove texture for jetty
  */
-public interface IETrafficLightColor
+public interface ITrafficLightColor
 {
     /**
      * set texture
@@ -25,6 +26,11 @@ public interface IETrafficLightColor
      */
     String path();
 
-    IETrafficLightColor next();
+    /**
+     * changes the color
+     *
+     * @return new color reference
+     */
+    ITrafficLightColor next();
 
 }

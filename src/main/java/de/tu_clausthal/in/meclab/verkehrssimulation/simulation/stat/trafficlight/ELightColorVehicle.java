@@ -8,11 +8,12 @@ import java.util.Locale;
 
 
 /**
- * pedestrian traffic light enumeration
+ * vehicle traffic light enumeration
+ * @bug replace texture for jetty
  */
-public enum EPedestriansTrafficLightColor implements IETrafficLightColor
+public enum ELightColorVehicle implements ITrafficLightColor
 {
-    RED, GREEN;
+    RED, REDYELLOW, GREEN, YELLOW;
 
     /**
      * texture of the sprite
@@ -24,6 +25,8 @@ public enum EPedestriansTrafficLightColor implements IETrafficLightColor
     {
         m_texture = p_texture;
     }
+
+
 
     @Override
     public Texture getTexture()
@@ -38,12 +41,14 @@ public enum EPedestriansTrafficLightColor implements IETrafficLightColor
     }
 
     @Override
-    public EPedestriansTrafficLightColor next()
+    public ELightColorVehicle next()
     {
         switch ( this )
         {
-            case RED : return GREEN;
-            case GREEN : return RED;
+            case RED : return REDYELLOW;
+            case REDYELLOW: return GREEN;
+            case GREEN : return YELLOW;
+            case YELLOW : return RED;
 
             default:
                 return RED;
