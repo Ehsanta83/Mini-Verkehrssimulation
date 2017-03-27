@@ -13,7 +13,10 @@ import java.util.List;
 
 /**
  * screen entry point, all graphical components based on the LibGDX library
+ *
+ * @deprecated remove for jetty
  */
+@Deprecated
 public class CScreen extends ApplicationAdapter
 {
     /**

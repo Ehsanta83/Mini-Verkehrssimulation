@@ -9,7 +9,9 @@ import java.util.Locale;
 
 /**
  * movable factory
+ * @deprecated remove and use EObjectFactory
  */
+@Deprecated
 public enum EMovableFactory
 {
     PEDESTRIAN,

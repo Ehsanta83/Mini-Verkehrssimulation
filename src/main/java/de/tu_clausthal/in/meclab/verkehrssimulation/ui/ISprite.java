@@ -5,7 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * visualize interface
+ *
+ * @deprecated remove for jetty
  */
+@Deprecated
 public interface ISprite extends IVisualize
 {
     /**

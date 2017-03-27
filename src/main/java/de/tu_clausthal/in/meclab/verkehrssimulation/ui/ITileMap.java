@@ -4,7 +4,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 
 /**
  * interface for creating a tilemap (environment)
+ *
+ * @deprecated remove for jetty
  */
+@Deprecated
 public interface ITileMap extends IVisualize
 {
     /**
