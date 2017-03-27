@@ -1,7 +1,7 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.ui;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+
 
 /**
  * visualize interface
@@ -16,11 +16,12 @@ public interface ISprite extends IVisualize
      *
      * @return sprite object
      */
+    @Deprecated
     Sprite sprite();
 
     /**
      * sprite initialize for correct painting initialization
-     *
      */
+    @Deprecated
     void spriteinitialize( final float p_unit );
 }

@@ -1,10 +1,10 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
 
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.stream.Stream;
+
 
 /**
  * object interface

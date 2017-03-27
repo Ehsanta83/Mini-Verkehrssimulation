@@ -1,4 +1,3 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
@@ -7,6 +6,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.jet.math.Functions;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.CMath;
+
 
 /**
  * direction enum (counter clockwise)
@@ -58,9 +58,9 @@ public enum EDirection
                 .assign( p_position, Functions.minus )
                 .assign( Functions.div( Math.sqrt( Algebra.DEFAULT.norm2( l_view ) ) ) )
         )
-            .assign( Functions.mult( p_speed ) )
-            .assign( p_position, Functions.plus )
-            .assign( Math::round );
+                            .assign( Functions.mult( p_speed ) )
+                            .assign( p_position, Functions.plus )
+                            .assign( Math::round );
     }
 
 
@@ -75,8 +75,8 @@ public enum EDirection
         return EDirection.values()[
             (int) (
                 p_angle < 0
-                    ? 360 + p_angle
-                    : p_angle
+                ? 360 + p_angle
+                : p_angle
             ) / 45
             ];
     }

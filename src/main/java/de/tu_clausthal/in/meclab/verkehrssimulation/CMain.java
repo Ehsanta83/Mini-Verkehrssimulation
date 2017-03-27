@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 /**
  * main desktop application
  */
@@ -55,8 +56,8 @@ public final class CMain
                 CConfiguration.INSTANCE.trafficlights().parallelStream(),
                 CConfiguration.INSTANCE.agents().parallelStream()
             )
-                .flatMap( i -> i )
-                .collect( Collectors.toList() ),
+                  .flatMap( i -> i )
+                  .collect( Collectors.toList() ),
 
             CConfiguration.INSTANCE.environment()
         );
@@ -88,47 +89,48 @@ public final class CMain
         IntStream
             .range( 0, CConfiguration.INSTANCE.simulationsteps() )
             .mapToObj( i ->
-            {
-                Stream.concat(
-                    Stream.of(
-                        //CConfiguration.INSTANCE.evaluation(),
-                        CConfiguration.INSTANCE.environment()
-                    ),
-                    Stream.concat(
-                        Stream.concat(
-                            CConfiguration.INSTANCE.ways().parallelStream(),
-                            CConfiguration.INSTANCE.trafficlights().parallelStream() ),
-                        CConfiguration.INSTANCE.agents().parallelStream()
-                    )
-                )
-                    .parallel()
-                    .forEach( j ->
-                    {
-                        try
-                        {
-                            j.call();
-                        }
-                        catch ( final Exception l_exception )
-                        {
-                            LOGGER.warning( l_exception.toString() );
-                            if ( CConfiguration.INSTANCE.stackstrace() )
-                                l_exception.printStackTrace( System.err );
-                        }
-                    } );
-                // thread sleep for slowing down
-                if ( CConfiguration.INSTANCE.threadsleeptime() > 0 )
-                    try
-                    {
-                        Thread.sleep( CConfiguration.INSTANCE.threadsleeptime() );
-                    }
-                    catch ( final InterruptedException l_exception )
-                    {
-                        LOGGER.warning( l_exception.toString() );
-                    }
+                       {
+                           Stream.concat(
+                               Stream.of(
+                                   //CConfiguration.INSTANCE.evaluation(),
+                                   CConfiguration.INSTANCE.environment()
+                               ),
+                               Stream.concat(
+                                   Stream.concat(
+                                       CConfiguration.INSTANCE.ways().parallelStream(),
+                                       CConfiguration.INSTANCE.trafficlights().parallelStream()
+                                   ),
+                                   CConfiguration.INSTANCE.agents().parallelStream()
+                               )
+                           )
+                                 .parallel()
+                                 .forEach( j ->
+                                           {
+                                               try
+                                               {
+                                                   j.call();
+                                               }
+                                               catch ( final Exception l_exception )
+                                               {
+                                                   LOGGER.warning( l_exception.toString() );
+                                                   if ( CConfiguration.INSTANCE.stackstrace() )
+                                                       l_exception.printStackTrace( System.err );
+                                               }
+                                           } );
+                           // thread sleep for slowing down
+                           if ( CConfiguration.INSTANCE.threadsleeptime() > 0 )
+                               try
+                               {
+                                   Thread.sleep( CConfiguration.INSTANCE.threadsleeptime() );
+                               }
+                               catch ( final InterruptedException l_exception )
+                               {
+                                   LOGGER.warning( l_exception.toString() );
+                               }
 
-                // checks that the simulation is closed
-                return p_screen.isDisposed();
-            } )
+                           // checks that the simulation is closed
+                           return p_screen.isDisposed();
+                       } )
             .filter( i -> i )
             .findFirst();
     }

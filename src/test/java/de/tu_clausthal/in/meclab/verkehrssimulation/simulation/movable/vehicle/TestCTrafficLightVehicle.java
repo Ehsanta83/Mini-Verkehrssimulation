@@ -80,7 +80,7 @@ public final class TestCTrafficLightVehicle
                 final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
             )
         {
-            m_vehicle = new CVehicleGenerator(
+            m_vehicle = new CVehicleGeneratorOld(
                 m_environment,
                 l_stream,
                 m_actions,

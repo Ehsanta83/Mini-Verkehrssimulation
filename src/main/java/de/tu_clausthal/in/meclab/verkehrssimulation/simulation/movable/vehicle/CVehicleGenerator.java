@@ -1,53 +1,50 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveableGenerator;
 import org.lightjason.agentspeak.action.IAction;
-import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
-import org.lightjason.agentspeak.language.execution.IVariableBuilder;
+import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Random;
 import java.util.Set;
 
-/**
- * agent generator for dynamic / moving agents
- * @todo add agent
- */
-public class CVehicleGenerator extends IBaseAgentGenerator<IMovable<?>>
+
+public final class CVehicleGenerator extends IBaseMoveableGenerator<CVehicle>
 {
-    /**
-     * environment reference
-     */
-    private final IEnvironment m_environment;
-    /**
-     * random generator
-     */
-    private final Random m_random = new Random();
 
     /**
      * ctor
      *
-     * @param p_environment environment
-     * @param p_stream input asl stream
-     * @param p_actions action set
-     * @param p_aggregation aggregation set
-     * @throws Exception on any error
+     * @param p_configuration agent configuration
+     * @param p_environment
      */
-    public CVehicleGenerator( final IEnvironment p_environment, final InputStream p_stream,
-                             final Set<IAction> p_actions, final IAggregation p_aggregation
-    ) throws Exception
+    public CVehicleGenerator(
+        final IAgentConfiguration<CVehicle> p_configuration,
+        final IEnvironment<?> p_environment
+    )
     {
-        super( p_stream, p_actions, p_aggregation, Collections.emptySet(), IVariableBuilder.EMPTY );
-        m_environment = p_environment;
+        super( p_configuration, p_environment );
     }
 
-    @SuppressWarnings( "unchecked" )
-    @Override
-    public CVehicle generatesingle( final Object... p_data )
+    /**
+     * generator
+     */
+    private final class CGenerator extends IGenerator
     {
-        return null;
+
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+                           final IAggregation p_aggregation
+        ) throws Exception
+        {
+            super( p_stream, p_actions, p_aggregation );
+        }
+
+        @Override
+        public final CVehicle generatesingle( final Object... p_data )
+        {
+            return new CVehicle( m_configuration, m_environment, null );
+        }
     }
+
 }

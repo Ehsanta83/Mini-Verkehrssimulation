@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
@@ -7,6 +7,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.stream.Stream;
+
 
 /**
  * vehicles traffic light class

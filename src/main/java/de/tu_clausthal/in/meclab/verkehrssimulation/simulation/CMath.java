@@ -16,6 +16,7 @@ import org.apache.commons.math3.random.SynchronizedRandomGenerator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+
 /**
  * class for global math algorithm
  */
@@ -45,7 +46,8 @@ public final class CMath
      * pvate ctor
      */
     private CMath()
-    {}
+    {
+    }
 
     /**
      * consums a stream of matrix objects
@@ -57,10 +59,10 @@ public final class CMath
     public static Stream<DoubleMatrix1D> matrixconsumer( final Stream<DoubleMatrix1D> p_stream, final Consumer<String> p_consumer )
     {
         return p_stream.map( i ->
-        {
-            p_consumer.accept( MATRIXFORMAT.toString( i ) + " " );
-            return i;
-        } );
+                             {
+                                 p_consumer.accept( MATRIXFORMAT.toString( i ) + " " );
+                                 return i;
+                             } );
     }
 
     /**
@@ -91,8 +93,8 @@ public final class CMath
         final double l_second = ALGEBRA.norm2( p_second );
 
         return ( l_first == 0 ) || ( l_second == 0 )
-            ? new ImmutablePair<>( 0.0, false )
-            : new ImmutablePair<>( Math.acos( ALGEBRA.mult( p_first, p_second ) / ( Math.sqrt( l_first ) * Math.sqrt( l_second ) ) ), true );
+               ? new ImmutablePair<>( 0.0, false )
+               : new ImmutablePair<>( Math.acos( ALGEBRA.mult( p_first, p_second ) / ( Math.sqrt( l_first ) * Math.sqrt( l_second ) ) ), true );
     }
 
 

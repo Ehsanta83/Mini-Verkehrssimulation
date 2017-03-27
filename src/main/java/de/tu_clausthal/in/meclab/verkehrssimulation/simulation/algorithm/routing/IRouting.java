@@ -1,4 +1,3 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing;
 
 import cern.colt.matrix.DoubleMatrix1D;
@@ -6,6 +5,7 @@ import cern.colt.matrix.ObjectMatrix2D;
 
 import java.util.List;
 import java.util.stream.Stream;
+
 
 /**
  * routing interface
@@ -40,6 +40,5 @@ public interface IRouting
      * @return estimated time
      */
     double estimatedtime( final Stream<DoubleMatrix1D> p_route, final double p_speed );
-
 
 }

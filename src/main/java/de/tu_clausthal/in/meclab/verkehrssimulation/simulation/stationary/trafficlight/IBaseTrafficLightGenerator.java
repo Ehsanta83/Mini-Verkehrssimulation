@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @bug fix documentation
  */
-public abstract class IBaseTrafficLightGenerator<T extends IBaseTrafficLight<?, ?>>  extends IBaseAgentGenerator<T>
+public abstract class IBaseTrafficLightGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseAgentGenerator<T>
 {
     private final IEnvironment<?> m_environment;
 

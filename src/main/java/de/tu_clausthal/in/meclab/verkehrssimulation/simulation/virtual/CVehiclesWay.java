@@ -11,6 +11,7 @@ import org.lightjason.agentspeak.language.ILiteral;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+
 /**
  * vehicles way class
  */
@@ -28,7 +29,9 @@ public class CVehiclesWay extends IBaseWay<CVehiclesWay>
      * @param p_righttop righttop position in grid
      * @param p_rotation rotation
      */
-    public CVehiclesWay( final IAgentConfiguration<CVehiclesWay> p_configuration, final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop, final int p_rotation )
+    public CVehiclesWay( final IAgentConfiguration<CVehiclesWay> p_configuration, final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop,
+                         final int p_rotation
+    )
     {
         super( p_configuration, p_leftbottom, p_righttop, p_rotation );
     }
@@ -36,7 +39,7 @@ public class CVehiclesWay extends IBaseWay<CVehiclesWay>
     @Override
     public final void spriteinitialize( final float p_unit )
     {
-        super.spriteinitialize(  p_unit, new Texture( Gdx.files.internal( TEXTURE_FILE_NAME ) ) );
+        super.spriteinitialize( p_unit, new Texture( Gdx.files.internal( TEXTURE_FILE_NAME ) ) );
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import com.badlogic.gdx.graphics.Texture;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
@@ -9,11 +9,15 @@ import java.util.Locale;
 
 /**
  * vehicle traffic light enumeration
+ *
  * @bug replace texture for jetty
  */
 public enum ELightColorVehicle implements ITrafficLightColor
 {
-    RED, REDYELLOW, GREEN, YELLOW;
+    RED,
+    REDYELLOW,
+    GREEN,
+    YELLOW;
 
     /**
      * texture of the sprite
@@ -21,17 +25,15 @@ public enum ELightColorVehicle implements ITrafficLightColor
     private Texture m_texture;
 
     @Override
-    public void setTexture( final Texture p_texture )
-    {
-        m_texture = p_texture;
-    }
-
-
-
-    @Override
     public Texture getTexture()
     {
         return m_texture;
+    }
+
+    @Override
+    public void setTexture( final Texture p_texture )
+    {
+        m_texture = p_texture;
     }
 
     @Override
@@ -45,10 +47,14 @@ public enum ELightColorVehicle implements ITrafficLightColor
     {
         switch ( this )
         {
-            case RED : return REDYELLOW;
-            case REDYELLOW: return GREEN;
-            case GREEN : return YELLOW;
-            case YELLOW : return RED;
+            case RED:
+                return REDYELLOW;
+            case REDYELLOW:
+                return GREEN;
+            case GREEN:
+                return YELLOW;
+            case YELLOW:
+                return RED;
 
             default:
                 return RED;

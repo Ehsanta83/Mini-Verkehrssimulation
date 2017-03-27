@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 /**
  * common class
  */
@@ -64,6 +65,7 @@ public final class CCommon
      *
      * @param p_file file
      * @return URL of file or null
+     *
      * @throws MalformedURLException on incorrect URL
      * @throws URISyntaxException on incorrect URI syntax
      */
@@ -77,6 +79,7 @@ public final class CCommon
      *
      * @param p_file file relative to the CMain
      * @return URL of file or null
+     *
      * @throws MalformedURLException on incorrect URL
      * @throws URISyntaxException on incorrect URI syntax
      */

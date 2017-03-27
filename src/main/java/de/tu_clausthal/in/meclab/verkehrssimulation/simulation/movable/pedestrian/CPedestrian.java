@@ -3,71 +3,45 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestri
 import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
+import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
+import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
+import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.ITerm;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Stream;
+
 
 /**
  * pedestrian class
  */
-public class CPedestrian extends IMovable<CPedestrian>
+public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
 
-    /**
-     * gender
-     */
-    private String m_gender;
-    /**
-     * speed
-     */
-    private int m_speed;
-    /**
-     * type
-     */
-    private String m_type;
-    /**
-     * visibility
-     */
-    private int m_visibility;
+
 
     /**
      * ctor
      *
-     * @param p_agentconfiguration agent configuration
-     * @param p_environment environment
-     * @param p_position initialize position
-     * @param p_rotation
+     * @param p_configuration agent configuration
+     * @param p_environment
+     * @param p_position
      */
     protected CPedestrian(
-        final IAgentConfiguration<CPedestrian> p_agentconfiguration,
-        final IEnvironment p_environment,
-        final DoubleMatrix1D p_position,
-        final int p_rotation
+        final IAgentConfiguration<CPedestrian> p_configuration,
+        final IEnvironment<?> p_environment,
+        final DoubleMatrix1D p_position
     )
     {
-        super( p_agentconfiguration, p_environment, p_position, p_rotation );
+        super( p_configuration, p_environment, "pedestrian", p_position );
     }
 
-    @Override
-    public final Stream<ILiteral> literal( final IObject<?>... p_object )
-    {
-        return this.literal( Arrays.stream( p_object ) );
-    }
-
-    @Override
-    public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
-    {
-        return Stream.of( CLiteral.from( "pedestrian",
-                                         CLiteral.from( "gender", CRawTerm.from( m_gender ) ),
-                                         CLiteral.from( "speed", CRawTerm.from( m_speed ) ),
-                                         CLiteral.from( "type", CRawTerm.from( m_type ) ),
-                                         CLiteral.from( "visibility", CRawTerm.from( m_visibility ) )
-        ) );
-    }
 
 }

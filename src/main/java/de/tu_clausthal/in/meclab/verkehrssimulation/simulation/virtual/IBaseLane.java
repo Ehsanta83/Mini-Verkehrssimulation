@@ -8,6 +8,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 
 import java.util.List;
 
+
 /**
  * abstract base lane class
  */

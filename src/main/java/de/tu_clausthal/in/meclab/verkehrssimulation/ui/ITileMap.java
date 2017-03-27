@@ -2,6 +2,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.ui;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
+
 /**
  * interface for creating a tilemap (environment)
  *
@@ -15,6 +16,7 @@ public interface ITileMap extends IVisualize
      *
      * @return map
      */
+    @Deprecated
     TiledMap map();
 
     /**
@@ -22,6 +24,7 @@ public interface ITileMap extends IVisualize
      *
      * @return rows
      */
+    @Deprecated
     int row();
 
     /**
@@ -29,6 +32,7 @@ public interface ITileMap extends IVisualize
      *
      * @return columns
      */
+    @Deprecated
     int column();
 
     /**
@@ -36,5 +40,6 @@ public interface ITileMap extends IVisualize
      *
      * @return cell size
      */
+    @Deprecated
     int cellsize();
 }

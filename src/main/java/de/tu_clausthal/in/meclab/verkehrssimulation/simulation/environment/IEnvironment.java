@@ -8,10 +8,11 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ITileMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+
 /**
  * environment interface
  */
-public interface IEnvironment<T extends IEnvironment<?>> extends IObject<T>, ITileMap
+public interface IEnvironment<T extends IEnvironment<?>> extends IObject<T>
 {
 
     // --- main elements ---------------------------------------------------------------------------------------------------------------------------------------

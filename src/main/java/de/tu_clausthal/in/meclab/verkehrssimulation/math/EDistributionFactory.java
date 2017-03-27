@@ -23,10 +23,11 @@ import org.apache.commons.math3.distribution.WeibullDistribution;
 import java.text.MessageFormat;
 import java.util.Locale;
 
+
 /**
  * distribution factory
  */
-public enum  EDistributionFactory
+public enum EDistributionFactory
 {
     BETA,
     CAUCHY,
@@ -49,6 +50,7 @@ public enum  EDistributionFactory
 
     /**
      * generate the distribution
+     *
      * @param p_args distribution arguments
      * @return the distribution
      */
@@ -56,24 +58,42 @@ public enum  EDistributionFactory
     {
         switch ( this )
         {
-            case BETA: return new BetaDistribution( p_args[0], p_args[1] );
-            case CAUCHY: return new CauchyDistribution( p_args[0], p_args[1] );
-            case CHI_SQUARED: return new ChiSquaredDistribution( p_args[0] );
-            case EXPONENTIAL: return new ExponentialDistribution( p_args[0] );
-            case F: return new FDistribution( p_args[0], p_args[1] );
-            case GAMMA: return new GammaDistribution( p_args[0], p_args[1] );
-            case GUMBEL: return new GumbelDistribution( p_args[0], p_args[1] );
-            case LAPLACE: return new LaplaceDistribution( p_args[0], p_args[1] );
-            case LEVY: return new LevyDistribution( p_args[0], p_args[1] );
-            case LOGISTIC: return new LogisticDistribution( p_args[0], p_args[1] );
-            case LOG_NORMAL: return new LogNormalDistribution( p_args[0], p_args[1] );
-            case NAKAGAMI: return new NakagamiDistribution( p_args[0], p_args[1] );
-            case NORMAL: return new NormalDistribution( p_args[0], p_args[1] );
-            case PARETO: return new ParetoDistribution( p_args[0], p_args[1] );
-            case T: return new TDistribution( p_args[0] );
-            case TRIANGULAR: return new TriangularDistribution( p_args[0], p_args[1], p_args[2] );
-            case UNIFORM: return new UniformRealDistribution( p_args[0], p_args[1] );
-            case WEIBULL: return new WeibullDistribution( p_args[0], p_args[1] );
+            case BETA:
+                return new BetaDistribution( p_args[0], p_args[1] );
+            case CAUCHY:
+                return new CauchyDistribution( p_args[0], p_args[1] );
+            case CHI_SQUARED:
+                return new ChiSquaredDistribution( p_args[0] );
+            case EXPONENTIAL:
+                return new ExponentialDistribution( p_args[0] );
+            case F:
+                return new FDistribution( p_args[0], p_args[1] );
+            case GAMMA:
+                return new GammaDistribution( p_args[0], p_args[1] );
+            case GUMBEL:
+                return new GumbelDistribution( p_args[0], p_args[1] );
+            case LAPLACE:
+                return new LaplaceDistribution( p_args[0], p_args[1] );
+            case LEVY:
+                return new LevyDistribution( p_args[0], p_args[1] );
+            case LOGISTIC:
+                return new LogisticDistribution( p_args[0], p_args[1] );
+            case LOG_NORMAL:
+                return new LogNormalDistribution( p_args[0], p_args[1] );
+            case NAKAGAMI:
+                return new NakagamiDistribution( p_args[0], p_args[1] );
+            case NORMAL:
+                return new NormalDistribution( p_args[0], p_args[1] );
+            case PARETO:
+                return new ParetoDistribution( p_args[0], p_args[1] );
+            case T:
+                return new TDistribution( p_args[0] );
+            case TRIANGULAR:
+                return new TriangularDistribution( p_args[0], p_args[1], p_args[2] );
+            case UNIFORM:
+                return new UniformRealDistribution( p_args[0], p_args[1] );
+            case WEIBULL:
+                return new WeibullDistribution( p_args[0], p_args[1] );
 
             default:
                 throw new RuntimeException( MessageFormat.format( "not set {0}", this ) );

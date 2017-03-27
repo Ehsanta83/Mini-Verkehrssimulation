@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+
 /**
  * environment class
  */
@@ -128,10 +129,10 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
     }
 
     /**
-     *
      * @param p_object object, which should be moved (must store the current position)
      * @param p_position new position
      * @return object reference
+     *
      * @bug check parameter and generics
      */
     @Override
@@ -160,13 +161,14 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
     @SuppressWarnings( "unchecked" )
     public final synchronized IObject get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_agentspostions.getQuick( (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
+        return (IObject) m_agentspostions.getQuick(
+            (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
     }
 
     /**
-     *
      * @param p_object element
      * @return
+     *
      * @bug check parameter
      */
     @Override
@@ -189,9 +191,9 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
     public final boolean isinside( final DoubleMatrix1D p_position )
     {
         return ( p_position.getQuick( 0 ) >= 0 )
-            && ( p_position.getQuick( 1 ) >= 0 )
-            && ( p_position.getQuick( 0 ) < m_row )
-            && ( p_position.getQuick( 1 ) < m_column );
+               && ( p_position.getQuick( 1 ) >= 0 )
+               && ( p_position.getQuick( 0 ) < m_row )
+               && ( p_position.getQuick( 1 ) < m_column );
     }
 
     @Override
@@ -216,6 +218,14 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
         return Stream.of();
     }
 
+    @Override
+    public final TiledMap map()
+    {
+        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "background.tmx" );
+    }
+
+    // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
+
     /**
      * value clipping
      *
@@ -226,13 +236,5 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
     private static double clip( final double p_value, final double p_max )
     {
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
-    }
-
-    // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public final TiledMap map()
-    {
-        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "background.tmx" );
     }
 }

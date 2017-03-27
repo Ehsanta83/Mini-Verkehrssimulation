@@ -1,4 +1,3 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.ui;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import java.util.List;
+
 
 /**
  * screen entry point, all graphical components based on the LibGDX library
@@ -76,7 +76,6 @@ public class CScreen extends ApplicationAdapter
         // create sprites
         m_sprites.forEach( i -> i.spriteinitialize( l_unit ) );
         m_render.setView( m_camera );
-
 
     }
 

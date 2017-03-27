@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 /**
  * test pedestrian traffic light

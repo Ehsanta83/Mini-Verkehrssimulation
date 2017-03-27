@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
@@ -16,8 +16,8 @@ public final class CTrafficLightPedestrianGenerator extends IBaseTrafficLightGen
 {
 
     public CTrafficLightPedestrianGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                                                final IAggregation p_aggregation,
-                                                final IEnvironment<?> p_environment
+                                             final IAggregation p_aggregation,
+                                             final IEnvironment<?> p_environment
     ) throws Exception
     {
         super( p_stream, p_actions, p_aggregation, p_environment );

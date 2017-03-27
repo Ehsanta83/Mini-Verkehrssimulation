@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+
 /**
  * intersection class
  */
@@ -44,7 +45,8 @@ public class CIntersection extends IBaseLane<CIntersection>
     @Override
     public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
-        return Stream.of( CLiteral.from( "lane",
+        return Stream.of( CLiteral.from(
+            "lane",
             CLiteral.from( "passable", CRawTerm.from( m_passable ) )
         ) );
     }

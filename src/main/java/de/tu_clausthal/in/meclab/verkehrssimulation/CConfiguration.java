@@ -3,12 +3,12 @@ package de.tu_clausthal.in.meclab.verkehrssimulation;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IMovable;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian.CPedestrianGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.CTrafficLightVehicle;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.ELightColorVehicle;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight.IBaseTrafficLight;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGeneratorOld;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.CTrafficLightVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.ELightColorVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.IBaseTrafficLight;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 /**
  * configuration and initialization of all simulation objects
@@ -96,7 +97,7 @@ public final class CConfiguration
     /**
      * simulation agents
      */
-    private List<IMovable> m_agents;
+    private List<IBaseMoveable> m_agents;
 
     /**
      * constructor
@@ -135,7 +136,8 @@ public final class CConfiguration
 
         // create traffic lights
         final List<IBaseTrafficLight> l_trafficlights = new LinkedList<>();
-        this.createTrafficLights( (List<Map<String, Object>>) l_data.getOrDefault( "trafficlights", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
+        this.createTrafficLights(
+            (List<Map<String, Object>>) l_data.getOrDefault( "trafficlights", Collections.<Map<String, Object>>emptyList() ), l_trafficlights );
         m_trafficlights = Collections.unmodifiableList( l_trafficlights );
 
         // create ways
@@ -160,7 +162,7 @@ public final class CConfiguration
         );
 
         // create agents
-        final List<IMovable> l_agents = new LinkedList<>();
+        final List<IBaseMoveable> l_agents = new LinkedList<>();
         this.createAgents(
             (Map<String, Object>) l_data.getOrDefault( "agents", Collections.<String, Object>emptyMap() ),
             l_agents,
@@ -266,7 +268,7 @@ public final class CConfiguration
      *
      * @return list of agents
      */
-    final List<IMovable> agents()
+    final List<IBaseMoveable> agents()
     {
         return m_agents;
     }
@@ -333,18 +335,18 @@ public final class CConfiguration
             .map( i -> new CLane(
                 (List<Integer>) i.get( "leftbottom" ),
                 (List<Integer>) i.get( "righttop" ),
-                    (String) i.get( "type" )
+                (String) i.get( "type" )
             ) )
             .forEach( p_lanes::add );
         p_lanesConfiguration
-                .stream()
-                .map( i -> (Map<String, Object>) i.get( "sidewalk" ) )
-                .filter( Objects::nonNull )
-                .map( i -> new CSidewalk(
-                        (List<Integer>) i.get( "leftbottom" ),
-                        (List<Integer>) i.get( "righttop" )
-                ) )
-                .forEach( p_lanes::add );
+            .stream()
+            .map( i -> (Map<String, Object>) i.get( "sidewalk" ) )
+            .filter( Objects::nonNull )
+            .map( i -> new CSidewalk(
+                (List<Integer>) i.get( "leftbottom" ),
+                (List<Integer>) i.get( "righttop" )
+            ) )
+            .forEach( p_lanes::add );
         p_lanesConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "intersection" ) )
@@ -364,89 +366,91 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IMovable> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IBaseMoveable> p_elements, final boolean p_agentprint ) throws IOException
     {
 
-        final Map<String, IAgentGenerator<IMovable>> l_agentgenerator = new HashMap<>();
+        final Map<String, IAgentGenerator<IBaseMoveable>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
                 p_agentprint ? Stream.of() : Stream.of( new CEmptyPrint() ),
                 Stream.concat(
                     org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
-                    org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle.class )
+                    org.lightjason.agentspeak.common.CCommon
+                        .actionsFromAgentClass( de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle.class )
                 )
             ).collect( Collectors.toSet() ) );
 
-        final List<Map<String, Object>> l_vehiclesrandomgeneratepositions = (List<Map<String, Object>>) p_agentsConfiguration.get( "vehiclesrandomgeneratepositions" );
+        final List<Map<String, Object>> l_vehiclesrandomgeneratepositions = (List<Map<String, Object>>) p_agentsConfiguration.get(
+            "vehiclesrandomgeneratepositions" );
 
         ( (List<Map<String, Object>>) p_agentsConfiguration.get( "vehicles" ) )
             .stream()
             .filter( Objects::nonNull )
             .forEach( i ->
-            {
-                // read ASL item from configuration and get the path relative to configuration
-                final String l_asl = m_configurationpath + "asl/" + ( (String) i.getOrDefault( "asl", "" ) ).trim();
+                      {
+                          // read ASL item from configuration and get the path relative to configuration
+                          final String l_asl = m_configurationpath + "asl/" + ( (String) i.getOrDefault( "asl", "" ) ).trim();
 
-                try (
-                    // open filestream of ASL content
-                    final InputStream l_stream = new URL( l_asl ).openStream();
-                    )
-                {
-                    // get existing agent generator or create a new one based on the ASL
-                    // and push it back if generator does not exists
-                    final IAgentGenerator<IMovable> l_generator = l_agentgenerator.getOrDefault(
-                        l_asl,
-                        new CVehicleGenerator(
-                            m_environment,
-                            l_stream,
-                            l_action,
-                            IAggregation.EMPTY
-                        )
-                    );
-                    l_agentgenerator.putIfAbsent( l_asl, l_generator );
+                          try (
+                              // open filestream of ASL content
+                              final InputStream l_stream = new URL( l_asl ).openStream();
+                          )
+                          {
+                              // get existing agent generator or create a new one based on the ASL
+                              // and push it back if generator does not exists
+                              final IAgentGenerator<IBaseMoveable> l_generator = l_agentgenerator.getOrDefault(
+                                  l_asl,
+                                  new CVehicleGeneratorOld(
+                                      m_environment,
+                                      l_stream,
+                                      l_action,
+                                      IAggregation.EMPTY
+                                  )
+                              );
+                              l_agentgenerator.putIfAbsent( l_asl, l_generator );
 
-                    // generate agents and put it to the list
-                    l_generator.generatemultiple(
-                        (int) i.getOrDefault( "number", 0 ),
-                        l_vehiclesrandomgeneratepositions,
-                        i.get( "type" ),
-                        i.get( "width" ),
-                        i.get( "height" )
-                    ).sequential().forEach( p_elements::add );
-                }
-                catch ( final Exception l_exception )
-                {
-                    l_exception.printStackTrace( System.out );
-                    System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
-                }
+                              // generate agents and put it to the list
+                              l_generator.generatemultiple(
+                                  (int) i.getOrDefault( "number", 0 ),
+                                  l_vehiclesrandomgeneratepositions,
+                                  i.get( "type" ),
+                                  i.get( "width" ),
+                                  i.get( "height" )
+                              ).sequential().forEach( p_elements::add );
+                          }
+                          catch ( final Exception l_exception )
+                          {
+                              l_exception.printStackTrace( System.out );
+                              System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
+                          }
 
-            } );
+                      } );
 
         final Map<String, Object> l_pedestrianconfigurations = (Map<String, Object>) p_agentsConfiguration.get( "pedestrians" );
         // read ASL item from configuration and get the path relative to configuration
         final String l_asl = m_configurationpath + "asl/" + ( (String) l_pedestrianconfigurations.getOrDefault( "asl", "" ) ).trim();
 
         try (
-                // open filestream of ASL content
-                final InputStream l_stream = new URL( l_asl ).openStream();
-            )
+            // open filestream of ASL content
+            final InputStream l_stream = new URL( l_asl ).openStream();
+        )
         {
             // get existing agent generator or create a new one based on the ASL
             // and push it back if generator does not exists
-            final IAgentGenerator<IMovable> l_generator = l_agentgenerator.getOrDefault(
-                    l_asl,
-                    new CPedestrianGenerator(
-                        l_stream,
-                        l_action,
-                        IAggregation.EMPTY,
-                        m_environment
-                    )
+            final IAgentGenerator<IBaseMoveable> l_generator = l_agentgenerator.getOrDefault(
+                l_asl,
+                new CPedestrianGenerator(
+                    l_stream,
+                    l_action,
+                    IAggregation.EMPTY,
+                    m_environment
+                )
             );
             l_agentgenerator.putIfAbsent( l_asl, l_generator );
 
             // generate agents and put it to the list
             l_generator.generatemultiple(
-                    (int) l_pedestrianconfigurations.getOrDefault( "number", 0 )
+                (int) l_pedestrianconfigurations.getOrDefault( "number", 0 )
             ).sequential().forEach( p_elements::add );
         }
         catch ( final Exception l_exception )
@@ -476,7 +480,7 @@ public final class CConfiguration
 
         @Override
         public IFuzzyValue<Boolean> execute( final IContext p_context, final boolean p_parallel, final List<ITerm> p_argument, final List<ITerm> p_return,
-                                            final List<ITerm> p_annotation
+                                             final List<ITerm> p_annotation
         )
         {
             return CFuzzyValue.from( true );

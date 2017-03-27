@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+
 /**
  * lane class
  */
@@ -47,9 +48,10 @@ public class CLane extends IBaseLane<CLane>
     @Override
     public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
-        return Stream.of( CLiteral.from( "lane",
-                CLiteral.from( "passable", CRawTerm.from( m_passable ) ),
-                CLiteral.from( "type", CRawTerm.from( m_type ) )
+        return Stream.of( CLiteral.from(
+            "lane",
+            CLiteral.from( "passable", CRawTerm.from( m_passable ) ),
+            CLiteral.from( "type", CRawTerm.from( m_type ) )
         ) );
     }
 

@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stat.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.Gdx;
@@ -35,6 +35,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
     /**
      * sprite
      */
+    @Deprecated
     private Sprite m_sprite;
     /**
      * defines the left bottom position (row / column), width, height
@@ -62,7 +63,8 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * @param p_position
      * @param p_rotation
      */
-    protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final Class<L> p_light, final DoubleMatrix1D p_position, final int p_rotation
+    protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final Class<L> p_light,
+                                 final DoubleMatrix1D p_position, final int p_rotation
     )
     {
         super( p_configuration );
@@ -73,19 +75,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
     }
-
-
-
-    /**
-     * changes the color of the light
-     */
-    @IAgentActionFilter
-    @IAgentActionName( name= "next" )
-    private void next()
-    {
-        m_color.get().next();
-    }
-
 
     @Override
     public Sprite sprite()
@@ -117,7 +106,8 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
     public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
         return Stream.of(
-            CLiteral.from( "trafficlight",
+            CLiteral.from(
+                "trafficlight",
                 Stream.concat(
                     Stream.of(
                         CLiteral.from( "color", CRawTerm.from( m_color.get().toString().toLowerCase( Locale.ROOT ) ) )
@@ -136,9 +126,19 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     protected abstract Stream<ILiteral> individual( final Stream<IObject<?>> p_object );
 
+    /**
+     * changes the color of the light
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "next" )
+    private void next()
+    {
+        m_color.get().next();
+    }
 
     /**
      * environment beliefbase
+     *
      * @bug missing methods
      */
     private final class CEnvironmentBeliefbase extends IBeliefbaseOnDemand<T>

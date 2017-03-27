@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 /**
  * JPS+ algorithm
  */
@@ -67,42 +68,50 @@ final class CJPSPlus implements IRouting
     public final double estimatedtime( final Stream<DoubleMatrix1D> p_route, final double p_speed )
     {
         return StreamUtils.windowed( p_route, 2, 1 )
-            .mapToDouble( i -> Math.sqrt(
-                Algebra.DEFAULT.norm2(
-                    new DenseDoubleMatrix1D( i.get( 1 ).toArray() )
-                        .assign( i.get( 0 ), Functions.minus )
-                )
-                ) / p_speed
-            )
-            .sum();
+                          .mapToDouble( i -> Math.sqrt(
+                              Algebra.DEFAULT.norm2(
+                                  new DenseDoubleMatrix1D( i.get( 1 ).toArray() )
+                                      .assign( i.get( 0 ), Functions.minus )
+                              )
+                                        ) / p_speed
+                          )
+                          .sum();
     }
 
     /**
      * individual jump point successors are identified
+     *
      * @param p_objects Snapshot of the environment
      * @param p_curnode the current node to search for successors
      * @param p_target the goal node
      * @param p_closedlist the list of coordinate that already explored
      * @param p_openlist the set of CJumpPoint that will be explored
      */
-    private void successors( final ObjectMatrix2D p_objects, final CJumpPoint p_curnode, final DoubleMatrix1D p_target, final ArrayList<DoubleMatrix1D> p_closedlist,
-                             final Set<CJumpPoint> p_openlist )
+    private void successors( final ObjectMatrix2D p_objects, final CJumpPoint p_curnode, final DoubleMatrix1D p_target,
+                             final ArrayList<DoubleMatrix1D> p_closedlist,
+                             final Set<CJumpPoint> p_openlist
+    )
     {
         IntStream.rangeClosed( -1, 1 )
-            .forEach( i -> IntStream.rangeClosed( -1, 1 )
-                .filter( j -> ( i != 0 || j != 0 )
-                    && !this.isNotNeighbour( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j, p_closedlist )
-                    && !this.isOccupied( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j ) )
-                .forEach( j ->
-                {
-                    final DoubleMatrix1D l_nextjumpnode = this.jump( p_curnode.coordinate(), p_target, i, j, p_objects );
-                    this.addsuccessors( l_nextjumpnode, p_closedlist, p_openlist, p_curnode, p_target );
-                } )
-            );
+                 .forEach( i -> IntStream.rangeClosed( -1, 1 )
+                                         .filter( j -> ( i != 0 || j != 0 )
+                                                       && !this
+                                             .isNotNeighbour( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j,
+                                                              p_closedlist
+                                             )
+                                                       && !this
+                                             .isOccupied( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j ) )
+                                         .forEach( j ->
+                                                   {
+                                                       final DoubleMatrix1D l_nextjumpnode = this.jump( p_curnode.coordinate(), p_target, i, j, p_objects );
+                                                       this.addsuccessors( l_nextjumpnode, p_closedlist, p_openlist, p_curnode, p_target );
+                                                   } )
+                 );
     }
 
     /**
      * Validated successors are added to open list
+     *
      * @param p_nextjumpnode successors that need to be validated
      * @param p_closedlist the list of coordinate that already explored
      * @param p_openlist the set of CJumpPoint that will be explored
@@ -110,7 +119,8 @@ final class CJPSPlus implements IRouting
      * @param p_target the goal node
      */
     private void addsuccessors( final DoubleMatrix1D p_nextjumpnode, final ArrayList<DoubleMatrix1D> p_closedlist,
-                                final Set<CJumpPoint> p_openlist, final CJumpPoint p_curnode, final DoubleMatrix1D p_target )
+                                final Set<CJumpPoint> p_openlist, final CJumpPoint p_curnode, final DoubleMatrix1D p_target
+    )
     {
         if ( !( p_nextjumpnode != null && !p_curnode.coordinate().equals( p_nextjumpnode ) && ( !p_closedlist.contains( p_nextjumpnode ) ) ) )
             return;
@@ -127,6 +137,7 @@ final class CJPSPlus implements IRouting
 
     /**
      * In order to identify individual jump point successors heading in a given direction (run recursively until find a jump point or failure)
+     *
      * @param p_curnode the current node to search for
      * @param p_target the goal node
      * @param p_row to increase or decrease row by adding p_row
@@ -135,12 +146,13 @@ final class CJPSPlus implements IRouting
      * @return l_nextnode next jump point
      */
     private DoubleMatrix1D jump( final DoubleMatrix1D p_curnode, final DoubleMatrix1D p_target,
-                                 final double p_row, final double p_col, final ObjectMatrix2D p_objects )
+                                 final double p_row, final double p_col, final ObjectMatrix2D p_objects
+    )
     {
         //The next nodes details
         final double l_nextrow = p_curnode.getQuick( 0 ) + p_row;
         final double l_nextcol = p_curnode.getQuick( 1 ) + p_col;
-        final DoubleMatrix1D l_nextnode =  new DenseDoubleMatrix1D( new double[]{l_nextrow, l_nextcol} );
+        final DoubleMatrix1D l_nextnode = new DenseDoubleMatrix1D( new double[]{l_nextrow, l_nextcol} );
 
         // If the l_nextnode is outside the grid or occupied then return null
         if ( this.isOccupied( p_objects, l_nextrow, l_nextcol ) || this.isNotCoordinate( p_objects, l_nextrow, l_nextcol ) )
@@ -158,7 +170,7 @@ final class CJPSPlus implements IRouting
                 return l_node;
         }
         else if ( this.horizontal( l_nextrow, l_nextcol, p_row, p_objects, 1 ) || this.horizontal( l_nextrow, l_nextcol, p_row, p_objects, -1 )
-            || this.vertical( l_nextrow, l_nextcol, p_col, p_objects, 1 ) || this.vertical( l_nextrow, l_nextcol, p_col, p_objects, -1 ) )
+                  || this.vertical( l_nextrow, l_nextcol, p_col, p_objects, 1 ) || this.vertical( l_nextrow, l_nextcol, p_col, p_objects, -1 ) )
             return l_nextnode;
 
         return this.jump( l_nextnode, p_target, p_row, p_col, p_objects );
@@ -166,6 +178,7 @@ final class CJPSPlus implements IRouting
 
     /**
      * In order to identify diagonal jump point
+     *
      * @param p_nextrow row of the next node to search for
      * @param p_nextcolumn column of the next node to search for
      * @param p_nextnode next node
@@ -176,9 +189,11 @@ final class CJPSPlus implements IRouting
      * @return diagonal jump point
      */
     private DoubleMatrix1D diagjump( final double p_nextrow, final double p_nextcolumn, final DoubleMatrix1D p_nextnode, final DoubleMatrix1D p_target,
-                                     final double p_row, final double p_col, final ObjectMatrix2D p_objects )
+                                     final double p_row, final double p_col, final ObjectMatrix2D p_objects
+    )
     {
-        if ( this.diagonal( p_nextrow, p_nextcolumn, -p_row, p_col, p_row, 0, p_objects ) || this.diagonal( p_nextrow, p_nextcolumn, p_row, -p_col, 0, p_col, p_objects ) )
+        if ( this.diagonal( p_nextrow, p_nextcolumn, -p_row, p_col, p_row, 0, p_objects ) || this.diagonal(
+            p_nextrow, p_nextcolumn, p_row, -p_col, 0, p_col, p_objects ) )
             return p_nextnode;
 
         //before each diagonal step the algorithm must first fail to detect any straight jump points
@@ -190,6 +205,7 @@ final class CJPSPlus implements IRouting
 
     /**
      * Helper function to identify diagonal jump point
+     *
      * @param p_nextrow row of the next node to search for
      * @param p_nextcolumn column of the next node to search for
      * @param p_row to increase or decrease row by adding p_row
@@ -199,15 +215,20 @@ final class CJPSPlus implements IRouting
      * @param p_objects Snapshot of the environment
      * @return true or false
      */
-    private boolean diagonal( final double p_nextrow, final double p_nextcolumn, final double p_row, final double p_col, final double p_hzon, final double p_ver,
-                              final ObjectMatrix2D p_objects )
+    private boolean diagonal( final double p_nextrow, final double p_nextcolumn, final double p_row, final double p_col, final double p_hzon,
+                              final double p_ver,
+                              final ObjectMatrix2D p_objects
+    )
     {
-        return !this.isNotCoordinate( p_objects, p_nextrow - p_hzon, p_nextcolumn - p_ver ) && !this.isNotCoordinate( p_objects, p_nextrow + p_row, p_nextcolumn + p_col )
-            && this.isOccupied( p_objects, p_nextrow - p_hzon, p_nextcolumn - p_ver ) && !this.isOccupied( p_objects, p_nextrow + p_row, p_nextcolumn + p_col );
+        return !this.isNotCoordinate( p_objects, p_nextrow - p_hzon, p_nextcolumn - p_ver ) && !this.isNotCoordinate(
+            p_objects, p_nextrow + p_row, p_nextcolumn + p_col )
+               && this.isOccupied( p_objects, p_nextrow - p_hzon, p_nextcolumn - p_ver ) && !this.isOccupied(
+            p_objects, p_nextrow + p_row, p_nextcolumn + p_col );
     }
 
     /**
      * Helper function to identify horizontal jump point
+     *
      * @param p_nextrow row of the next node to search for
      * @param p_nextcol column of the next node to search for
      * @param p_row to increase or decrease row by adding p_row
@@ -218,12 +239,13 @@ final class CJPSPlus implements IRouting
     private boolean horizontal( final double p_nextrow, final double p_nextcol, final double p_row, final ObjectMatrix2D p_objects, final double p_value )
     {
         return p_row != 0 && !this.isNotCoordinate( p_objects, p_nextrow + p_row, p_nextcol ) && !this.isOccupied( p_objects, p_nextrow + p_row, p_nextcol )
-            && !this.isNotCoordinate( p_objects, p_nextrow, p_nextcol + p_value ) && this.isOccupied( p_objects, p_nextrow, p_nextcol + p_value )
-            && !this.isOccupied( p_objects, p_nextrow + p_row, p_nextcol + p_value );
+               && !this.isNotCoordinate( p_objects, p_nextrow, p_nextcol + p_value ) && this.isOccupied( p_objects, p_nextrow, p_nextcol + p_value )
+               && !this.isOccupied( p_objects, p_nextrow + p_row, p_nextcol + p_value );
     }
 
     /**
      * Helper function to identify vertical jump point
+     *
      * @param p_nextrow row of the next node to search for
      * @param p_nextcol column of the next node to search for
      * @param p_col to increase or decrease column by adding p_col
@@ -234,12 +256,13 @@ final class CJPSPlus implements IRouting
     private boolean vertical( final double p_nextrow, final double p_nextcol, final double p_col, final ObjectMatrix2D p_objects, final double p_value )
     {
         return p_col != 0 && !this.isNotCoordinate( p_objects, p_nextrow, p_nextcol + p_col ) && !this.isOccupied( p_objects, p_nextrow, p_nextcol + p_col )
-            && !this.isNotCoordinate( p_objects, p_nextrow + p_value, p_nextcol ) && this.isOccupied( p_objects, p_nextrow + p_value, p_nextcol )
-            && !this.isOccupied( p_objects, p_nextrow + p_value, p_nextcol + p_col );
+               && !this.isNotCoordinate( p_objects, p_nextrow + p_value, p_nextcol ) && this.isOccupied( p_objects, p_nextrow + p_value, p_nextcol )
+               && !this.isOccupied( p_objects, p_nextrow + p_value, p_nextcol + p_col );
     }
 
     /**
      * To check any point in the grid environment is free or occupied
+     *
      * @param p_objects Snapshot of the environment
      * @param p_row the row number of the coordinate to check
      * @param p_column the column number of the coordinate to check
@@ -252,6 +275,7 @@ final class CJPSPlus implements IRouting
 
     /**
      * To check any point is in the grid environment or out of environment
+     *
      * @param p_objects Snapshot of the environment
      * @param p_row the row number of the coordinate to check
      * @param p_column the column number of the coordinate to check
@@ -264,6 +288,7 @@ final class CJPSPlus implements IRouting
 
     /**
      * Finds the non valid successors of any grid
+     *
      * @param p_objects Snapshot of the environment
      * @param p_row the row number of the coordinate to check
      * @param p_column the column number of the coordinate to check
@@ -271,18 +296,19 @@ final class CJPSPlus implements IRouting
      */
     private boolean isNotNeighbour( final ObjectMatrix2D p_objects, final double p_row, final double p_column, final ArrayList<DoubleMatrix1D> p_closedlist )
     {
-        return p_closedlist.contains(  new DenseDoubleMatrix1D( new double[]{p_row, p_column} ) ) || this.isNotCoordinate( p_objects, p_row, p_column );
+        return p_closedlist.contains( new DenseDoubleMatrix1D( new double[]{p_row, p_column} ) ) || this.isNotCoordinate( p_objects, p_row, p_column );
     }
 
     /**
      * Calculates the given node's score using the Manhattan distance formula
+     *
      * @param p_jumpnode The node to calculate
      * @param p_target the target node
      */
     private void calculateScore( final CJumpPoint p_jumpnode, final DoubleMatrix1D p_target )
     {
         final double l_hscore = Math.abs( p_target.getQuick( 0 ) - p_jumpnode.coordinate().getQuick( 0 ) ) * 10
-            + Math.abs( p_target.getQuick( 1 ) - p_jumpnode.coordinate().getQuick( 1 ) ) * 10;
+                                + Math.abs( p_target.getQuick( 1 ) - p_jumpnode.coordinate().getQuick( 1 ) ) * 10;
 
         p_jumpnode.hscore( l_hscore );
 

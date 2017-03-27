@@ -1,4 +1,3 @@
-
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing;
 
 /**
