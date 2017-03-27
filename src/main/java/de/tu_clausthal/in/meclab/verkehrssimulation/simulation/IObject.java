@@ -18,6 +18,7 @@ public interface IObject extends ISprite
      *
      * @return position tuple
      */
+    @Deprecated
     DoubleMatrix1D position();
 
     /**
