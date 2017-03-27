@@ -18,10 +18,6 @@ public abstract class IBaseWay<T extends IBaseWay<?>> extends IBaseAgent<T> impl
      */
     protected final DoubleMatrix1D m_position;
     /**
-     * sprite
-     */
-    private Sprite m_sprite;
-    /**
      * rotation of the traffic light
      */
     private final int m_rotation;
@@ -51,29 +47,6 @@ public abstract class IBaseWay<T extends IBaseWay<?>> extends IBaseAgent<T> impl
             p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1
         } );
         m_rotation = p_rotation;
-    }
-
-
-    /**
-     * sprite initialize
-     *
-     * @param p_texture texture
-     * @bug incomplete
-     */
-    public void spriteinitialize( final float p_unit, final Texture p_texture )
-    {
-        m_sprite = new Sprite( p_texture );
-        //m_sprite.setPosition( (float) m_spriteposition.get( 0 ), (float) m_spriteposition.get( 1 ) );
-        m_sprite.setOrigin( 0, 0 );
-        m_sprite.setRotation( m_rotation );
-        //ToDO: I will change this after changing to another game engine
-        m_sprite.setSize( 28, 4 );
-    }
-
-    @Override
-    public Sprite sprite()
-    {
-        return m_sprite;
     }
 
 }

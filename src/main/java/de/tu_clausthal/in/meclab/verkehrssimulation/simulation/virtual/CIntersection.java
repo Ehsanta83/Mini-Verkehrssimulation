@@ -36,7 +36,6 @@ public class CIntersection extends IBaseLane<CIntersection>
     }
 
     @Override
-    @SafeVarargs
     public final Stream<ILiteral> literal( final IObject<?>... p_object )
     {
         return this.literal( Arrays.stream( p_object ) );

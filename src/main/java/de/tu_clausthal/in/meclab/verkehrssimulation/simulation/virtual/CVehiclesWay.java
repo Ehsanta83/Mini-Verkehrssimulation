@@ -17,10 +17,6 @@ import java.util.stream.Stream;
  */
 public class CVehiclesWay extends IBaseWay<CVehiclesWay>
 {
-    /**
-     * filename of the texture pic
-     */
-    private static final String TEXTURE_FILE_NAME = CCommon.PACKAGEPATH + "vehicles_way.png";
 
     /**
      * constructor
@@ -34,12 +30,6 @@ public class CVehiclesWay extends IBaseWay<CVehiclesWay>
     )
     {
         super( p_configuration, p_leftbottom, p_righttop, p_rotation );
-    }
-
-    @Override
-    public final void spriteinitialize( final float p_unit )
-    {
-        super.spriteinitialize( p_unit, new Texture( Gdx.files.internal( TEXTURE_FILE_NAME ) ) );
     }
 
     @Override

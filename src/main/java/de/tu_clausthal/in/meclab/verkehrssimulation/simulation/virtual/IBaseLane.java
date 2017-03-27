@@ -42,16 +42,6 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseAgent<T> im
         } );
     }
 
-    @Override
-    public Sprite sprite()
-    {
-        return null;
-    }
-
-    @Override
-    public void spriteinitialize( float p_unit )
-    {
-    }
 
     @Override
     public DoubleMatrix1D position()

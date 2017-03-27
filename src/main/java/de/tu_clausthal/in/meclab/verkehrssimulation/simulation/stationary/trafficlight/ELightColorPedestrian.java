@@ -17,23 +17,6 @@ public enum ELightColorPedestrian implements ITrafficLightColor
     RED,
     GREEN;
 
-    /**
-     * texture of the sprite
-     */
-    private Texture m_texture;
-
-    @Override
-    public Texture getTexture()
-    {
-        return m_texture;
-    }
-
-    @Override
-    public void setTexture( final Texture p_texture )
-    {
-        m_texture = p_texture;
-    }
-
     @Override
     public String path()
     {

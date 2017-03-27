@@ -33,11 +33,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     private AtomicReference<L> m_color;
     /**
-     * sprite
-     */
-    @Deprecated
-    private Sprite m_sprite;
-    /**
      * defines the left bottom position (row / column), width, height
      */
     private final DoubleMatrix1D m_position;
@@ -74,25 +69,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         m_light = p_light;
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
-    }
-
-    @Override
-    public Sprite sprite()
-    {
-        return m_sprite;
-    }
-
-    @Override
-    public void spriteinitialize( final float p_unit )
-    {
-        //initialize textures
-        Arrays.stream( m_light.getEnumConstants() ).forEach( i -> i.setTexture( new Texture( Gdx.files.internal( i.path() ) ) ) );
-
-        m_sprite = new Sprite( m_color.get().getTexture() );
-        m_sprite.setPosition( (float) m_position.get( 1 ), (float) m_position.get( 0 ) );
-        m_sprite.setSize( (float) m_position.get( 2 ) * p_unit, (float) m_position.get( 3 ) * p_unit );
-        m_sprite.setOrigin( 0, 0 );
-        m_sprite.setRotation( m_rotation );
     }
 
     @Override
