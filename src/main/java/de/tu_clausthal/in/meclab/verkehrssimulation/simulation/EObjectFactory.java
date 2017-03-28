@@ -6,6 +6,9 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.CPedestri
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.CVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.CTrafficLightPedestrian;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.CTrafficLightVehicle;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
@@ -24,10 +27,18 @@ import java.util.stream.Stream;
 public enum EObjectFactory
 {
     ENVIRONMENT,
+
+    INTERSECTION,
+    LANE,
+    SIDEWALK,
+
     VEHICLE,
     VEHICLE_TRAFFICLIGHT,
+
     PEDESTRIAN,
     PEDESTRIAN_TRAFFICLIGHT;
+
+
 
     /**
      * generates a agent generator
@@ -48,6 +59,16 @@ public enum EObjectFactory
         {
             case ENVIRONMENT:
                 return new CEnvironment.CGenerator( p_stream, p_actions, p_aggregation );
+
+
+            case INTERSECTION:
+                return new CIntersection.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+
+            case LANE:
+                return new CLane.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+
+            case SIDEWALK:
+                return new CSidewalk.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
 
             case PEDESTRIAN:

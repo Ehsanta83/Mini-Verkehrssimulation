@@ -9,7 +9,6 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Set;
 import java.util.stream.Stream;
 
 
@@ -52,7 +51,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
      *
      * @bug fix documentation
      */
-    public static final class CGenerator extends IBaseGenerator<CTrafficLightVehicle>
+    public static final class CGenerator extends IGenerator<CTrafficLightVehicle>
     {
 
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,

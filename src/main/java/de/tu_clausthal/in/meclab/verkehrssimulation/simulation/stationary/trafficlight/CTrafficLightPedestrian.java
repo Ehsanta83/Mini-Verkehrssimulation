@@ -9,7 +9,6 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Set;
 import java.util.stream.Stream;
 
 
@@ -49,7 +48,7 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
     /**
      * generator of pedestrian traffic lights
      */
-    public static final class CGenerator extends IBaseGenerator<CTrafficLightPedestrian>
+    public static final class CGenerator extends IGenerator<CTrafficLightPedestrian>
     {
 
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
@@ -66,4 +65,5 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
             return new CTrafficLightPedestrian( m_configuration, p_environment, p_position, p_rotation );
         }
     }
+
 }

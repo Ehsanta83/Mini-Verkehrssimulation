@@ -3,13 +3,18 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IBaseObject;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IBaseObjectGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
+import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.score.IAggregation;
 
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -31,22 +36,15 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseObject<T> i
     /**
      * ctor
      *
-     * @param p_leftbottom left-bottom position
-     * @param p_righttop right-up position
      * @param p_configuration agent configuration
      * @todo check parameter
      */
     protected IBaseLane( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
-                         final List<Integer> p_leftbottom, final List<Integer> p_righttop
+                         final Number... p_position
     )
     {
         super( p_configuration, p_environment, p_functor );
-        m_position = new DenseDoubleMatrix1D( new double[]{
-            p_leftbottom.get( 0 ),
-            p_leftbottom.get( 1 ),
-            p_righttop.get( 0 ) - p_leftbottom.get( 0 ) + 1,
-            p_righttop.get( 1 ) - p_leftbottom.get( 1 ) + 1
-        } );
+        m_position = new DenseDoubleMatrix1D( Arrays.stream( p_position ).mapToDouble( Number::doubleValue ).toArray() );
     }
 
     @Override
@@ -57,4 +55,26 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseObject<T> i
             CLiteral.from( "passable", CRawTerm.from( m_passable ) )
         );
     }
+
+
+    public abstract static class IGenerator<T extends ILane<?>> extends IBaseObjectGenerator<T>
+    {
+
+        /**
+         * @param p_stream
+         * @param p_actions
+         * @param p_aggregation
+         * @param p_agentclass
+         * @param p_environment @throws Exception on any error
+         */
+        protected IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
+                              final IAggregation p_aggregation,
+                              final Class<T> p_agentclass,
+                              final IEnvironment p_environment
+        ) throws Exception
+        {
+            super( p_stream, p_actions, p_aggregation, p_agentclass, p_environment );
+        }
+    }
+
 }

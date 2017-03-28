@@ -19,17 +19,23 @@ public class CVehiclesWay extends IBaseWay<CVehiclesWay>
     /**
      * constructor
      *
-     * @param p_leftbottom leftbottom position in grid
-     * @param p_righttop righttop position in grid
+     * @param p_configuration agent configuration
+     * @param p_environment
      * @param p_rotation rotation
+     * @param p_position @bug check parameter
      */
-    public CVehiclesWay( final IAgentConfiguration<CVehiclesWay> p_configuration, final IEnvironment p_environment, final DoubleMatrix1D p_leftbottom,
-                         final DoubleMatrix1D p_righttop,
-                         final int p_rotation
+    protected CVehiclesWay(
+        final IAgentConfiguration<CVehiclesWay> p_configuration,
+        final IEnvironment p_environment,
+        final String p_functor,
+        final int p_rotation,
+        final Number... p_position
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_leftbottom, p_righttop, p_rotation );
+        super( p_configuration, p_environment, FUNCTOR, p_rotation, p_position );
     }
+
+
 
     @Override
     protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )

@@ -76,7 +76,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      *
      * @bug fix documentation
      */
-    protected abstract static class IBaseGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
     {
 
 
@@ -87,9 +87,9 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_environment
          * @throws Exception on any error
          */
-        public IBaseGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                               final IAggregation p_aggregation, final Class<T> p_agentclass,
-                               final IEnvironment p_environment
+        public IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
+                           final IAggregation p_aggregation, final Class<T> p_agentclass,
+                           final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, p_agentclass, p_environment );
