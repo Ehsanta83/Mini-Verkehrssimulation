@@ -218,12 +218,6 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
         return Stream.of();
     }
 
-    @Override
-    public final TiledMap map()
-    {
-        return new TmxMapLoader().load( CCommon.PACKAGEPATH + "background.tmx" );
-    }
-
     // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
 
     /**
