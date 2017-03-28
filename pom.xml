@@ -262,7 +262,7 @@
 				</executions>
 			</plugin>
 
-			<!-- checkstyle is perform at compile phase -->
+			<!-- checkstyle is perform at compile phase
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -284,6 +284,7 @@
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>
