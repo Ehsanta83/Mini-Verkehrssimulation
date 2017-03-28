@@ -1,3 +1,5 @@
+extern/foo(5).
+
 !main.
 
 +!main

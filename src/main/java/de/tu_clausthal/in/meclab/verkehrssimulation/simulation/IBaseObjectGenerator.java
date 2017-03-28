@@ -4,6 +4,7 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvi
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
+import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
 import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
 import org.lightjason.agentspeak.beliefbase.view.IView;
 import org.lightjason.agentspeak.common.CCommon;
@@ -76,8 +77,13 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
         @SuppressWarnings( "unchecked" )
         public final IView<T> beliefbase()
         {
-            final IView<T> l_view = super.beliefbase();
+            final IView<T> l_view = new CBeliefbasePersistent<T>( new CMultiStorage<>() ).create( BELIEFBASEROOTNAME );
             l_view.add( new CBeliefbasePersistent<T>( new CSingleStorage<ILiteral, IView<T>, T>() ).create( "extern", l_view ) );
+
+            // add initial beliefs and clear initial beliefbase trigger
+            m_initialbeliefs.parallelStream().forEach( i -> l_view.add( i.shallowcopy() ) );
+            l_view.trigger();
+
             return l_view;
         }
     }
