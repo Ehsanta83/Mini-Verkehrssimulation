@@ -26,9 +26,7 @@ machine:
 
 dependencies:
     pre:
-        - sudo apt-get -y autoremove
         - sudo apt-get -y update
-        - sudo apt-get -y upgrade
         - sudo apt-get install doxygen graphviz
         - git clone https://github.com/LightJason/AgentSpeak.git && cd AgentSpeak && mvn install -DskipTests
         - git clone https://github.com/LightJason/REST.git && cd AgentSpeak && mvn install -DskipTests
