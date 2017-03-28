@@ -7,15 +7,9 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMove
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
-import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
-import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
-import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.ITerm;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 
@@ -25,6 +19,8 @@ import java.util.stream.Stream;
 @IAgentAction
 public class CVehicle extends IBaseMoveable<CVehicle>
 {
+    private static final String FUNCTOR = "vehicle";
+
     /**
      * width
      */
@@ -47,9 +43,15 @@ public class CVehicle extends IBaseMoveable<CVehicle>
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, "vehicle", p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_position );
 
 
+    }
+
+    @Override
+    protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
+    {
+        return Stream.of();
     }
 
 

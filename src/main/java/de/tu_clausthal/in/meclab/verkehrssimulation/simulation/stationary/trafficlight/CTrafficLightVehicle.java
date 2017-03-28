@@ -14,6 +14,8 @@ import java.util.stream.Stream;
  */
 public class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightVehicle, ELightColorVehicle>
 {
+    private static final String FUNCTOR = "vehiclelight";
+
     /**
      * ctor
      *
@@ -29,13 +31,14 @@ public class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightVehicle
         final int p_rotation
     )
     {
-        super( p_configuration, p_environment, ELightColorVehicle.class, p_position, p_rotation );
+        super( p_configuration, p_environment, FUNCTOR, ELightColorVehicle.class, p_position, p_rotation );
     }
 
+
+
     @Override
-    protected final Stream<ILiteral> individual( final Stream<IObject<?>> p_object )
+    protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
     }
-
 }

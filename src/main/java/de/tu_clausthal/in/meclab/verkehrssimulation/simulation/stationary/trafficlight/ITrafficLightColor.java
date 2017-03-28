@@ -1,8 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
-import com.badlogic.gdx.graphics.Texture;
-
-
 /**
  * traffic light enumeration interface
  *

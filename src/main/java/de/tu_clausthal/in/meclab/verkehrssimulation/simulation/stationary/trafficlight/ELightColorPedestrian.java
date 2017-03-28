@@ -1,6 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
-import com.badlogic.gdx.graphics.Texture;
 import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 
 import java.text.MessageFormat;

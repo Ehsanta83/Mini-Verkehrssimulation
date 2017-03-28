@@ -1,9 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IBaseObjectGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
-import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
@@ -15,16 +15,23 @@ import java.util.Set;
  *
  * @bug fix documentation
  */
-public abstract class IBaseTrafficLightGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseAgentGenerator<T>
+public abstract class IBaseTrafficLightGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
 {
-    private final IEnvironment<?> m_environment;
 
-    protected IBaseTrafficLightGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                                          final IAggregation p_aggregation, final IEnvironment<?> p_environment
+
+    /**
+     * @param p_stream
+     * @param p_actions
+     * @param p_aggregation
+     * @param p_environment
+     * @throws Exception
+     */
+    public IBaseTrafficLightGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+                                       final IAggregation p_aggregation,
+                                       final IEnvironment<?> p_environment
     ) throws Exception
     {
-        super( p_stream, p_actions, p_aggregation );
-        m_environment = p_environment;
+        super( p_stream, p_actions, p_aggregation, p_environment );
     }
 
     @Override

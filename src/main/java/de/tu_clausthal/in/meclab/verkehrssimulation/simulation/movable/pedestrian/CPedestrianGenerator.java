@@ -1,19 +1,12 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveableGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
-import org.apache.commons.math3.distribution.AbstractRealDistribution;
-import org.apache.commons.math3.distribution.NormalDistribution;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
-import org.lightjason.agentspeak.language.execution.IVariableBuilder;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Set;
 
 
@@ -39,22 +32,29 @@ public final class CPedestrianGenerator extends IBaseMoveableGenerator<CPedestri
 
     /**
      * generator
+     * @bug check null value on generating
      */
     private final class CGenerator extends IGenerator
     {
 
-        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                           final IAggregation p_aggregation
+        /**
+         * @param p_stream
+         * @param p_actions
+         * @param p_aggregation
+         * @param p_environment
+         * @throws Exception
+         */
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions, final IAggregation p_aggregation,
+                           final IEnvironment<?> p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation );
+            super( p_stream, p_actions, p_aggregation, p_environment );
         }
-
 
         @Override
         public CPedestrian generatesingle( final Object... p_data )
         {
-            return null;
+            return new CPedestrian( m_configuration, m_environment, null );
         }
     }
 }

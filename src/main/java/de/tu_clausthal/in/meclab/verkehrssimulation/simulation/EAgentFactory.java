@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * class for generating object-generators
  */
-public enum EObjectFactory
+public enum EAgentFactory
 {
     TRAFFICLIGHT_PEDESTRIAN,
     TRAFFICLIGHT_VEHICLE;

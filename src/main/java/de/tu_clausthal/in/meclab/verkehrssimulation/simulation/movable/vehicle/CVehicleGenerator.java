@@ -10,6 +10,10 @@ import java.io.InputStream;
 import java.util.Set;
 
 
+/**
+ * vehicle generator
+ * @todo implement
+ */
 public final class CVehicleGenerator extends IBaseMoveableGenerator<CVehicle>
 {
 
@@ -29,15 +33,23 @@ public final class CVehicleGenerator extends IBaseMoveableGenerator<CVehicle>
 
     /**
      * generator
+     * @bug check null value on initializing
      */
     private final class CGenerator extends IGenerator
     {
 
-        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                           final IAggregation p_aggregation
+        /**
+         * @param p_stream
+         * @param p_actions
+         * @param p_aggregation
+         * @param p_environment
+         * @throws Exception
+         */
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions, final IAggregation p_aggregation,
+                           final IEnvironment<?> p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation );
+            super( p_stream, p_actions, p_aggregation, p_environment );
         }
 
         @Override

@@ -4,18 +4,9 @@ import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle;
-import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
-import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
-import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.language.CLiteral;
-import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.ITerm;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.stream.Stream;
 
 
@@ -24,7 +15,7 @@ import java.util.stream.Stream;
  */
 public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
-
+    private static final String FUNCTOR = "pedestrian";
 
 
     /**
@@ -40,8 +31,14 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, "pedestrian", p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_position );
     }
 
 
+    @Override
+    protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object
+    )
+    {
+        return Stream.of();
+    }
 }

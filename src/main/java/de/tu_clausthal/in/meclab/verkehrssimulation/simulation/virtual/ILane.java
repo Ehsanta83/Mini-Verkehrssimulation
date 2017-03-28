@@ -8,10 +8,5 @@ import cern.colt.matrix.DoubleMatrix1D;
  */
 public interface ILane<T extends ILane<?>> extends IVirtual<T>
 {
-    /**
-     * returns the current position of the object
-     *
-     * @return position tuple
-     */
-    DoubleMatrix1D position();
+
 }

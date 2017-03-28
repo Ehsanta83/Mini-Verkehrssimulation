@@ -3,7 +3,6 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
-import de.tu_clausthal.in.meclab.verkehrssimulation.ui.ITileMap;
 
 import java.util.List;
 import java.util.stream.Stream;
