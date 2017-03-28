@@ -5,7 +5,7 @@ package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.traff
  *
  * @bug remove texture for jetty
  */
-public interface ITrafficLightColor
+public interface ITrafficLightColor<T extends Enum<?>>
 {
 
     /**
@@ -20,6 +20,6 @@ public interface ITrafficLightColor
      *
      * @return new color reference
      */
-    ITrafficLightColor next();
+    T next();
 
 }

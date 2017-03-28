@@ -13,6 +13,7 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Set;
+import java.util.stream.Stream;
 
 
 /**
@@ -39,7 +40,7 @@ public enum EObjectFactory
      *
      * @throws Exception on any error
      */
-    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Set<IAction> p_actions,
+    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
                                                                  final IAggregation p_aggregation, final IEnvironment p_environment
     ) throws Exception
     {
@@ -76,7 +77,7 @@ public enum EObjectFactory
      * @return
      * @throws Exception on any error
      */
-    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Set<IAction> p_actions,
+    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
                                                                  final IAggregation p_aggregation ) throws Exception
     {
         return this.generate( p_stream, p_actions, p_aggregation, null );

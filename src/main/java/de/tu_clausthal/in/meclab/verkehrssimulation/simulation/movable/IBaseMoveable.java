@@ -10,6 +10,7 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
 import java.util.Set;
+import java.util.stream.Stream;
 
 
 
@@ -55,12 +56,12 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
          * @param p_environment
          * @throws Exception on any error
          */
-        protected IGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                              final IAggregation p_aggregation,
+        protected IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
+                              final IAggregation p_aggregation, final Class<T> p_agentclass,
                               final IEnvironment p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, p_environment );
+            super( p_stream, p_actions, p_aggregation, p_agentclass, p_environment );
         }
 
     }

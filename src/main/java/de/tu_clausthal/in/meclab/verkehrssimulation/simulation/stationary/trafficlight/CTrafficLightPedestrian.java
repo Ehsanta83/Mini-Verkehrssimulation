@@ -52,12 +52,12 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
     public static final class CGenerator extends IBaseGenerator<CTrafficLightPedestrian>
     {
 
-        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                            final IAggregation p_aggregation,
                            final IEnvironment p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, p_environment );
+            super( p_stream, p_actions, p_aggregation, CTrafficLightPedestrian.class, p_environment );
         }
 
         @Override

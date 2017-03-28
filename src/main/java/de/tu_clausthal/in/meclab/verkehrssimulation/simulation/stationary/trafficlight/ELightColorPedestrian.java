@@ -11,7 +11,7 @@ import java.util.Locale;
  *
  * @bug replace texture for jetty
  */
-public enum ELightColorPedestrian implements ITrafficLightColor
+public enum ELightColorPedestrian implements ITrafficLightColor<ELightColorPedestrian>
 {
     RED,
     GREEN;

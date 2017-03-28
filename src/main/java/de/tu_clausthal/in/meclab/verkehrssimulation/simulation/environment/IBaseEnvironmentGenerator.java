@@ -8,6 +8,8 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -17,11 +19,11 @@ import java.util.Set;
  */
 public abstract class IBaseEnvironmentGenerator extends IBaseAgentGenerator<IEnvironment>
 {
-    public IBaseEnvironmentGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+    public IBaseEnvironmentGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                                       final IAggregation p_aggregation
     ) throws Exception
     {
-        super( p_stream, p_actions, p_aggregation );
+        super( p_stream, p_actions.collect( Collectors.toSet() ), p_aggregation );
     }
 
     @Override

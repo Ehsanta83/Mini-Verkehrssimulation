@@ -12,20 +12,20 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 
 /**
  * traffic light abstract class
  */
 @IAgentAction
-public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L extends Enum<?> & ITrafficLightColor> extends IBaseObject<T> implements ITrafficLight<T>
+public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L extends Enum<?> & ITrafficLightColor<L>> extends IBaseObject<T> implements ITrafficLight<T>
 {
     /**
      * color of traffic light
      */
-    private AtomicReference<L> m_color;
+    private final AtomicReference<L> m_color;
     /**
      * defines the left bottom position (row / column), width, height
      */
@@ -34,10 +34,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * rotation of the traffic light
      */
     private final int m_rotation;
-    /**
-     * enum class
-     */
-    private final Class<L> m_light;
 
 
     /**
@@ -58,7 +54,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         super( p_configuration, p_environment, p_functor );
         m_position = p_position;
         m_rotation = p_rotation;
-        m_light = p_light;
+        m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
     }
 
 
@@ -67,10 +63,11 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * changes the color of the light
      */
     @IAgentActionFilter
-    @IAgentActionName( name = "next" )
-    private void next()
+    @IAgentActionName( name = "state/next" )
+    private void nextstate()
     {
-        m_color.get().next();
+        m_color.set( m_color.get().next() );
+        System.out.println( "---test---> " + m_color  );
     }
 
 
@@ -90,12 +87,12 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_environment
          * @throws Exception on any error
          */
-        public IBaseGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                               final IAggregation p_aggregation,
+        public IBaseGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
+                               final IAggregation p_aggregation, final Class<T> p_agentclass,
                                final IEnvironment p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, p_environment );
+            super( p_stream, p_actions, p_aggregation, p_agentclass, p_environment );
         }
 
         @Override

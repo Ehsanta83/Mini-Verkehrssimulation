@@ -6,6 +6,7 @@ import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
 import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
 import org.lightjason.agentspeak.beliefbase.view.IView;
+import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.agentspeak.configuration.CDefaultAgentConfiguration;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
@@ -19,6 +20,8 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -38,11 +41,11 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
      * @param p_environment
      * @throws Exception on any error
      */
-    protected IBaseObjectGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                                    final IAggregation p_aggregation, final IEnvironment p_environment
+    protected IBaseObjectGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
+                                    final IAggregation p_aggregation, final Class<T> p_agentclass, final IEnvironment p_environment
     ) throws Exception
     {
-        super( p_stream, p_actions, p_aggregation );
+        super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_agentclass ) ).collect( Collectors.toSet() ), p_aggregation );
         m_environment = p_environment;
     }
 

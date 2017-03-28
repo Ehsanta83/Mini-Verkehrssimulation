@@ -2,6 +2,7 @@
 
 +!main
     <- generic/print("hello vehicle light");
+    state/next;
     +extern/iam(red)
 .
 

@@ -51,7 +51,7 @@ public abstract class IBaseTest
         )
         {
             m_environment = EObjectFactory.ENVIRONMENT
-                .generate( l_stream, ACTIONS, IAggregation.EMPTY )
+                .generate( l_stream, ACTIONS.stream(), IAggregation.EMPTY )
                 .generatesingle( 100, 100, 25, ERoutingFactory.JPSPLUS.get() )
                 .raw();
         }
@@ -81,7 +81,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, ACTIONS, IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, ACTIONS.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )
@@ -113,7 +113,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, ACTIONS, IAggregation.EMPTY, m_environment ).generatemultiple( p_number, p_arguments ).map( IAgent::<T>raw ).collect( Collectors.toList() );
+            return p_factory.generate( l_stream, ACTIONS.stream(), IAggregation.EMPTY, m_environment ).generatemultiple( p_number, p_arguments ).map( IAgent::<T>raw ).collect( Collectors.toList() );
 
         }
         catch ( final Exception l_exception )

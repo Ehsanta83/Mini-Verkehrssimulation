@@ -233,7 +233,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     public static final class CGenerator extends IBaseEnvironmentGenerator
     {
 
-        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                            final IAggregation p_aggregation
         ) throws Exception
         {
