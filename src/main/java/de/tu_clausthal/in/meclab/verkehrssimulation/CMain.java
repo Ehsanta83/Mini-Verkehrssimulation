@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 /**
  * main desktop application
+ *
+ * @bug clean-up
  */
 public final class CMain
 {

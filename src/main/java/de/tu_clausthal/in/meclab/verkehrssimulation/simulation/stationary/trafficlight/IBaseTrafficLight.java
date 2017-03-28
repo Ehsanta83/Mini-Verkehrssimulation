@@ -79,7 +79,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      *
      * @bug fix documentation
      */
-    public abstract static class IBaseGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IBaseGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
     {
 
 

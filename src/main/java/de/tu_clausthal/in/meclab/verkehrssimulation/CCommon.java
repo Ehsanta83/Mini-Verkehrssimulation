@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * common class
  *
- * @bug check
+ * @bug clean-up
  */
 public final class CCommon
 {

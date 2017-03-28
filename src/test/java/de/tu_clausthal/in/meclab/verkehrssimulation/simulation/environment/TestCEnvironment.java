@@ -1,78 +1,40 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment;
 
-import cern.colt.matrix.ObjectMatrix2D;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CConfiguration;
-import org.junit.Before;
+import de.tu_clausthal.in.meclab.verkehrssimulation.IBaseTest;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * test environment
+ *
+ * @todo create test cases
  */
-public class TestCEnvironment
+public final class TestCEnvironment extends IBaseTest
 {
-    /**
-     * environment reference
-     */
-    private IEnvironment m_environment;
 
     /**
-     * initialize
-     */
-    @Before
-    public void initialize()
-    {
-        try
-        {
-            CConfiguration.INSTANCE.load( CCommon.PACKAGEPATH + "configuration.yaml" );
-            m_environment = CConfiguration.INSTANCE.environment();
-        }
-        catch ( final IOException l_exception )
-        {
-            l_exception.printStackTrace();
-            l_exception.printStackTrace();
-            assertTrue( l_exception.getMessage(), false );
-        }
-        catch ( final URISyntaxException l_exception )
-        {
-            l_exception.printStackTrace();
-            l_exception.printStackTrace();
-            assertTrue( l_exception.getMessage(), false );
-        }
-    }
-
-    /**
-     * test
+     * pedestrian test
+     *
+     * @throws Exception on execution error
      */
     @Test
-    public void test()
+    public final void test() throws Exception
     {
-        final ObjectMatrix2D l_lanepositions = m_environment.lanespositions();
-        IntStream.rangeClosed( 1, l_lanepositions.rows() ).forEach( i ->
-        {
-            IntStream.rangeClosed( 1, l_lanepositions.columns() ).forEach( j ->
-            {
-                System.out.println( "[" + i + ", " + j + "]: " + l_lanepositions.getQuick( i, j ) );
-            } );
-        } );
+        m_environment.call();
     }
+
 
     /**
      * main method
      * @param p_args args
+     *
+     * @throws Exception on any error
      */
-    public static void main( final String[] p_args )
+    public static void main( final String[] p_args ) throws Exception
     {
         final TestCEnvironment l_test = new TestCEnvironment();
 
-        l_test.initialize();
+        l_test.initializeenvironment();
         l_test.test();
-
     }
+
 }

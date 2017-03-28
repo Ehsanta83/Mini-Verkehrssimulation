@@ -365,7 +365,7 @@ public final class CConfiguration
                 Stream.concat(
                     org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
                     org.lightjason.agentspeak.common.CCommon
-                        .actionsFromAgentClass( de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicle.class )
+                        .actionsFromAgentClass( de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.CVehicle.class )
                 )
             ).collect( Collectors.toSet() ) );
 

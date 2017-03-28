@@ -1,8 +1,8 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveableGenerator;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
@@ -14,24 +14,29 @@ import java.util.stream.Stream;
 
 
 /**
- * pedestrian generator
- *
- * @todo build with an agent
+ * pedestrian class
  */
-public final class CPedestrianGenerator extends IBaseMoveableGenerator<CPedestrian>
+public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
-    private static final String FUNCTOR = "pedestriangenerator";
+    private static final String FUNCTOR = "pedestrian";
+
 
     /**
      * ctor
      *
      * @param p_configuration agent configuration
      * @param p_environment
+     * @param p_position
      */
-    protected CPedestrianGenerator( final IAgentConfiguration<CPedestrian> p_configuration, final IEnvironment p_environment )
+    private CPedestrian(
+        final IAgentConfiguration<CPedestrian> p_configuration,
+        final IEnvironment p_environment,
+        final DoubleMatrix1D p_position
+    )
     {
-        super( p_configuration, p_environment, FUNCTOR );
+        super( p_configuration, p_environment, FUNCTOR, p_position );
     }
+
 
     @Override
     protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object
@@ -41,12 +46,7 @@ public final class CPedestrianGenerator extends IBaseMoveableGenerator<CPedestri
     }
 
 
-    /**
-     * generator
-     *
-     * @bug check null value on generating
-     */
-    private final class CGenerator extends IGenerator
+    public static final class CGenerator extends IGenerator<CPedestrian>
     {
 
         /**
@@ -54,19 +54,21 @@ public final class CPedestrianGenerator extends IBaseMoveableGenerator<CPedestri
          * @param p_actions
          * @param p_aggregation
          * @param p_environment
-         * @throws Exception
+         * @throws Exception on any error
          */
-        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions, final IAggregation p_aggregation,
-                           final IEnvironment p_environment
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+                              final IAggregation p_aggregation,
+                              final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, p_environment );
         }
 
         @Override
-        public CPedestrian generatesingle( final Object... p_data )
+        @SuppressWarnings( "unchecked" )
+        public final CPedestrian generatesingle( final Object... p_data )
         {
-            return new CPedestrian( m_configuration, m_environment, null );
+            return new CPedestrian( m_configuration, m_environment, (DoubleMatrix1D) p_data[0] );
         }
     }
 }

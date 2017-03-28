@@ -1,4 +1,4 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.IBaseTest;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.EObjectFactory;
@@ -8,18 +8,19 @@ import org.junit.Test;
 
 
 /**
- * test vehicles traffic light
+ * test vehicle
+ *
+ * @todo create test cases
  */
-public final class TestCVehiclesTrafficLight extends IBaseTest
+public final class TestCVehicle extends IBaseTest
 {
 
-    private CTrafficLightVehicle m_vehiclelight;
-
+    private CVehicle m_vehicle;
 
     @Before
     public final void initialize()
     {
-        m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT );
+        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE );
     }
 
 
@@ -31,10 +32,11 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
     @Test
     public final void test() throws Exception
     {
-        Assume.assumeNotNull( m_vehiclelight );
+        Assume.assumeNotNull( m_vehicle );
 
-        m_vehiclelight.call();
+        m_vehicle.call();
     }
+
 
     /**
      * main method
@@ -44,12 +46,11 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
      */
     public static void main( final String[] p_args ) throws Exception
     {
-        final TestCPedestrianTrafficLight l_test = new TestCPedestrianTrafficLight();
+        final TestCVehicle l_test = new TestCVehicle();
 
         l_test.initializeenvironment();
         l_test.initialize();
         l_test.test();
     }
-
 
 }

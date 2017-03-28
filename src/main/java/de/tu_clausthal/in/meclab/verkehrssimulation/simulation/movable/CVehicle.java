@@ -1,10 +1,8 @@
-package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle;
+package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveableGenerator;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -42,7 +40,7 @@ public class CVehicle extends IBaseMoveable<CVehicle>
      * @param p_environment
      * @param p_position
      */
-    public CVehicle(
+    private CVehicle(
         final IAgentConfiguration<CVehicle> p_configuration,
         final IEnvironment p_environment,
         final DoubleMatrix1D p_position
@@ -73,4 +71,29 @@ public class CVehicle extends IBaseMoveable<CVehicle>
 
     }
 
+
+    public static final class CGenerator extends IGenerator<CVehicle>
+    {
+
+        /**
+         * @param p_stream
+         * @param p_actions
+         * @param p_aggregation
+         * @param p_environment
+         * @throws Exception on any error
+         */
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions, final IAggregation p_aggregation,
+                           final IEnvironment p_environment
+        ) throws Exception
+        {
+            super( p_stream, p_actions, p_aggregation, p_environment );
+        }
+
+        @Override
+        @SuppressWarnings( "unchecked" )
+        public CVehicle generatesingle( final Object... p_data )
+        {
+            return new CVehicle( m_configuration, m_environment, (DoubleMatrix1D) p_data[0] );
+        }
+    }
 }
