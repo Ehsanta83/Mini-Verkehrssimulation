@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.IBaseTest;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.EObjectFactory;
 import org.junit.Assume;
@@ -19,7 +20,7 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
     @Before
     public final void initialize()
     {
-        m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT );
+        m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT, new DenseDoubleMatrix1D( new double[]{0, 0} ), 180 );
     }
 
 

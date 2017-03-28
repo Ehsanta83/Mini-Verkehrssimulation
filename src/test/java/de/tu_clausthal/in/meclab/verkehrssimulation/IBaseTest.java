@@ -58,7 +58,7 @@ public abstract class IBaseTest
         catch ( final Exception l_exception )
         {
             l_exception.printStackTrace();
-            assertTrue( l_exception.getMessage(), false );
+            assertTrue( false );
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class IBaseTest
         catch ( final Exception l_exception )
         {
             l_exception.printStackTrace();
-            assertTrue( l_exception.getMessage(), false );
+            assertTrue( false );
             return null;
         }
     }
@@ -119,7 +119,7 @@ public abstract class IBaseTest
         catch ( final Exception l_exception )
         {
             l_exception.printStackTrace();
-            assertTrue( l_exception.getMessage(), false );
+            assertTrue( false );
             return null;
         }
     }

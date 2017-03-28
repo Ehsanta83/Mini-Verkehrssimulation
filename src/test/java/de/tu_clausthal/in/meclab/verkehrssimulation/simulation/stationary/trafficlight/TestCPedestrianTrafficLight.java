@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight;
 
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.IBaseTest;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.EObjectFactory;
 import org.junit.Assume;
@@ -19,7 +20,7 @@ public final class TestCPedestrianTrafficLight extends IBaseTest
     @Before
     public final void initialize()
     {
-        m_pedestrianlight = this.generate( "src/test/resources/pedestrianlight.asl", EObjectFactory.PEDESTRIAN_TRAFFICLIGHT );
+        m_pedestrianlight = this.generate( "src/test/resources/pedestrianlight.asl", EObjectFactory.PEDESTRIAN_TRAFFICLIGHT, new DenseDoubleMatrix1D( new double[]{0, 0} ), 90 );
     }
 
 

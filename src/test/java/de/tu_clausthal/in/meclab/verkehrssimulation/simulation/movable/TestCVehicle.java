@@ -1,5 +1,6 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.IBaseTest;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.EObjectFactory;
 import org.junit.Assume;
@@ -20,7 +21,7 @@ public final class TestCVehicle extends IBaseTest
     @Before
     public final void initialize()
     {
-        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE );
+        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
     }
 
 
