@@ -1,11 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation;
 
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
-import org.apache.commons.compress.archivers.sevenz.CLI;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.view.IView;
-import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.ILiteral;

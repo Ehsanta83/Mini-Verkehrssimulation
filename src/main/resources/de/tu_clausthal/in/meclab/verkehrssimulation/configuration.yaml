@@ -1,3 +1,17 @@
+openbrowser : true
+
+httpserver:
+    enable: true
+    port: 8000
+    host: localhost
+
+
+
+
+
+
+
+
 # enable / disable logger
 logging : false
 

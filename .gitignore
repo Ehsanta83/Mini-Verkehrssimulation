@@ -13,21 +13,15 @@
 
 !src/main/resources/**/*.properties
 !src/main/resources/**/*.yaml
-!src/main/resources/**/*.xml
 !src/main/resources/**/*.asl
-!src/main/resources/**/*.png
-!src/main/resources/**/*.ttf
-!src/main/resources/**/*.efx
-!src/main/resources/**/*.tmx
-!src/main/resources/**/*.jpg
+
+!src/main/webapp/**/*.htm*
+!src/main/webapp/**/*.css
+!src/main/webapp/**/*.js
 
 !src/site/*.doxyfile
 !src/site/*.htm
 !src/site/*.css
 !src/site/*.xml
 
-!src/test/resources/**/*.asl
-
 target/**
-
-/bin/

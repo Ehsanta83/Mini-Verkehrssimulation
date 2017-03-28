@@ -15,7 +15,6 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Set;
 import java.util.stream.Stream;
 
 

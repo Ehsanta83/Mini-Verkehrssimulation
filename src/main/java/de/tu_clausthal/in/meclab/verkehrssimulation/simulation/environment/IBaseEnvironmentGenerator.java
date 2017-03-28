@@ -7,7 +7,6 @@ import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
 import java.io.InputStream;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

@@ -1,6 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
-import cern.colt.matrix.DoubleMatrix1D;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;

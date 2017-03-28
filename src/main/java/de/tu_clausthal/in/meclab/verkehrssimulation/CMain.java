@@ -1,14 +1,13 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
-import java.util.logging.Logger;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 
 /**
@@ -18,10 +17,6 @@ import java.util.stream.Stream;
  */
 public final class CMain
 {
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger( CMain.class.getName() );
 
     /**
      * constructor
@@ -33,106 +28,54 @@ public final class CMain
     /**
      * main method
      *
-     * @param p_arg arguments
+     * @param p_args arguments
      * @throws IOException on io errors
      * @throws URISyntaxException on URI syntax error
      */
-    public static void main( final String[] p_arg ) throws IOException, URISyntaxException
+    public static void main( final String[] p_args ) throws IOException, URISyntaxException
     {
-        // --- read configuration and initialize simulation ui -------------------------------------------------------------------------------------------------
+        // --- define CLI options ------------------------------------------------------------------------------------------------------------------------------
 
-        CConfiguration.INSTANCE.load( CCommon.PACKAGEPATH + "configuration.yaml" );
+        final Options l_clioptions = new Options();
+        l_clioptions.addOption( "help", false, "shows this information" );
+        l_clioptions.addOption( "generateconfig", false, "generate default configuration" );
+        l_clioptions.addOption( "config", true, "path to configuration directory (default: <user home>/.asimov/configuration.yaml)" );
 
-        final LwjglApplicationConfiguration l_config = new LwjglApplicationConfiguration();
-        l_config.title = "Verkehrssimulation";
-        l_config.width = CConfiguration.INSTANCE.windowWidth();
-        l_config.height = CConfiguration.INSTANCE.windowHeight();
-
-        // open window
-        LOGGER.info( MessageFormat.format( "open window with size [{0}x{1}]", l_config.width, l_config.height ) );
-        /*
-        final CScreen l_screen = new CScreen(
-            Stream.of(
-                CConfiguration.INSTANCE.ways().parallelStream(),
-                CConfiguration.INSTANCE.trafficlights().parallelStream(),
-                CConfiguration.INSTANCE.agents().parallelStream()
-            )
-                  .flatMap( i -> i )
-                  .collect( Collectors.toList() ),
-
-            CConfiguration.INSTANCE.environment()
-        );
-        new LwjglApplication( l_screen, l_config );
-        CMain.execute( l_screen );
-        */
-        /*
-        final Server l_server = new Server( 8080 );
-        final ServletContextHandler l_handler = new ServletContextHandler( l_server, "/" );
-        l_handler.addServlet( CServlet.class, "/" );
+        final CommandLine l_cli;
         try
         {
-            l_server.start();
-            l_server.join();
-        } catch ( final Exception e )
-        {
-            e.printStackTrace();
+            l_cli = new DefaultParser().parse( l_clioptions, p_args );
         }
-        */
+        catch ( final Exception l_exception )
+        {
+            System.err.println( "command-line arguments parsing error" );
+            System.exit( -1 );
+            return;
+        }
+
+
+
+        // --- process CLI arguments and initialize configuration ----------------------------------------------------------------------------------------------
+
+        if ( l_cli.hasOption( "help" ) )
+        {
+            new HelpFormatter().printHelp( new java.io.File( CMain.class.getProtectionDomain().getCodeSource().getLocation().getPath() ).getName(), l_clioptions );
+            return;
+        }
+
+        if ( l_cli.hasOption( "generateconfig" ) )
+        {
+            System.out.println( MessageFormat.format( "default configuration was created under [{0}]", CConfiguration.createdefault() ) );
+            return;
+        }
+
+        // load configuration and start the http server (if possible)
+        CConfiguration.INSTANCE.loadfile( l_cli.getOptionValue( "config", "" ) );
+
+
+        // execute server
+        CHTTPServer.execute();
     }
 
-    /**
-     * execute simulation
-     *
-     * @param p_screen screen reference
-     */
-    private static void execute( final CScreen p_screen )
-    {
-        IntStream
-            .range( 0, CConfiguration.INSTANCE.simulationsteps() )
-            .mapToObj( i ->
-                       {
-                           Stream.concat(
-                               Stream.of(
-                                   //CConfiguration.INSTANCE.evaluation(),
-                                   CConfiguration.INSTANCE.environment()
-                               ),
-                               Stream.concat(
-                                   Stream.concat(
-                                       CConfiguration.INSTANCE.ways().parallelStream(),
-                                       CConfiguration.INSTANCE.trafficlights().parallelStream()
-                                   ),
-                                   CConfiguration.INSTANCE.agents().parallelStream()
-                               )
-                           )
-                                 .parallel()
-                                 .forEach( j ->
-                                           {
-                                               try
-                                               {
-                                                   j.call();
-                                               }
-                                               catch ( final Exception l_exception )
-                                               {
-                                                   LOGGER.warning( l_exception.toString() );
-                                                   if ( CConfiguration.INSTANCE.stackstrace() )
-                                                       l_exception.printStackTrace( System.err );
-                                               }
-                                           } );
-                           // thread sleep for slowing down
-                           if ( CConfiguration.INSTANCE.threadsleeptime() > 0 )
-                               try
-                               {
-                                   Thread.sleep( CConfiguration.INSTANCE.threadsleeptime() );
-                               }
-                               catch ( final InterruptedException l_exception )
-                               {
-                                   LOGGER.warning( l_exception.toString() );
-                               }
 
-                           // checks that the simulation is closed
-                           return p_screen.isDisposed();
-                       } )
-            .filter( i -> i )
-            .findFirst();
-    }
 }
