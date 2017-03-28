@@ -7,6 +7,8 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 
 /**
  * test vehicles traffic light
@@ -16,7 +18,9 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
 
     private CTrafficLightVehicle m_vehiclelight;
 
-
+    /**
+     * initialize vehicle light
+     */
     @Before
     public final void initialize()
     {
@@ -34,7 +38,9 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
     {
         Assume.assumeNotNull( m_vehiclelight );
 
+        System.out.println( m_vehiclelight.literal().collect( Collectors.toSet() ) );
         m_vehiclelight.call();
+        System.out.println( m_vehiclelight.literal().collect( Collectors.toSet() ) );
     }
 
     /**
@@ -45,7 +51,7 @@ public final class TestCVehiclesTrafficLight extends IBaseTest
      */
     public static void main( final String[] p_args ) throws Exception
     {
-        final TestCPedestrianTrafficLight l_test = new TestCPedestrianTrafficLight();
+        final TestCVehiclesTrafficLight l_test = new TestCVehiclesTrafficLight();
 
         l_test.initializeenvironment();
         l_test.initialize();

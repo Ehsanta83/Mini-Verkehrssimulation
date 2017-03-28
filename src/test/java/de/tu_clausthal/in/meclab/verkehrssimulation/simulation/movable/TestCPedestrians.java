@@ -7,6 +7,9 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
+
 /**
  * test pedestrians
  *
@@ -17,7 +20,9 @@ public class TestCPedestrians extends IBaseTest
 
     private CPedestrian m_pedestrian;
 
-
+    /**
+     * initialize pedestrian
+     */
     @Before
     public final void initialize()
     {
@@ -36,6 +41,7 @@ public class TestCPedestrians extends IBaseTest
         Assume.assumeNotNull( m_pedestrian );
 
         m_pedestrian.call();
+        System.out.println( m_pedestrian.literal().collect( Collectors.toSet() ) );
     }
 
     /**

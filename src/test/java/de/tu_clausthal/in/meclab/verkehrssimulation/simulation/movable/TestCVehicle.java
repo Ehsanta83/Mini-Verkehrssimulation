@@ -7,6 +7,9 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 
 /**
  * test vehicle
@@ -18,6 +21,9 @@ public final class TestCVehicle extends IBaseTest
 
     private CVehicle m_vehicle;
 
+    /**
+     * initialize vehicle
+     */
     @Before
     public final void initialize()
     {
@@ -36,6 +42,7 @@ public final class TestCVehicle extends IBaseTest
         Assume.assumeNotNull( m_vehicle );
 
         m_vehicle.call();
+        System.out.println( m_vehicle.literal().collect( Collectors.toSet() ) );
     }
 
 

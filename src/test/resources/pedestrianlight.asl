@@ -1,5 +1,8 @@
+!main.
+
 +!main
-    <- generic/print("Hallo")
+    <- generic/print("hello pedestrian light");
+    +extern/iam(green)
 .
 
 +!pedestrianstrafficlight(color (C), duration(D), numberofpersons(N))

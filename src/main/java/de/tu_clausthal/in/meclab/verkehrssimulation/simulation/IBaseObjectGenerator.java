@@ -70,10 +70,12 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
         }
 
         @Override
+        @SuppressWarnings( "unchecked" )
         public final IView<T> beliefbase()
         {
             final IView<T> l_view = super.beliefbase();
-            return l_view.add( new CBeliefbasePersistent<T>( new CSingleStorage<ILiteral, IView<T>, T>() ).create( "extern", l_view ) );
+            l_view.add( new CBeliefbasePersistent<T>( new CSingleStorage<ILiteral, IView<T>, T>() ).create( "extern", l_view ) );
+            return l_view;
         }
     }
 }

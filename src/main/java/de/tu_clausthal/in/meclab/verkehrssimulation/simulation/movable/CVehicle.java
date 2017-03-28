@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * vehicle class
  */
 @IAgentAction
-public class CVehicle extends IBaseMoveable<CVehicle>
+public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     private static final String FUNCTOR = "vehicle";
 

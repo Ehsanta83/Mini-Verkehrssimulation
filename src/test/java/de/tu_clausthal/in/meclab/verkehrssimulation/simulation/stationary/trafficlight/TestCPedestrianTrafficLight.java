@@ -7,6 +7,8 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 
 /**
  * test pedestrian traffic light
@@ -16,7 +18,9 @@ public final class TestCPedestrianTrafficLight extends IBaseTest
 
     private CTrafficLightPedestrian m_pedestrianlight;
 
-
+    /**
+     * initialize traffic light
+     */
     @Before
     public final void initialize()
     {
@@ -34,7 +38,9 @@ public final class TestCPedestrianTrafficLight extends IBaseTest
     {
         Assume.assumeNotNull( m_pedestrianlight );
 
+        System.out.println( m_pedestrianlight.literal().collect( Collectors.toSet() ) );
         m_pedestrianlight.call();
+        System.out.println( m_pedestrianlight.literal().collect( Collectors.toSet() ) );
     }
 
     /**

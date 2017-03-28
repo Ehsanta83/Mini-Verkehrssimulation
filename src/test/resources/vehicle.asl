@@ -1,7 +1,7 @@
 !main.
 
 +!main <-
-    generic/print("Hallo")
+    generic/print("hello vehicle")
 .
 
 +!vehicle( speed(S), type(T), visibility(V), vehiclestrafficlightcolor(Vtl), pedestrianstrafficlightcolor(Ptl) )
