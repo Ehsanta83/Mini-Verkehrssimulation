@@ -5,7 +5,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvi
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,7 +28,7 @@ public class CSidewalk extends IBaseLane<CSidewalk>
      */
     protected CSidewalk(
         final IAgentConfiguration<CSidewalk> p_configuration,
-        final IEnvironment<?> p_environment,
+        final IEnvironment p_environment,
         final List<Integer> p_leftbottom,
         final List<Integer> p_righttop
     )

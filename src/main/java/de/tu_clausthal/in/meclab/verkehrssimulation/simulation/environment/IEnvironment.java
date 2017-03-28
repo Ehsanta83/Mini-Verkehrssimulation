@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * environment interface
  */
-public interface IEnvironment<T extends IEnvironment<?>> extends IObject<T>
+public interface IEnvironment extends IObject<IEnvironment>
 {
 
     // --- main elements ---------------------------------------------------------------------------------------------------------------------------------------

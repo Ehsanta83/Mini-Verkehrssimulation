@@ -56,8 +56,7 @@ public final class TestCTrafficLightVehicle
                 org.lightjason.agentspeak.common.CCommon.actionsFromAgentClass( CVehicle.class )
         ).collect( Collectors.toSet() ) );
 
-        Assume.assumeNotNull( m_environment );
-        Assume.assumeNotNull( m_actions );
+
     }
 
     /**
@@ -66,6 +65,9 @@ public final class TestCTrafficLightVehicle
     @Test
     public void testVehicleGenerator()
     {
+        Assume.assumeNotNull( m_environment );
+        Assume.assumeNotNull( m_actions );
+
         final List<Map<String, Object>> l_vehiclerandomgeneratepositions = new LinkedList<>();
         final Map<String, Object> l_map = new HashMap<String, Object>()
         {
@@ -80,12 +82,14 @@ public final class TestCTrafficLightVehicle
                 final FileInputStream l_stream = new FileInputStream( "src/test/resources/vehicle.asl" );
             )
         {
+            /*
             m_vehicle = new CVehicleGeneratorOld(
                 m_environment,
                 l_stream,
                 m_actions,
                 IAggregation.EMPTY )
                 .generatesingle( l_vehiclerandomgeneratepositions, "car", 32, 16 );
+                */
             //m_vehicle.call();
         } catch ( final Exception l_exception )
         {

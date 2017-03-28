@@ -1,52 +1,34 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.ERoutingFactory;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.CEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.IBaseMoveable;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.pedestrian.CPedestrianGenerator;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable.vehicle.CVehicleGeneratorOld;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.CTrafficLightVehicle;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.ELightColorVehicle;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.stationary.trafficlight.IBaseTrafficLight;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CIntersection;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CLane;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CSidewalk;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.CVehiclesWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.IBaseWay;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
 import org.apache.commons.io.FilenameUtils;
-import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.IBaseAction;
 import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.common.IPath;
-import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.ITerm;
 import org.lightjason.agentspeak.language.execution.IContext;
 import org.lightjason.agentspeak.language.execution.fuzzy.CFuzzyValue;
 import org.lightjason.agentspeak.language.execution.fuzzy.IFuzzyValue;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.logging.LogManager;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
  * configuration and initialization of all simulation objects
+ *
+ * @bug refactor
  */
 public final class CConfiguration
 {
@@ -149,7 +131,7 @@ public final class CConfiguration
         final List<ILane> l_lanes = new LinkedList<>();
         this.createLanes( (List<Map<String, Object>>) l_data.getOrDefault( "lanes", Collections.<Map<String, Object>>emptyList() ), l_lanes );
         m_lanes = Collections.unmodifiableList( l_lanes );
-
+/*
         // create environment - static items must be exists
         m_environment = new CEnvironment(
             (Integer) ( (Map<String, Object>) l_data.getOrDefault( "environment", Collections.<String, Integer>emptyMap() ) ).getOrDefault( "rows", -1 ),
@@ -169,7 +151,7 @@ public final class CConfiguration
             (boolean) l_data.getOrDefault( "agentprint", true )
         );
         m_agents = Collections.unmodifiableList( l_agents );
-
+*/
         return this;
     }
 
@@ -281,6 +263,7 @@ public final class CConfiguration
      */
     private void createTrafficLights( final List<Map<String, Object>> p_trafficlightsConfiguration, final List<IBaseTrafficLight> p_trafficlights )
     {
+        /*
         p_trafficlightsConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
@@ -296,6 +279,7 @@ public final class CConfiguration
 
             ) )
             .forEach( p_trafficlights::add );
+            */
     }
 
     /**
@@ -306,6 +290,7 @@ public final class CConfiguration
      */
     private void createWays( final List<Map<String, Object>> p_waysConfiguration, final List<IBaseWay> p_ways )
     {
+        /*
         p_waysConfiguration
             .stream()
             .map( i -> (Map<String, Object>) i.get( "vehicles" ) )
@@ -317,6 +302,7 @@ public final class CConfiguration
                 (int) i.get( "rotation" )
             ) )
             .forEach( p_ways::add );
+            */
     }
 
     /**
@@ -327,6 +313,7 @@ public final class CConfiguration
      */
     private void createLanes( final List<Map<String, Object>> p_lanesConfiguration, final List<ILane> p_lanes )
     {
+        /*
         //ToDo: is there a better way to do this?
         p_lanesConfiguration
             .stream()
@@ -356,6 +343,7 @@ public final class CConfiguration
                 (List<Integer>) i.get( "righttop" )
             ) )
             .forEach( p_lanes::add );
+            */
     }
 
     /**
@@ -366,9 +354,10 @@ public final class CConfiguration
      * @throws IOException thrown on ASL reading error
      */
     @SuppressWarnings( "unchecked" )
-    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IBaseMoveable> p_elements, final boolean p_agentprint ) throws IOException
+    private void createAgents( final Map<String, Object> p_agentsConfiguration, final List<IBaseMoveable> p_elements, final boolean p_agentprint )
+    throws IOException
     {
-
+        /*
         final Map<String, IAgentGenerator<IBaseMoveable>> l_agentgenerator = new HashMap<>();
         final Set<IAction> l_action = Collections.unmodifiableSet(
             Stream.concat(
@@ -458,7 +447,7 @@ public final class CConfiguration
             l_exception.printStackTrace( System.out );
             System.err.println( MessageFormat.format( "error on agent generation: {0}", l_exception ) );
         }
-
+        */
     }
 
     /**

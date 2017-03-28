@@ -1,9 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.movable;
 
+import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IBaseObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IBaseObjectGenerator;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
-import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 
@@ -12,25 +12,26 @@ import java.util.Set;
 
 
 /**
- *
+ * moveable object
  * @todo implement agent action for generating objects
  */
-public abstract class IBaseMoveableGenerator<T extends IMoveable<?>> extends IBaseAgent<T>
+public abstract class IBaseMoveableGenerator<T extends IMoveable<?>> extends IBaseObject<T>
 {
-    protected final IEnvironment<?> m_environment;
-
 
     /**
      * ctor
      *
      * @param p_configuration agent configuration
+     * @param p_environment environment reference
+     * @param p_functor functor of the object literal
      */
-    protected IBaseMoveableGenerator( final IAgentConfiguration<T> p_configuration, final IEnvironment<?> p_environment )
+    protected IBaseMoveableGenerator( final IAgentConfiguration<T> p_configuration,
+                                      final IEnvironment p_environment,
+                                      final String p_functor
+    )
     {
-        super( p_configuration );
-        m_environment = p_environment;
+        super( p_configuration, p_environment, p_functor );
     }
-
 
     /**
      * generator instance for generated agent
@@ -48,7 +49,7 @@ public abstract class IBaseMoveableGenerator<T extends IMoveable<?>> extends IBa
          */
         public IGenerator( final InputStream p_stream, final Set<IAction> p_actions,
                            final IAggregation p_aggregation,
-                           final IEnvironment<?> p_environment
+                           final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, p_environment );

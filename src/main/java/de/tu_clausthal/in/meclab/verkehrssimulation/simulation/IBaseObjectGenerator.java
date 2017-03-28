@@ -23,23 +23,23 @@ import java.util.Set;
 
 /**
  * base agent generator
- * @todo implement
+ *
  * @param <T>
+ * @todo implement
  */
 public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T>
 {
-    protected final IEnvironment<?> m_environment;
+    protected final IEnvironment m_environment;
 
     /**
-     *
      * @param p_stream
      * @param p_actions
      * @param p_aggregation
      * @param p_environment
-     * @throws Exception
+     * @throws Exception on any error
      */
-    public IBaseObjectGenerator( final InputStream p_stream, final Set<IAction> p_actions,
-                                 final IAggregation p_aggregation, final IEnvironment<?> p_environment
+    protected IBaseObjectGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+                                    final IAggregation p_aggregation, final IEnvironment p_environment
     ) throws Exception
     {
         super( p_stream, p_actions, p_aggregation );
@@ -56,6 +56,9 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
         return new CConfiguration( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_aggregation, p_variablebuilder );
     }
 
+    /**
+     * agent configuration
+     */
     private final class CConfiguration extends CDefaultAgentConfiguration<T>
     {
         public CConfiguration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans, final Set<IRule> p_rules,

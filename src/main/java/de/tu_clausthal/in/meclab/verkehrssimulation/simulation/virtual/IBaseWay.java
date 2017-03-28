@@ -30,7 +30,9 @@ public abstract class IBaseWay<T extends IBaseWay<?>> extends IBaseObject<T> imp
      * @param p_rotation rotation
      * @bug check parameter
      */
-    protected IBaseWay( final IAgentConfiguration<T> p_configuration, final IEnvironment<?> p_environment, final String p_functor, final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop, final int p_rotation )
+    protected IBaseWay( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
+                        final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop, final int p_rotation
+    )
     {
         super( p_configuration, p_environment, p_functor );
 

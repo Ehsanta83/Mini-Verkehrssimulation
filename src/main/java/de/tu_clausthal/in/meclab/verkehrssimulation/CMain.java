@@ -1,6 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import de.tu_clausthal.in.meclab.verkehrssimulation.ui.CScreen;
 
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -50,6 +48,7 @@ public final class CMain
 
         // open window
         LOGGER.info( MessageFormat.format( "open window with size [{0}x{1}]", l_config.width, l_config.height ) );
+        /*
         final CScreen l_screen = new CScreen(
             Stream.of(
                 CConfiguration.INSTANCE.ways().parallelStream(),
@@ -63,7 +62,7 @@ public final class CMain
         );
         new LwjglApplication( l_screen, l_config );
         CMain.execute( l_screen );
-
+        */
         /*
         final Server l_server = new Server( 8080 );
         final ServletContextHandler l_handler = new ServletContextHandler( l_server, "/" );

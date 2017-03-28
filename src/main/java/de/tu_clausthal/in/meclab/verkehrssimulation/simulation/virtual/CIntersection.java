@@ -1,15 +1,9 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.language.CLiteral;
-import org.lightjason.agentspeak.language.CRawTerm;
-import org.lightjason.agentspeak.language.ILiteral;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 
 /**
@@ -30,7 +24,7 @@ public class CIntersection extends IBaseLane<CIntersection>
      */
     protected CIntersection(
         final IAgentConfiguration<CIntersection> p_configuration,
-        final IEnvironment<?> p_environment,
+        final IEnvironment p_environment,
         final String p_functor,
         final List<Integer> p_leftbottom,
         final List<Integer> p_righttop
@@ -38,6 +32,5 @@ public class CIntersection extends IBaseLane<CIntersection>
     {
         super( p_configuration, p_environment, FUNCTOR, p_leftbottom, p_righttop );
     }
-
 
 }

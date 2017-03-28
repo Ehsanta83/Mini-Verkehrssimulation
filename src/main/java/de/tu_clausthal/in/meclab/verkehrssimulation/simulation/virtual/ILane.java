@@ -1,8 +1,5 @@
 package de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual;
 
-import cern.colt.matrix.DoubleMatrix1D;
-
-
 /**
  * lane interface
  */

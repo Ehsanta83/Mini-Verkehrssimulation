@@ -26,7 +26,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     /**
      * environment reference
      */
-    private final IEnvironment<?> m_environment;
+    private final IEnvironment m_environment;
 
     /**
      * ctor
@@ -35,7 +35,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * @param p_environment environment reference
      * @param p_functor functor of the object literal
      */
-    public IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment<?> p_environment, final String p_functor )
+    public IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor )
     {
         super( p_configuration );
         m_functor = p_functor;

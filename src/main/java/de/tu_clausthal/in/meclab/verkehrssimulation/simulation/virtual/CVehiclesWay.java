@@ -6,7 +6,6 @@ import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.environment.IEnvi
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 
@@ -24,7 +23,8 @@ public class CVehiclesWay extends IBaseWay<CVehiclesWay>
      * @param p_righttop righttop position in grid
      * @param p_rotation rotation
      */
-    public CVehiclesWay( final IAgentConfiguration<CVehiclesWay> p_configuration, final IEnvironment<?> p_environment, final DoubleMatrix1D p_leftbottom, final DoubleMatrix1D p_righttop,
+    public CVehiclesWay( final IAgentConfiguration<CVehiclesWay> p_configuration, final IEnvironment p_environment, final DoubleMatrix1D p_leftbottom,
+                         final DoubleMatrix1D p_righttop,
                          final int p_rotation
     )
     {

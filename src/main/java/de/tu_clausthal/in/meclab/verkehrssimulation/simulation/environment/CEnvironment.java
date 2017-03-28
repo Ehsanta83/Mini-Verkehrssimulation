@@ -4,19 +4,18 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import de.tu_clausthal.in.meclab.verkehrssimulation.CCommon;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.IObject;
 import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.algorithm.routing.IRouting;
-import de.tu_clausthal.in.meclab.verkehrssimulation.simulation.virtual.ILane;
+import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.score.IAggregation;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -24,16 +23,12 @@ import java.util.stream.Stream;
 /**
  * environment class
  */
-public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironment<CEnvironment>
+public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
     /**
      * logger
      */
     private static final Logger LOGGER = Logger.getLogger( CEnvironment.class.getName() );
-    /**
-     * algebra object
-     */
-    private static final Algebra ALGEBRA = new Algebra();
     /**
      * routing algorithm
      */
@@ -66,11 +61,11 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
      * @param p_cellrows number of row cells
      * @param p_cellcolumns number of column cells
      * @param p_cellsize cell size
-     * @param p_lanes list of all lanes
+     * @bug fix cell size to floating-point
      */
-    public CEnvironment(
-        final IAgentConfiguration<CEnvironment> p_configuration,
-        final int p_cellrows, final int p_cellcolumns, final int p_cellsize, final IRouting p_routing, final List<? extends ILane> p_lanes
+    private CEnvironment(
+        final IAgentConfiguration<IEnvironment> p_configuration,
+        final int p_cellrows, final int p_cellcolumns, final double p_cellsize, final IRouting p_routing
     )
     {
         super( p_configuration );
@@ -80,12 +75,10 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
 
         m_row = p_cellrows;
         m_column = p_cellcolumns;
-        m_cellsize = p_cellsize;
+        m_cellsize = (int) p_cellsize;
         m_routing = p_routing;
         m_lanespositions = new SparseObjectMatrix2D( m_row, m_column );
         m_agentspostions = new SparseObjectMatrix2D( m_row, m_column );
-
-        p_lanes.forEach( i -> CCommon.inttupelstream( i ).forEach( j -> m_lanespositions.setQuick( j.getLeft(), j.getRight(), i ) ) );
     }
 
 
@@ -230,5 +223,30 @@ public class CEnvironment extends IBaseAgent<CEnvironment> implements IEnvironme
     private static double clip( final double p_value, final double p_max )
     {
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
+    }
+
+
+
+    /**
+     * generator of the environment
+     */
+    public static final class CGenerator extends IBaseEnvironmentGenerator
+    {
+
+        public CGenerator( final InputStream p_stream, final Set<IAction> p_actions,
+                           final IAggregation p_aggregation
+        ) throws Exception
+        {
+            super( p_stream, p_actions, p_aggregation );
+        }
+
+        @Override
+        protected final IEnvironment generate( final IAgentConfiguration<IEnvironment> p_configuration, final int p_rows, final int p_columns,
+                                               final double p_cellsize,
+                                               final IRouting p_routing
+        )
+        {
+            return new CEnvironment( p_configuration, p_rows, p_columns, p_cellsize, p_routing );
+        }
     }
 }

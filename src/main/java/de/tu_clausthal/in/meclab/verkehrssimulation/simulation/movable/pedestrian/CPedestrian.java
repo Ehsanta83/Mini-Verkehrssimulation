@@ -27,7 +27,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
      */
     protected CPedestrian(
         final IAgentConfiguration<CPedestrian> p_configuration,
-        final IEnvironment<?> p_environment,
+        final IEnvironment p_environment,
         final DoubleMatrix1D p_position
     )
     {

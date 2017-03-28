@@ -36,7 +36,9 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseObject<T> i
      * @param p_configuration agent configuration
      * @todo check parameter
      */
-    protected IBaseLane( final IAgentConfiguration<T> p_configuration, final IEnvironment<?> p_environment, final String p_functor, final List<Integer> p_leftbottom, final List<Integer> p_righttop )
+    protected IBaseLane( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
+                         final List<Integer> p_leftbottom, final List<Integer> p_righttop
+    )
     {
         super( p_configuration, p_environment, p_functor );
         m_position = new DenseDoubleMatrix1D( new double[]{
