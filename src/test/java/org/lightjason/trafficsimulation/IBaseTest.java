@@ -59,9 +59,6 @@ public abstract class IBaseTest
     @Before
     public final void initializeenvironment() throws Exception
     {
-        Assume.assumeNotNull( m_actions );
-        Assume.assumeNotNull( m_environment );
-
         try
         (
             final FileInputStream l_stream = new FileInputStream( "src/test/resources/environment.asl" );
