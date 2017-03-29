@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * test pedestrian traffic light
  */
-public final class TestCPedestrianTrafficLight extends IBaseTest
+public final class TestCTrafficLightPedestriant extends IBaseTest
 {
 
     private CTrafficLightPedestrian m_pedestrianlight;
@@ -51,7 +51,7 @@ public final class TestCPedestrianTrafficLight extends IBaseTest
      */
     public static void main( final String[] p_args ) throws Exception
     {
-        final TestCPedestrianTrafficLight l_test = new TestCPedestrianTrafficLight();
+        final TestCTrafficLightPedestriant l_test = new TestCTrafficLightPedestriant();
 
         l_test.initializeenvironment();
         l_test.initialize();

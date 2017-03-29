@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  *
  * @todo create test cases
  */
-public class TestCPedestrians extends IBaseTest
+public class TestCPedestrian extends IBaseTest
 {
 
     private CPedestrian m_pedestrian;
@@ -52,7 +52,7 @@ public class TestCPedestrians extends IBaseTest
      */
     public static void main( final String[] p_args ) throws Exception
     {
-        final TestCPedestrians l_test = new TestCPedestrians();
+        final TestCPedestrian l_test = new TestCPedestrian();
 
         l_test.initializeenvironment();
         l_test.initialize();

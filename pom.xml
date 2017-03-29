@@ -8,6 +8,10 @@
 	<artifactId>trafficsimulation</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
+	<!-- project meta information -->
+	<name>Multi-Agent Traffic Simulation</name>
+	<description>Micro-based traffic simulation based on the multi-agent BDI framework LightJason AgentSpeak(L++)</description>
+
 	<!-- project build configuration -->
 	<prerequisites>
 		<maven>3.0.1</maven>
@@ -107,8 +111,23 @@
 
 
 	<!-- reporting plugins -->
+	<!-- reporting plugins -->
 	<reporting>
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.9</version>
+			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
@@ -126,7 +145,51 @@
 				<artifactId>jdepend-maven-plugin</artifactId>
 				<version>2.0</version>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.7</version>
+				<configuration>
+					<excludes>
+						<exclude>**/CASTVisitorAgent.java</exclude>
+						<exclude>**/CASTVisitorPlanBundle.java</exclude>
+						<exclude>**/generated/*.java</exclude>
+					</excludes>
+					<linkXRef>false</linkXRef>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>1.4.5</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.19.1</version>
+				<configuration>
+					<linkXRef>false</linkXRef>
+				</configuration>
+			</plugin>
+
 		</plugins>
+
 	</reporting>
 
 	<!-- defines the build settings -->
