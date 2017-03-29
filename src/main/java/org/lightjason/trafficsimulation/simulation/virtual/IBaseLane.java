@@ -2,16 +2,16 @@ package org.lightjason.trafficsimulation.simulation.virtual;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
-import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
+import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
+import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -38,11 +38,11 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseObject<T> i
      * @param p_configuration agent configuration
      * @todo check parameter
      */
-    protected IBaseLane( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
-                         final Number... p_position
+    protected IBaseLane( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
+                         final String p_functor, final String p_name, final Number... p_position
     )
     {
-        super( p_configuration, p_environment, p_functor );
+        super( p_configuration, p_environment, p_functor, p_name );
         m_position = new DenseDoubleMatrix1D( Arrays.stream( p_position ).mapToDouble( Number::doubleValue ).toArray() );
     }
 

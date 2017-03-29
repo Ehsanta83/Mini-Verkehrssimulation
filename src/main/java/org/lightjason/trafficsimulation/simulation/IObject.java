@@ -28,4 +28,11 @@ public interface IObject<T extends IAgent<?>> extends IAgent<T>
      */
     Stream<ILiteral> literal( final Stream<IObject<?>> p_object );
 
+    /**
+     * name of the object
+     *
+     * @return string name
+     */
+    String name();
+
 }

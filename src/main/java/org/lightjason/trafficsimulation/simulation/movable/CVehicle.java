@@ -1,8 +1,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -10,6 +8,8 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
 import java.util.stream.Stream;

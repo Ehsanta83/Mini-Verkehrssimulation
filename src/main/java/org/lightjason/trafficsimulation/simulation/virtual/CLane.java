@@ -1,11 +1,11 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
-import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -23,15 +23,16 @@ public final class CLane extends IBaseLane<CLane>
      *
      * @param p_configuration agent configuration
      * @param p_environment
-     * @param p_position @todo check parameter
+     * @param p_values
+     * @todo check parameter
      */
     private CLane(
         final IAgentConfiguration<CLane> p_configuration,
         final IEnvironment p_environment,
-        final Number... p_position
+        final String p_name, final Number... p_values
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_values );
     }
 
 
@@ -61,7 +62,7 @@ public final class CLane extends IBaseLane<CLane>
         @SuppressWarnings( "unchecked" )
         public final CLane generatesingle( final Object... p_data )
         {
-            return new CLane( m_configuration, m_environment, (Number[]) p_data );
+            return new CLane( m_configuration, m_environment, FUNCTOR, (Number[]) p_data );
         }
     }
 }

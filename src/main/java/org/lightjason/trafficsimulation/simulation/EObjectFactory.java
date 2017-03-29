@@ -1,5 +1,8 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
+import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.environment.CEnvironment;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
@@ -9,9 +12,7 @@ import org.lightjason.trafficsimulation.simulation.stationary.trafficlight.CTraf
 import org.lightjason.trafficsimulation.simulation.virtual.CIntersection;
 import org.lightjason.trafficsimulation.simulation.virtual.CLane;
 import org.lightjason.trafficsimulation.simulation.virtual.CSidewalk;
-import org.lightjason.agentspeak.action.IAction;
-import org.lightjason.agentspeak.generator.IAgentGenerator;
-import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.virtual.CVehiclesWay;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -30,6 +31,7 @@ public enum EObjectFactory
     INTERSECTION,
     LANE,
     SIDEWALK,
+    VEHICLEWAY,
 
     VEHICLE,
     VEHICLE_TRAFFICLIGHT,
@@ -68,6 +70,9 @@ public enum EObjectFactory
 
             case SIDEWALK:
                 return new CSidewalk.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+
+            case VEHICLEWAY:
+                return new CVehiclesWay.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
 
             case PEDESTRIAN:

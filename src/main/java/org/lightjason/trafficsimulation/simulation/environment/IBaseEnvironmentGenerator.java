@@ -1,10 +1,10 @@
 package org.lightjason.trafficsimulation.simulation.environment;
 
-import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 
 import java.io.InputStream;
 import java.util.stream.Collectors;

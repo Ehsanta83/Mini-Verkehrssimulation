@@ -4,13 +4,13 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -24,6 +24,8 @@ import java.util.stream.Stream;
  */
 public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
+    private static final String FUNCTOR = "environment";
+
     /**
      * logger
      */
@@ -208,6 +210,12 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     public final Stream<ILiteral> literal( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
+    }
+
+    @Override
+    public final String name()
+    {
+        return FUNCTOR;
     }
 
     // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------

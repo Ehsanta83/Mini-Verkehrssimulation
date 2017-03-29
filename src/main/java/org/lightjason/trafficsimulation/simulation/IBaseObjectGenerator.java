@@ -1,6 +1,5 @@
 package org.lightjason.trafficsimulation.simulation;
 
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
@@ -17,6 +16,7 @@ import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
 import java.util.Collection;
