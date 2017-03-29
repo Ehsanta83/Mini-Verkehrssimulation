@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- defines the main project information -->
-	<groupId>de.tu_clausthal.in.meclab</groupId>
-	<artifactId>verkehrssimulation</artifactId>
+	<groupId>org.lightjason</groupId>
+	<artifactId>trafficsimulation</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
 	<!-- project build configuration -->
@@ -221,7 +221,7 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <!-- here is the class defined, which has got the "public static coid main( final String[] p_args )" class -->
-                                        <Main-Class>de.tu_clausthal.in.meclab.verkehrssimulation.CMain</Main-Class>
+                                        <Main-Class>org.lightjason.trafficsimulation.CMain</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
