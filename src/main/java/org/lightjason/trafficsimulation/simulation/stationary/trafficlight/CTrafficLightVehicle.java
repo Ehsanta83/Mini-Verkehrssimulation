@@ -29,12 +29,12 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
      */
     private CTrafficLightVehicle(
         final IAgentConfiguration<CTrafficLightVehicle> p_configuration,
-        final IEnvironment p_environment,
+        final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position,
         final int p_rotation
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, ELightColorVehicle.class, p_position, p_rotation );
+        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorVehicle.class, p_position, p_rotation );
     }
 
 
@@ -65,7 +65,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
         @Override
         protected final CTrafficLightVehicle generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation )
         {
-            return new CTrafficLightVehicle( m_configuration, p_environment, p_position, p_rotation );
+            return new CTrafficLightVehicle( m_configuration, p_environment, FUNCTOR, p_position, p_rotation );
         }
 
     }

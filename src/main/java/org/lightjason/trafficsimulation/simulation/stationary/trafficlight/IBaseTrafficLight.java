@@ -47,11 +47,11 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * @param p_rotation
      */
     protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
-                                 final String p_functor, final Class<L> p_light,
+                                 final String p_functor, final String p_name, final Class<L> p_light,
                                  final DoubleMatrix1D p_position, final int p_rotation
     )
     {
-        super( p_configuration, p_environment, p_functor );
+        super( p_configuration, p_environment, p_functor, p_name );
         m_position = p_position;
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );

@@ -29,11 +29,11 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
      */
     private CPedestrian(
         final IAgentConfiguration<CPedestrian> p_configuration,
-        final IEnvironment p_environment,
+        final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
     }
 
 
@@ -67,7 +67,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         @SuppressWarnings( "unchecked" )
         public final CPedestrian generatesingle( final Object... p_data )
         {
-            return new CPedestrian( m_configuration, m_environment, (DoubleMatrix1D) p_data[0] );
+            return new CPedestrian( m_configuration, m_environment, FUNCTOR, (DoubleMatrix1D) p_data[0] );
         }
     }
 }

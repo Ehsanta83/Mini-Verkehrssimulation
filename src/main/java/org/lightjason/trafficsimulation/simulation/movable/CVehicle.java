@@ -41,11 +41,11 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
      */
     private CVehicle(
         final IAgentConfiguration<CVehicle> p_configuration,
-        final IEnvironment p_environment,
+        final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
 
     }
 
@@ -92,7 +92,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         @SuppressWarnings( "unchecked" )
         public CVehicle generatesingle( final Object... p_data )
         {
-            return new CVehicle( m_configuration, m_environment, (DoubleMatrix1D) p_data[0] );
+            return new CVehicle( m_configuration, m_environment, FUNCTOR, (DoubleMatrix1D) p_data[0] );
         }
     }
 }

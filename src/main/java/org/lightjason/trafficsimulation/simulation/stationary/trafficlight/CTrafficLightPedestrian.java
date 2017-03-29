@@ -29,12 +29,12 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
      */
     private CTrafficLightPedestrian(
         final IAgentConfiguration<CTrafficLightPedestrian> p_configuration,
-        final IEnvironment p_environment,
+        final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position,
         final int p_rotation
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, ELightColorPedestrian.class, p_position, p_rotation );
+        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorPedestrian.class, p_position, p_rotation );
     }
 
 
@@ -62,7 +62,7 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
         @Override
         protected final CTrafficLightPedestrian generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation )
         {
-            return new CTrafficLightPedestrian( m_configuration, p_environment, p_position, p_rotation );
+            return new CTrafficLightPedestrian( m_configuration, p_environment, FUNCTOR, p_position, p_rotation );
         }
     }
 
