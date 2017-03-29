@@ -3,8 +3,7 @@
 !pom.xml
 !circle.yml
 !*.java
-!*.xsd
-!*.xjb
+!*.asl
 !*.md
 
 !src/analysis/**/*.xml
@@ -13,7 +12,6 @@
 
 !src/main/resources/**/*.properties
 !src/main/resources/**/*.yaml
-!src/main/resources/**/*.asl
 
 !src/main/webapp/**/*.htm*
 !src/main/webapp/**/*.css
