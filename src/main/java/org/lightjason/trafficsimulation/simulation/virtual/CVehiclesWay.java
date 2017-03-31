@@ -1,5 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
@@ -62,9 +64,10 @@ public final class CVehiclesWay extends IBaseWay<CVehiclesWay>
         }
 
         @Override
-        public final CVehiclesWay generatesingle( final Object... p_data )
+        protected final Pair<CVehiclesWay, Stream<String>> generate( final Object... p_data )
         {
-            return new CVehiclesWay( m_configuration, m_environment, FUNCTOR, (Number[]) p_data );
+            return new ImmutablePair<>( new CVehiclesWay( m_configuration, m_environment, FUNCTOR, (Number[]) p_data ), Stream.of() );
         }
+
     }
 }

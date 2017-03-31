@@ -1,5 +1,6 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
@@ -16,6 +17,7 @@ import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CHTTPServer;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -28,8 +30,8 @@ import java.util.stream.Stream;
 /**
  * base agent generator
  *
- * @param <T>
- * @todo implement
+ * @tparam T agent type
+ * @todo can we add a naming method, which can generate unique names for each agent?
  */
 public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T>
 {
@@ -49,6 +51,21 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
         super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_agentclass ) ).collect( Collectors.toSet() ), p_aggregation );
         m_environment = p_environment;
     }
+
+    @Override
+    public final T generatesingle( final Object... p_data )
+    {
+        return CHTTPServer.register( this.generate( p_data ) );
+    }
+
+    /**
+     * generates the agent
+     *
+     * @param p_data creating arguments
+     * @return agent object and group names
+     */
+    protected abstract Pair<T,Stream<String>> generate( final Object... p_data );
+
 
     @Override
     protected IAgentConfiguration<T> configuration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans,

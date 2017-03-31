@@ -1,5 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
@@ -54,9 +56,9 @@ public final class CIntersection extends IBaseLane<CIntersection>
 
         @Override
         @SuppressWarnings( "unchecked" )
-        public final CIntersection generatesingle( final Object... p_data )
+        protected final Pair<CIntersection, Stream<String>> generate( final Object... p_data )
         {
-            return new CIntersection( m_configuration, m_environment, FUNCTOR, (Number[]) p_data );
+            return new ImmutablePair<>( new CIntersection( m_configuration, m_environment, FUNCTOR, (Number[]) p_data ), Stream.of() );
         }
     }
 

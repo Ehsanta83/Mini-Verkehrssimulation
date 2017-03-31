@@ -17,11 +17,13 @@ import java.util.stream.Stream;
  * moveable object
  *
  * @todo implement moving
+ * @todo can we create a main generate method for vehicles and pedestrian?
  */
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
     /**
      * current position of the agent
+     * @todo can we remove position to iobject?
      */
     private final DoubleMatrix1D m_position;
 

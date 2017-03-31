@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 /**
  * general tests
- * @deprecated ??
+ * @deprecated did we need this?
  */
 @Deprecated
 public final class TestCGeneral

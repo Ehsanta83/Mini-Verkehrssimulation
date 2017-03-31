@@ -1,5 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
@@ -60,9 +62,9 @@ public final class CLane extends IBaseLane<CLane>
 
         @Override
         @SuppressWarnings( "unchecked" )
-        public final CLane generatesingle( final Object... p_data )
+        protected final Pair<CLane, Stream<String>> generate( final Object... p_data )
         {
-            return new CLane( m_configuration, m_environment, FUNCTOR, (Number[]) p_data );
+            return new ImmutablePair<>( new CLane( m_configuration, m_environment, FUNCTOR, (Number[]) p_data ), Stream.of() );
         }
     }
 }

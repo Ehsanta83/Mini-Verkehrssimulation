@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 /**
  * routing interface
+ * @todo can we create a routing algorithm, which can be run as agent?
  */
 public interface IRouting
 {

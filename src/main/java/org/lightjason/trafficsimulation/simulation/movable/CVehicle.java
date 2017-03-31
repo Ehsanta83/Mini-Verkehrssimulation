@@ -1,6 +1,8 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -90,9 +92,9 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
 
         @Override
         @SuppressWarnings( "unchecked" )
-        public CVehicle generatesingle( final Object... p_data )
+        protected final Pair<CVehicle, Stream<String>> generate( final Object... p_data )
         {
-            return new CVehicle( m_configuration, m_environment, FUNCTOR, (DoubleMatrix1D) p_data[0] );
+            return new ImmutablePair<>( new CVehicle( m_configuration, m_environment, FUNCTOR, (DoubleMatrix1D) p_data[0] ), Stream.of() );
         }
     }
 }

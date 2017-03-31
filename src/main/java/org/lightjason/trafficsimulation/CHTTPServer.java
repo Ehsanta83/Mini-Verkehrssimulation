@@ -1,16 +1,19 @@
 package org.lightjason.trafficsimulation;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.rest.CApplication;
+import org.lightjason.trafficsimulation.simulation.IObject;
 
 import java.awt.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.stream.Stream;
 
 
 
@@ -95,16 +98,30 @@ public final class CHTTPServer
     /**
      * register agent if server is started
      *
-     * @param p_name name of the agent
      * @param p_agent agent object
      * @param p_group additional group
+     * @return agent object
      */
-    public static void register( final String p_name, final IAgent<?> p_agent, final String... p_group )
+    public static <T extends IObject<?>> T register( final T p_agent, final String... p_group )
     {
         if ( INSTANCE == null )
-            return;
+            return p_agent;
 
-        INSTANCE.m_restagent.register( p_name, p_agent, p_group );
+        INSTANCE.m_restagent.register( p_agent.name(), p_agent, p_group );
+
+        return p_agent;
+    }
+
+    /**
+     * register agent if server started
+     *
+     * @param p_agentgroup tupel of agent and stream of group names
+     * @tparam T agent type
+     * @return agent object
+     */
+    public static <T extends IObject<?>> T register( final Pair<T, Stream<String>> p_agentgroup )
+    {
+        return register( p_agentgroup.getLeft(), p_agentgroup.getRight().toArray( String[]::new ) );
     }
 
 }

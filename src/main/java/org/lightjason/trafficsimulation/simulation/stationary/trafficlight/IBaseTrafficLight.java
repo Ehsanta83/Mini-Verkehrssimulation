@@ -1,6 +1,8 @@
 package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -9,6 +11,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
+import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -97,9 +100,9 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
 
         @Override
         @SuppressWarnings( "unchecked" )
-        public final T generatesingle( final Object... p_data )
+        protected final Pair<T, Stream<String>> generate( final Object... p_data )
         {
-            return this.generate( m_environment, (DoubleMatrix1D) p_data[0], (int) p_data[1] );
+            return new ImmutablePair<>( this.generate( m_environment, (DoubleMatrix1D) p_data[0], (int) p_data[1] ), Stream.of() );
         }
 
         /**
