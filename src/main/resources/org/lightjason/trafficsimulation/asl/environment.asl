@@ -1,5 +1,5 @@
 !main.
 
 +!main <-
-    generate/print( "run environment" )
+    generic/print( "run environment" )
 .

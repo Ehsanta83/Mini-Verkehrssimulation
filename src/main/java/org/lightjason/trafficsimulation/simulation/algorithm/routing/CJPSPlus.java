@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * JPS+ algorithm
  */
-final class CJPSPlus implements IRouting
+final public class CJPSPlus implements IRouting
 {
 
     @Override

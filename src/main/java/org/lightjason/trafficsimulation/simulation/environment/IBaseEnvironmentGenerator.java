@@ -4,6 +4,7 @@ import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CHTTPServer;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 
 import java.io.InputStream;
@@ -29,10 +30,12 @@ public abstract class IBaseEnvironmentGenerator extends IBaseAgentGenerator<IEnv
     @SuppressWarnings( "unchecked" )
     public final IEnvironment generatesingle( final Object... p_data )
     {
-        return this.generate(
-            m_configuration,
-            ( (Number) p_data[0] ).intValue(), ( (Number) p_data[1] ).intValue(), ( (Number) p_data[2] ).doubleValue(),
-            (IRouting) p_data[3]
+        return CHTTPServer.register(
+                    this.generate(
+                        m_configuration,
+                        ( (Number) p_data[0] ).intValue(), ( (Number) p_data[1] ).intValue(), ( (Number) p_data[2] ).doubleValue(),
+                        (IRouting) p_data[3]
+                    )
         );
     }
 

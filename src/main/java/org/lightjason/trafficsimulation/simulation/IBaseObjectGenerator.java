@@ -55,6 +55,7 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
     @Override
     public final T generatesingle( final Object... p_data )
     {
+        System.out.println( "fooo" );
         return CHTTPServer.register( this.generate( p_data ) );
     }
 

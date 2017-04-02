@@ -4,6 +4,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
@@ -53,10 +54,9 @@ public final class CConfiguration
 
         try
             (
-                final InputStream l_stream = new FileInputStream( orDefaultPath( p_path ) );
+                final InputStream l_stream = orDefaultPath( p_path );
             )
         {
-
             final Map<String, ?> l_result = (Map<String, Object>) new Yaml().load( l_stream );
             if ( l_result != null )
             {
@@ -96,11 +96,11 @@ public final class CConfiguration
      * @param p_path path or null / empty
      * @return default path on empty or input path
      */
-    private static String orDefaultPath( final String p_path )
+    private static InputStream orDefaultPath( final String p_path ) throws FileNotFoundException
     {
         return ( p_path == null ) || ( p_path.isEmpty() )
-               ? CConfiguration.class.getResource( "configuration.yaml" ).getFile()
-               : p_path;
+               ? CConfiguration.class.getResourceAsStream( "configuration.yaml" )
+               : new FileInputStream( p_path );
     }
 
     /**

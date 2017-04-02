@@ -12,6 +12,7 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.CJPSPlus;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +33,11 @@ import java.util.stream.Stream;
  */
 public final class CMain
 {
+    static
+    {
+        LogManager.getLogManager().reset();
+    }
+
 
     /**
      * constructor
@@ -89,7 +96,7 @@ public final class CMain
         // initialize server
         CHTTPServer.initialize();
 
-        // add test agents
+        // --- add test agents -----------------------------------------------------------
         final Map<String, IAgent<?>> l_agents = new ConcurrentHashMap<>();
 
         final Set<IAction> l_actions = Stream.concat(
@@ -100,19 +107,24 @@ public final class CMain
             org.lightjason.agentspeak.common.CCommon.actionsFromPackage()
         ).collect( Collectors.toSet() );
 
-        /*
+
         EObjectFactory.PEDESTRIAN.generate(
+
             CMain.class.getResourceAsStream( "asl/pedestrian.asl" ),
+
             l_actions.stream(),
+
             IAggregation.EMPTY,
 
             EObjectFactory.ENVIRONMENT.generate(
                 CMain.class.getResourceAsStream( "asl/environment.asl" ),
                 l_actions.stream(),
                 IAggregation.EMPTY
-            ).generatesingle(  ).<IEnvironment>raw()
-        );
-        */
+            ).generatesingle( 25, 25, 2.5, new CJPSPlus() ).<IEnvironment>raw()
+
+        ).generatemultiple( 3, new DenseDoubleMatrix1D( 2 ) ).forEach( i -> {} );
+        // -------------------------------------------------------------------------------
+
 
         // execute server
         CHTTPServer.execute();
