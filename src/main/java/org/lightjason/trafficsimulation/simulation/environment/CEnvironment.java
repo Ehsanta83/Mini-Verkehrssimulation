@@ -253,7 +253,13 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
                                                final IRouting p_routing
         )
         {
-            return new CEnvironment( p_configuration, p_rows, p_columns, p_cellsize, p_routing );
+            return new CEnvironment(
+                                     p_configuration,
+                                     p_rows,
+                                     p_columns,
+                                     p_cellsize,
+                                     p_routing
+            );
         }
     }
 }

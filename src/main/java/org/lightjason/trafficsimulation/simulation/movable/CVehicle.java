@@ -14,6 +14,8 @@ import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 
@@ -24,6 +26,8 @@ import java.util.stream.Stream;
 public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     private static final String FUNCTOR = "vehicle";
+    private static final AtomicLong m_counter = new AtomicLong();
+
 
     /**
      * width
@@ -94,7 +98,24 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CVehicle, Stream<String>> generate( final Object... p_data )
         {
-            return new ImmutablePair<>( new CVehicle( m_configuration, m_environment, FUNCTOR, (DoubleMatrix1D) p_data[0] ), Stream.of() );
+            return new ImmutablePair<>(
+                                        new CVehicle(
+                                                      m_configuration,
+                                                      m_environment,
+                                                      MessageFormat.format( "{0} {1}", FUNCTOR, m_counter.getAndIncrement() ),
+                                                      (DoubleMatrix1D) p_data[0]
+                                        ),
+
+                                        Stream.of( FUNCTOR, GROUP )
+            );
+        }
+
+        /**
+         * reset the object counter
+         */
+        public static void resetcount()
+        {
+            m_counter.set( 0 );
         }
     }
 }

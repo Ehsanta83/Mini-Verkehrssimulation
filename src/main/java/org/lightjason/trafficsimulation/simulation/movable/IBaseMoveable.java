@@ -21,6 +21,7 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
+    protected final static String GROUP = "moveable";
     /**
      * current position of the agent
      * @todo can we remove position to iobject?

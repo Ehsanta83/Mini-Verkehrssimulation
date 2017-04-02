@@ -56,7 +56,7 @@ public abstract class IBaseLane<T extends IBaseLane<?>> extends IBaseObject<T> i
     }
 
 
-    public abstract static class IGenerator<T extends ILane<?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IGenerator<T extends ILane<?>> extends IBaseObjectGenerator<T>
     {
 
         /**

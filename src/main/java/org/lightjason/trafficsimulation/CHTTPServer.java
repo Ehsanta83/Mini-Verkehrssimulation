@@ -63,6 +63,12 @@ public final class CHTTPServer
     }
 
     /**
+     * run initialize without start-up of the server
+     */
+    public static void initialize()
+    {}
+
+    /**
      * execute the server instance
      */
     public static void execute()

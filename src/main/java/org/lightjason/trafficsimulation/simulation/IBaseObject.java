@@ -5,6 +5,7 @@ import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.view.IView;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
+import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.IShallowCopy;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -76,7 +77,12 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
             CLiteral.from(
                 m_functor,
                 Stream.concat(
-                    m_external.stream().map( IShallowCopy::shallowcopysuffix ).sorted().sequential(),
+                    Stream.concat(
+                        Stream.of(
+                            CLiteral.from( "name", CRawTerm.from( m_name ) )
+                        ),
+                        m_external.stream().map( IShallowCopy::shallowcopysuffix ).sorted().sequential()
+                    ),
                     this.individualliteral( p_object ).sorted().sequential()
                 )
             )

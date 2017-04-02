@@ -45,7 +45,7 @@ public abstract class IBaseWay<T extends IBaseWay<?>> extends IBaseObject<T> imp
 
     }
 
-    public abstract static class IGenerator<T extends IVirtual<?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IGenerator<T extends IVirtual<?>> extends IBaseObjectGenerator<T>
     {
 
         /**

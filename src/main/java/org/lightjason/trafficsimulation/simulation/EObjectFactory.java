@@ -108,4 +108,22 @@ public enum EObjectFactory
         return this.generate( p_stream, p_actions, p_aggregation, null );
     }
 
+
+    /**
+     * resets all generator counters
+     */
+    public static void resetcount()
+    {
+        CIntersection.CGenerator.resetcount();
+        CLane.CGenerator.resetcount();
+        CSidewalk.CGenerator.resetcount();
+        CVehiclesWay.CGenerator.resetcount();
+
+        CPedestrian.CGenerator.resetcount();
+        CVehicle.CGenerator.resetcount();
+
+        CTrafficLightPedestrian.CGenerator.resetcount();
+        CTrafficLightVehicle.CGenerator.resetcount();
+    }
+
 }

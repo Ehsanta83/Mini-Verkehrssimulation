@@ -1,13 +1,27 @@
 package org.lightjason.trafficsimulation;
 
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.agent.IAgent;
+import org.lightjason.agentspeak.common.*;
+import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.actions.CBroadcast;
+import org.lightjason.trafficsimulation.actions.CSend;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -32,7 +46,7 @@ public final class CMain
      * @throws IOException on io errors
      * @throws URISyntaxException on URI syntax error
      */
-    public static void main( final String[] p_args ) throws IOException, URISyntaxException
+    public static void main( final String[] p_args ) throws Exception
     {
         // --- define CLI options ------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,6 +86,33 @@ public final class CMain
         // load configuration and start the http server (if possible)
         CConfiguration.INSTANCE.loadfile( l_cli.getOptionValue( "config", "" ) );
 
+        // initialize server
+        CHTTPServer.initialize();
+
+        // add test agents
+        final Map<String, IAgent<?>> l_agents = new ConcurrentHashMap<>();
+
+        final Set<IAction> l_actions = Stream.concat(
+            Stream.of(
+                new CSend( l_agents ),
+                new CBroadcast( l_agents )
+            ),
+            org.lightjason.agentspeak.common.CCommon.actionsFromPackage()
+        ).collect( Collectors.toSet() );
+
+        /*
+        EObjectFactory.PEDESTRIAN.generate(
+            CMain.class.getResourceAsStream( "asl/pedestrian.asl" ),
+            l_actions.stream(),
+            IAggregation.EMPTY,
+
+            EObjectFactory.ENVIRONMENT.generate(
+                CMain.class.getResourceAsStream( "asl/environment.asl" ),
+                l_actions.stream(),
+                IAggregation.EMPTY
+            ).generatesingle(  ).<IEnvironment>raw()
+        );
+        */
 
         // execute server
         CHTTPServer.execute();

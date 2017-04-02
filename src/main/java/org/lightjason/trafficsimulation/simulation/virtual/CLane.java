@@ -10,6 +10,8 @@ import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 
@@ -19,6 +21,7 @@ import java.util.stream.Stream;
 public final class CLane extends IBaseLane<CLane>
 {
     private static final String FUNCTOR = "lane";
+    private static final AtomicLong m_counter = new AtomicLong();
 
     /**
      * ctor
@@ -64,7 +67,24 @@ public final class CLane extends IBaseLane<CLane>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CLane, Stream<String>> generate( final Object... p_data )
         {
-            return new ImmutablePair<>( new CLane( m_configuration, m_environment, FUNCTOR, (Number[]) p_data ), Stream.of() );
+            return new ImmutablePair<>(
+                                        new CLane(
+                                                   m_configuration,
+                                                   m_environment,
+                                                   MessageFormat.format( "{0} {1}", FUNCTOR, m_counter.getAndIncrement() ),
+                                                   (Number[]) p_data
+                                        ),
+
+                                        Stream.of()
+            );
+        }
+
+        /**
+         * reset the object counter
+         */
+        public static void resetcount()
+        {
+            m_counter.set( 0 );
         }
     }
 }

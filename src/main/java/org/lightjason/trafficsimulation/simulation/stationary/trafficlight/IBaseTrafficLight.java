@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 @IAgentAction
 public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L extends Enum<?> & ITrafficLightColor<L>> extends IBaseObject<T> implements ITrafficLight<T>
 {
+    protected static final String GROUP = "trafficlight";
     /**
      * color of traffic light
      */
@@ -102,7 +103,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         @SuppressWarnings( "unchecked" )
         protected final Pair<T, Stream<String>> generate( final Object... p_data )
         {
-            return new ImmutablePair<>( this.generate( m_environment, (DoubleMatrix1D) p_data[0], (int) p_data[1] ), Stream.of() );
+            return this.generate( m_environment, (DoubleMatrix1D) p_data[0], (int) p_data[1] );
         }
 
         /**
@@ -113,7 +114,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_rotation
          * @return
          */
-        protected abstract T generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation );
+        protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation );
 
     }
 }
