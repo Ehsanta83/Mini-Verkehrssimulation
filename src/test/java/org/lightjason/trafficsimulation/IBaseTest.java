@@ -118,7 +118,7 @@ public abstract class IBaseTest
      * @param <T>
      * @return
      */
-    protected final <T extends IObject<?>> List<T> generate( final String p_file, final EObjectFactory p_factory, final int p_number, final Object... p_arguments )
+    protected final <T extends IObject<?>> List<T> generatemultiple( final String p_file, final EObjectFactory p_factory, final int p_number, final Object... p_arguments )
     {
         Assume.assumeNotNull( m_actions );
         Assume.assumeNotNull( m_environment );
