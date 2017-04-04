@@ -5,10 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertTrue;
 
@@ -26,8 +28,22 @@ public class TestCArea extends IBaseTest
     public final void initialize()
     {
         m_areas = new LinkedList<>();
-        m_areas.add( this.generate( "src/test/resources/area.asl", EObjectFactory.AREA, new DenseDoubleMatrix1D( new double[]{0, 0} ) ) );
-        m_areas.add( this.generate( "src/test/resources/area.asl", EObjectFactory.AREA, new DenseDoubleMatrix1D( new double[]{10, 10} ) ) );
+
+        m_areas.add( this.generate( "src/test/resources/area.asl",
+            EObjectFactory.AREA,
+            true,
+            EArea.VEHICLE_WAY,
+            Stream.of( EDirection.EAST ),
+            new DenseDoubleMatrix1D( new double[]{0, 0} ) )
+        );
+
+        m_areas.add( this.generate( "src/test/resources/area.asl",
+            EObjectFactory.AREA,
+            true,
+            EArea.SIDEWALK,
+            Stream.of( EDirection.NORTH, EDirection.NORTHWEST, EDirection.WEST ),
+            new DenseDoubleMatrix1D( new double[]{10, 10} ) )
+        );
 
     }
 

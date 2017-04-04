@@ -57,19 +57,19 @@ public enum EObjectFactory
                 return new CEnvironment.CGenerator( p_stream, p_actions, p_aggregation );
 
             case AREA:
-                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case PEDESTRIAN:
-                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, null );
+                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case PEDESTRIAN_TRAFFICLIGHT:
-                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case VEHICLE:
-                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case VEHICLE_TRAFFICLIGHT:
-                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             default:
                 throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );

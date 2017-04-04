@@ -65,11 +65,11 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
          */
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                               final IAggregation p_aggregation,
-                              final IEnvironment p_environment, final DoubleMatrix1D p_position
+                              final IEnvironment p_environment, final Object... p_arguments
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
-            m_position = p_position;
+            m_position = (DoubleMatrix1D) p_arguments[0];
         }
 
         @Override

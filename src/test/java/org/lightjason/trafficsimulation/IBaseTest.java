@@ -33,6 +33,8 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class IBaseTest
 {
+    protected IEnvironment m_environment;
+
     private final Map<String, IAgent<?>> m_agents = new ConcurrentHashMap<>();
 
     private final Set<IAction> m_actions = Stream.concat(
@@ -43,7 +45,6 @@ public abstract class IBaseTest
                                                 CCommon.actionsFromPackage()
                                            ).collect( Collectors.toSet() );
 
-    protected IEnvironment m_environment;
 
 
     static
@@ -96,7 +97,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment, p_arguments ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )

@@ -13,14 +13,14 @@ import org.lightjason.trafficsimulation.simulation.CMath;
  */
 public enum EDirection
 {
-    FORWARD( 0 ),
-    FORWARDLEFT( 45 ),
-    LEFT( 90 ),
-    BACKWARDLEFT( 135 ),
-    BACKWARD( 180 ),
-    BACKWARDRIGHT( 225 ),
-    RIGHT( 270 ),
-    FORWARDRIGHT( 315 );
+    EAST( 0 ),
+    NORTHEAST( 45 ),
+    NORTH( 90 ),
+    NORTHWEST( 135 ),
+    WEST( 180 ),
+    SOUTHWEST( 225 ),
+    SOUTH( 270 ),
+    SOUTHEAST( 315 );
 
 
     /**
