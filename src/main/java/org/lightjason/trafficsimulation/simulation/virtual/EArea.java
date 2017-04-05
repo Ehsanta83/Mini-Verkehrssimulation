@@ -5,7 +5,9 @@ package org.lightjason.trafficsimulation.simulation.virtual;
  */
 public enum EArea
 {
-    VEHICLE_WAY,
+    DIRECTLANE,
+    TURNLEFTLANE,
+    INTERSECTION,
     SIDEWALK,
-    Forbidden
+    FORBIDDEN
 }

@@ -32,7 +32,7 @@ public class TestCArea extends IBaseTest
         m_areas.add( this.generate( "src/test/resources/area.asl",
             EObjectFactory.AREA,
             true,
-            EArea.VEHICLE_WAY,
+            EArea.DIRECTLANE,
             Stream.of( EDirection.EAST ),
             new DenseDoubleMatrix1D( new double[]{0, 0} ) )
         );
