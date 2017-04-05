@@ -3,14 +3,18 @@ package org.lightjason.trafficsimulation.simulation.virtual;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
 import org.junit.Test;
+import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 
+import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +25,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCArea extends IBaseTest
 {
+    /**
+     * list of areas
+     */
     private List<CArea> m_areas;
 
     /**
@@ -58,22 +65,45 @@ public class TestCArea extends IBaseTest
     {
         m_areas = new LinkedList<>();
         final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
+
+        final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
+
         l_areaconfiguration.stream()
             .forEach( i ->
-                m_areas.add( this.generate( "src/test/resources/area.asl",
-                    EObjectFactory.AREA,
-                    true,
-                    EArea.from( (String) i.get( "type" ) ),
-                    ( (List<String>) i.get( "directions" ) ).stream()
-                        .map( j -> EDirection.from( j ) ),
-                    new DenseDoubleMatrix1D(
-                        Stream.concat(
-                            ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
-                            ( (List<Integer>) i.get( "leftbottom" ) ).stream() )
-                        .mapToDouble( k -> k )
-                        .toArray() )
-                    )
-                )
+                {
+                    try
+                        (
+                            // I know this is not a good idea
+                            final FileInputStream l_stream = new FileInputStream( "src/test/resources/area.asl" );
+                        )
+                    {
+                        m_areas.add(
+                            EObjectFactory.AREA.generate(
+                                l_stream,
+                                l_actions.stream(),
+                                IAggregation.EMPTY,
+                                m_environment )
+                            .generatesingle(
+                                true,
+                                EArea.from( (String) i.get( "type" ) ),
+                                ( (List<String>) i.get( "directions" ) ).stream()
+                                    .map( j -> EDirection.from( j ) ),
+                                new DenseDoubleMatrix1D(
+                                    Stream.concat(
+                                        ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
+                                        ( (List<Integer>) i.get( "righttop" ) ).stream() )
+                                        .mapToDouble( k -> k )
+                                        .toArray() )
+                                )
+                            .raw()
+                        );
+                    }
+                    catch ( final Exception l_exeption )
+                    {
+                        l_exeption.printStackTrace();
+                        assertTrue( false );
+                    }
+                }
             );
     }
 
