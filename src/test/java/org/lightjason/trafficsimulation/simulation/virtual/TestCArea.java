@@ -4,6 +4,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.IBaseTest;
@@ -29,6 +30,11 @@ public class TestCArea extends IBaseTest
      * list of areas
      */
     private List<CArea> m_areas;
+
+    /**
+     * agent generator
+     */
+    private IAgentGenerator m_agentgenerator;
 
     /**
      * initialize area
@@ -58,6 +64,7 @@ public class TestCArea extends IBaseTest
 
     /**
      * get area configuration from yaml
+     * @todo why doesn't ".raw()" work?
      */
     @SuppressWarnings( {"SimplifyStreamApiCallChains", "unchecked", "Convert2MethodRef", "WeakerAccess"} )
     @Before
@@ -68,21 +75,30 @@ public class TestCArea extends IBaseTest
 
         final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
 
-        l_areaconfiguration.stream()
+        try
+            (
+                final FileInputStream l_stream = new FileInputStream( "src/test/resources/area.asl" );
+            )
+        {
+            m_agentgenerator = EObjectFactory.AREA.generate(
+                l_stream,
+                l_actions.stream(),
+                IAggregation.EMPTY,
+                m_environment );
+        }
+        catch ( final Exception l_exeption )
+        {
+            l_exeption.printStackTrace();
+            assertTrue( false );
+        }
+
+            l_areaconfiguration.stream()
             .forEach( i ->
                 {
                     try
-                        (
-                            // I know this is not a good idea
-                            final FileInputStream l_stream = new FileInputStream( "src/test/resources/area.asl" );
-                        )
                     {
                         m_areas.add(
-                            EObjectFactory.AREA.generate(
-                                l_stream,
-                                l_actions.stream(),
-                                IAggregation.EMPTY,
-                                m_environment )
+                            (CArea) m_agentgenerator
                             .generatesingle(
                                 true,
                                 EArea.from( (String) i.get( "type" ) ),
@@ -95,7 +111,7 @@ public class TestCArea extends IBaseTest
                                         .mapToDouble( k -> k )
                                         .toArray() )
                                 )
-                            .raw()
+
                         );
                     }
                     catch ( final Exception l_exeption )
