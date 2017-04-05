@@ -7,6 +7,8 @@ import cern.colt.matrix.linalg.Algebra;
 import cern.jet.math.Functions;
 import org.lightjason.trafficsimulation.simulation.CMath;
 
+import java.util.Locale;
+
 
 /**
  * direction enum (counter clockwise)
@@ -79,5 +81,16 @@ public enum EDirection
                 : p_angle
             ) / 45
             ];
+    }
+
+    /**
+     * get enum from string
+     *
+     * @param p_name string name
+     * @return area
+     */
+    public static EDirection from( final String p_name )
+    {
+        return EDirection.valueOf( p_name.toUpperCase( Locale.ROOT ) );
     }
 }

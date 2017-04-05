@@ -78,6 +78,15 @@ public abstract class IBaseTest
     }
 
     /**
+     * load configuration from yaml file
+     */
+    @Before
+    public final void loadconfiguration()
+    {
+        CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
+    }
+
+    /**
      * runs the object generation proecess
      *
      * @param p_file filename

@@ -3,12 +3,14 @@ package org.lightjason.trafficsimulation.simulation.virtual;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
 import org.junit.Test;
+import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,6 +47,34 @@ public class TestCArea extends IBaseTest
             new DenseDoubleMatrix1D( new double[]{10, 10} ) )
         );
 
+    }
+
+    /**
+     * get area configuration from yaml
+     */
+    @SuppressWarnings( {"SimplifyStreamApiCallChains", "unchecked", "Convert2MethodRef", "WeakerAccess"} )
+    @Before
+    public final void initializeFromConfiguration()
+    {
+        m_areas = new LinkedList<>();
+        final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
+        l_areaconfiguration.stream()
+            .forEach( i ->
+                m_areas.add( this.generate( "src/test/resources/area.asl",
+                    EObjectFactory.AREA,
+                    true,
+                    EArea.from( (String) i.get( "type" ) ),
+                    ( (List<String>) i.get( "directions" ) ).stream()
+                        .map( j -> EDirection.from( j ) ),
+                    new DenseDoubleMatrix1D(
+                        Stream.concat(
+                            ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
+                            ( (List<Integer>) i.get( "leftbottom" ) ).stream() )
+                        .mapToDouble( k -> k )
+                        .toArray() )
+                    )
+                )
+            );
     }
 
     /**
@@ -85,7 +115,11 @@ public class TestCArea extends IBaseTest
         final TestCArea l_test = new TestCArea();
 
         l_test.initializeenvironment();
-        l_test.initialize();
+        //l_test.initialize();
+        //l_test.test();
+
+        l_test.loadconfiguration();
+        l_test.initializeFromConfiguration();
         l_test.test();
     }
 }
