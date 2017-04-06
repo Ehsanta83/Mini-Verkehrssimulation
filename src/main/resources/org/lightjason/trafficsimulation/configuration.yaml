@@ -123,6 +123,10 @@ area :
 
 
 
+
+
+
+
 # enable / disable logger
 logging : false
 
@@ -189,52 +193,6 @@ trafficlights:
       width : 15
       height : 43
 
-# ways //ToDo: ways are defined just for sprites in libGDX, later we can delete them when we use another game framework
-# spriteposition is the left bottom of the sprite [col, row]. It is different from leftbottom and righttop,
-# because we rotate the sprite. That will be deleted after changing to new game engine.
-# leftbottom and righttop is for the positions in the grid in the environment [col, row]
-# rotation in degree
-ways:
-  - vehicles: #east - forward
-      spriteposition : [ 36, 32 ]
-      leftbottom : [ 37, 33 ]
-      righttop : [ 64, 36 ]
-      rotation : 0
-  - vehicles: #east - backward
-      spriteposition : [ 36, 28 ]
-      leftbottom : [ 37, 29 ]
-      righttop : [ 64, 32 ]
-      rotation : 0
-  - vehicles: #north - forward
-      spriteposition : [ 32, 36 ]
-      leftbottom : [ 29, 37 ]
-      righttop : [ 32, 64 ]
-      rotation : 90
-  - vehicles: #north - backward
-      spriteposition : [ 36, 36 ]
-      leftbottom : [ 33, 37 ]
-      righttop : [ 36, 64 ]
-      rotation : 90
-  - vehicles: #west - forward
-      spriteposition : [ 28, 36 ]
-      leftbottom : [ 1, 29 ]
-      righttop : [ 28, 32 ]
-      rotation : 180
-  - vehicles: #west - backward
-      spriteposition : [ 28, 32 ]
-      leftbottom : [ 1, 33 ]
-      righttop : [ 28, 36 ]
-      rotation : 180
-  - vehicles: #south - forward
-      spriteposition : [ 28, 28 ]
-      leftbottom : [ 33, 1 ]
-      righttop : [ 36, 28 ]
-      rotation : 270
-  - vehicles: #south - backward
-      spriteposition : [ 32, 28 ]
-      leftbottom : [ 29, 1 ]
-      righttop : [ 32, 28 ]
-      rotation : 270
 
 agents :
   vehicles :

@@ -65,6 +65,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions;
+        m_position = p_position;
     }
 
     @Override
@@ -94,8 +95,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         public CGenerator( final InputStream p_stream,
                            final Stream<IAction> p_actions,
                            final IAggregation p_aggregation,
-                           final IEnvironment p_environment,
-                           final Object... p_arguments
+                           final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CArea.class, p_environment );
@@ -103,21 +103,22 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 
         @Override
         @SuppressWarnings( "unchecked" )
-        protected final Pair<CArea, Stream<String>> generate( final Object... p_data )
+        protected final Pair<CArea, Stream<String>> generate( final Object... p_data ) throws RuntimeException
         {
-            return new ImmutablePair<>(
-                new CArea(
-                    m_configuration,
-                    m_environment,
-                    MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                    (boolean) p_data[0],
-                    (EArea) p_data[1],
-                    (Stream<EDirection>) p_data[2],
-                    (DoubleMatrix1D) p_data[3]
-                ),
-
-                Stream.of( FUNCTOR )
+            final DoubleMatrix1D l_position = (DoubleMatrix1D) p_data[3];
+            final CArea l_area = new CArea(
+                m_configuration,
+                m_environment,
+                MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
+                (boolean) p_data[0],
+                (EArea) p_data[1],
+                (Stream<EDirection>) p_data[2],
+                l_position
             );
+
+            m_environment.positionAnArea( l_area, l_position );
+
+            return new ImmutablePair<>( l_area, Stream.of( FUNCTOR ) );
         }
 
         /**

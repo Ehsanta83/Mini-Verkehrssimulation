@@ -9,10 +9,13 @@ import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * environment class
  */
-public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
+public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
     private static final String FUNCTOR = "environment";
 
@@ -47,9 +50,9 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
      */
     private final int m_cellsize;
     /**
-     * matrix with ways positions
+     * matrix with area positions
      */
-    private final ObjectMatrix2D m_lanespositions;
+    private final ObjectMatrix2D m_areagrid;
     /**
      * matrix with agents positions
      */
@@ -78,7 +81,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         m_column = p_cellcolumns;
         m_cellsize = (int) p_cellsize;
         m_routing = p_routing;
-        m_lanespositions = new SparseObjectMatrix2D( m_row, m_column );
+        m_areagrid = new SparseObjectMatrix2D( m_row, m_column );
         m_agentspostions = new SparseObjectMatrix2D( m_row, m_column );
     }
 
@@ -104,7 +107,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
 
     public final ObjectMatrix2D lanespositions()
     {
-        return m_lanespositions;
+        return m_areagrid;
     }
 
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
@@ -218,8 +221,6 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         return FUNCTOR;
     }
 
-    // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
-
     /**
      * value clipping
      *
@@ -233,6 +234,23 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     }
 
 
+    @Override
+    public void positionAnArea( final CArea p_area, final DoubleMatrix1D p_position )
+    {
+        CCommon.inttupelstream( (int) p_position.get( 0 ), (int) p_position.get( 2 ), (int) p_position.get( 1 ), (int) p_position.get( 3 ) )
+            .forEach( i ->
+                {
+                    if ( m_areagrid.getQuick( i.getLeft(), i.getRight() ) == null )
+                    {
+                        m_areagrid.setQuick( i.getLeft(), i.getRight(), p_area );
+                    }
+                    else
+                    {
+                        throw new RuntimeException( "Overlapping of the areas is not allowed." );
+                    }
+                }
+            );
+    }
 
     /**
      * generator of the environment

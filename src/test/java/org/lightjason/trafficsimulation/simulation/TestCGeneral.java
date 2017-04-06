@@ -1,5 +1,7 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import org.lightjason.trafficsimulation.CCommon;
+
 import java.util.Collections;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
@@ -30,16 +32,7 @@ public final class TestCGeneral
      */
     public static void main( final String[] p_args )
     {
-        IntStream.range( 0, 10 ).forEach( i ->
-            System.out.println(
-                Stream.of( "man", "woman" )
-                    .collect( Collectors.collectingAndThen( Collectors.toList(), collected ->
-                    {
-                        Collections.shuffle( collected );
-                        return collected.stream();
-                    } ) ).collect( Collectors.toList() ).get( 0 )
-            )
-        );
+        CCommon.inttupelstream( 37, 64, 35, 36 ).forEach( System.out::println );
 
     }
 }

@@ -13,7 +13,7 @@ public final class TestCEnvironment extends IBaseTest
 {
 
     /**
-     * pedestrian test
+     * environment test
      *
      * @throws Exception on execution error
      */
@@ -22,7 +22,6 @@ public final class TestCEnvironment extends IBaseTest
     {
         m_environment.call();
     }
-
 
     /**
      * main method

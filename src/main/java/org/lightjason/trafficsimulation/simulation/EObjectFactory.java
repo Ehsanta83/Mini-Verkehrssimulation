@@ -57,7 +57,7 @@ public enum EObjectFactory
                 return new CEnvironment.CGenerator( p_stream, p_actions, p_aggregation );
 
             case AREA:
-                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
+                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             case PEDESTRIAN:
                 return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
