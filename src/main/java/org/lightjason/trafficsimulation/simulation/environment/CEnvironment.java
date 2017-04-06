@@ -105,7 +105,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return m_cellsize;
     }
 
-    public final ObjectMatrix2D lanespositions()
+    public final ObjectMatrix2D areagrid()
     {
         return m_areagrid;
     }

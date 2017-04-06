@@ -49,11 +49,11 @@ public interface IEnvironment extends IObject<IEnvironment>
     int cellsize();
 
     /**
-     * returns lanes positions
+     * returns area grid
      *
      * @return matrix of lane positions
      */
-    ObjectMatrix2D lanespositions();
+    ObjectMatrix2D areagrid();
 
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------

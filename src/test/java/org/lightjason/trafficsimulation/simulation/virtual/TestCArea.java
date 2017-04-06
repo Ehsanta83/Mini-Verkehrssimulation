@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -150,24 +152,22 @@ public class TestCArea extends IBaseTest
      * test overlapping two areas
      */
     @Test
-    public final  void testPositionInEnvironment()
+    public final void testPositionInEnvironment()
     {
-        final DoubleMatrix1D l_position1 = new DenseDoubleMatrix1D( new double[]{37, 35, 64, 36} );
         final CArea l_area1 =  (CArea) m_agentgenerator.generatesingle(
                 true,
                 EArea.DIRECTLANE,
                 Stream.of( EDirection.EAST ),
-                l_position1 );
+                new DenseDoubleMatrix1D( new double[]{37, 35, 64, 36} ) );
 
         // area2 has overlapping with area1
-        final DoubleMatrix1D l_position2 = new DenseDoubleMatrix1D( new double[]{37, 36, 38, 37} );
         try
         {
             final CArea l_area2 =  (CArea) m_agentgenerator.generatesingle(
                 true,
                 EArea.DIRECTLANE,
                 Stream.of( EDirection.EAST ),
-                l_position2 );
+                new DenseDoubleMatrix1D( new double[]{37, 36, 38, 37} ) );
             Assert.fail( "Expected an RuntimeException to be thrown" );
         }
         catch ( final RuntimeException l_exception)
@@ -175,12 +175,40 @@ public class TestCArea extends IBaseTest
         }
 
         // area 3 has no overlapping with area 1
-        final DoubleMatrix1D l_position3 = new DenseDoubleMatrix1D( new double[]{37, 31, 64, 32} );
         final CArea l_area3 =  (CArea) m_agentgenerator.generatesingle(
             true,
             EArea.DIRECTLANE,
             Stream.of( EDirection.EAST ),
-            l_position3 );
+            new DenseDoubleMatrix1D( new double[]{37, 31, 64, 32} ) );
+    }
+
+    /**
+     * test area grid content
+     */
+    @Test
+    public final void testAreaGridContent()
+    {
+        m_agentgenerator.generatesingle(
+            true,
+            EArea.SIDEWALK,
+            Stream.of( EDirection.EAST ),
+            new DenseDoubleMatrix1D( new double[]{1, 1, 9, 9} ) );
+        final ObjectMatrix2D l_areagrid = m_environment.areagrid();
+        IntStream.rangeClosed( 1, l_areagrid.rows() ).forEach( i ->
+        {
+            IntStream.rangeClosed( 1, l_areagrid.columns() ).forEach( j ->
+            {
+                if( i <= 9 && j <= 9 &&  !( l_areagrid.getQuick( i, j ) instanceof CArea) )
+                {
+                    Assert.assertTrue( false );
+                }
+                if( ( i > 9 || j > 9 ) && ( l_areagrid.getQuick( i, j ) != null ) )
+                {
+                    Assert.assertTrue( false );
+                }
+                System.out.println( "[" + i + ", " + j + "]: " + l_areagrid.getQuick( i, j ) );
+            } );
+        } );
     }
 
 }
