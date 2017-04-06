@@ -118,7 +118,7 @@ public class TestCArea extends IBaseTest
         final List<CArea> l_areas = new LinkedList<>();
         final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
 
-            l_areaconfiguration.stream()
+        l_areaconfiguration.stream()
             .forEach( i ->
                 {
                     try
@@ -136,7 +136,6 @@ public class TestCArea extends IBaseTest
                                         .mapToDouble( k -> k )
                                         .toArray() )
                                 )
-
                         );
                     }
                     catch ( final Exception l_exeption )
@@ -170,7 +169,7 @@ public class TestCArea extends IBaseTest
                 new DenseDoubleMatrix1D( new double[]{37, 36, 38, 37} ) );
             Assert.fail( "Expected an RuntimeException to be thrown" );
         }
-        catch ( final RuntimeException l_exception)
+        catch ( final RuntimeException l_exception )
         {
         }
 
@@ -198,11 +197,11 @@ public class TestCArea extends IBaseTest
         {
             IntStream.rangeClosed( 1, l_areagrid.columns() ).forEach( j ->
             {
-                if( i <= 9 && j <= 9 &&  !( l_areagrid.getQuick( i, j ) instanceof CArea) )
+                if ( i <= 9 && j <= 9 &&  !( l_areagrid.getQuick( i, j ) instanceof CArea ) )
                 {
                     Assert.assertTrue( false );
                 }
-                if( ( i > 9 || j > 9 ) && ( l_areagrid.getQuick( i, j ) != null ) )
+                if ( ( i > 9 || j > 9 ) && ( l_areagrid.getQuick( i, j ) != null ) )
                 {
                     Assert.assertTrue( false );
                 }
