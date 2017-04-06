@@ -33,6 +33,8 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class IBaseTest
 {
+    protected IEnvironment m_environment;
+
     private final Map<String, IAgent<?>> m_agents = new ConcurrentHashMap<>();
 
     private final Set<IAction> m_actions = Stream.concat(
@@ -43,7 +45,6 @@ public abstract class IBaseTest
                                                 CCommon.actionsFromPackage()
                                            ).collect( Collectors.toSet() );
 
-    protected IEnvironment m_environment;
 
 
     static
@@ -77,6 +78,15 @@ public abstract class IBaseTest
     }
 
     /**
+     * load configuration from yaml file
+     */
+    @Before
+    public final void loadconfiguration()
+    {
+        CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
+    }
+
+    /**
      * runs the object generation proecess
      *
      * @param p_file filename
@@ -96,7 +106,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment, p_arguments ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )
@@ -118,7 +128,7 @@ public abstract class IBaseTest
      * @param <T>
      * @return
      */
-    protected final <T extends IObject<?>> List<T> generate( final String p_file, final EObjectFactory p_factory, final int p_number, final Object... p_arguments )
+    protected final <T extends IObject<?>> List<T> generatemultiple( final String p_file, final EObjectFactory p_factory, final int p_number, final Object... p_arguments )
     {
         Assume.assumeNotNull( m_actions );
         Assume.assumeNotNull( m_environment );

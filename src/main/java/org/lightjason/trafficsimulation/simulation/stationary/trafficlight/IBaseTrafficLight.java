@@ -31,10 +31,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     private final AtomicReference<L> m_color;
     /**
-     * defines the left bottom position (row / column), width, height
-     */
-    private final DoubleMatrix1D m_position;
-    /**
      * rotation of the traffic light
      */
     private final int m_rotation;
@@ -55,8 +51,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
                                  final DoubleMatrix1D p_position, final int p_rotation
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name );
-        m_position = p_position;
+        super( p_configuration, p_environment, p_functor, p_name, p_position );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
     }

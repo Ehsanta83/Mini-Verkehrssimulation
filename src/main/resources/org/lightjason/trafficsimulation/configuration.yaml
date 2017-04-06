@@ -6,7 +6,118 @@ httpserver:
     host: localhost
 
 
-
+#areas
+area :
+  #------------------------------------------- east lanes ---------------------------------------------
+  #east - forward
+  - leftbottom : [ 37, 35 ]
+    righttop : [ 64, 36 ]
+    type : directlane
+    directions : [ west ]
+  #east - forward - turn left
+  - leftbottom : [ 37, 33 ]
+    righttop : [ 64, 34 ]
+    type : turnleftlane
+    directions : [ west ]
+  #east - backward
+  - leftbottom : [ 37, 31 ]
+    righttop : [ 64, 32 ]
+    type : directlane
+    directions : [ east ]
+  #east - backward
+  - leftbottom : [ 37, 29 ]
+    righttop : [ 64, 30 ]
+    type : directlane
+    directions : [ east ]
+#------------------------------------------- north lanes ---------------------------------------------
+  #north - forward
+  - leftbottom : [ 29, 37 ]
+    righttop : [ 30, 64 ]
+    type : directlane
+    directions : [ south ]
+  #north - forward - turn left
+  - leftbottom : [ 31, 37 ]
+    righttop : [ 32, 64 ]
+    type : turnleftlane
+    directions : [ south ]
+  #north - backward
+  - leftbottom : [ 33, 37 ]
+    righttop : [ 34, 64 ]
+    type : directlane
+    directions : [ north ]
+  #north - backward
+  - leftbottom : [ 35, 37 ]
+    righttop : [ 36, 64 ]
+    type : directlane
+    directions : [ north ]
+#------------------------------------------- west lanes ---------------------------------------------
+  #west - forward
+  - leftbottom : [ 1, 29 ]
+    righttop : [ 28, 30 ]
+    type : directlane
+    directions : [ east ]
+  #west - forward - turn left
+  - leftbottom : [ 1, 31 ]
+    righttop : [ 28, 32 ]
+    type : turnleftlane
+    directions : [ east ]
+  #west - backward
+  - leftbottom : [ 1, 33 ]
+    righttop : [ 28, 34 ]
+    type : directlane
+    directions : [ west ]
+  #west - backward
+  - leftbottom : [ 1, 35 ]
+    righttop : [ 28, 36 ]
+    type : directlane
+    directions : [ west ]
+#------------------------------------------- south lanes ---------------------------------------------
+  #south - forward
+  - leftbottom : [ 35, 1 ]
+    righttop : [ 36, 28 ]
+    type : directlane
+    directions : [ north ]
+  #south - forward - turn left
+  - leftbottom : [ 33, 1 ]
+    righttop : [ 34, 28 ]
+    type : turnleftlane
+    directions : [ north ]
+  #south - backward
+  - leftbottom : [ 31, 1 ]
+    righttop : [ 32, 28 ]
+    type : directlane
+    directions : [ south ]
+  #south - backward
+  - leftbottom : [ 29, 1 ]
+    righttop : [ 30, 28 ]
+    type : directlane
+    directions : [ south ]
+#------------------------------------------- sidewalks ---------------------------------------------
+  #east - north
+  - leftbottom : [ 37, 37 ]
+    righttop : [ 64, 64 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #west - north
+  - leftbottom : [ 1, 37 ]
+    righttop : [ 28, 64 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #west - south
+  - leftbottom : [ 1, 1 ]
+    righttop : [ 28, 28 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #east - south
+  - leftbottom : [ 37, 1 ]
+    righttop : [ 64, 28 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #------------------------------------------- intersection ---------------------------------------------
+  - leftbottom : [ 29, 29 ]
+    righttop : [ 36, 36 ]
+    type : intersection
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
 
 
 
@@ -124,94 +235,6 @@ ways:
       leftbottom : [ 29, 1 ]
       righttop : [ 32, 28 ]
       rotation : 270
-
-#lanes
-lanes :
-  #------------------------------------------- east lanes ---------------------------------------------
-  - lane: #east - forward
-      leftbottom : [ 37, 35 ]
-      righttop : [ 64, 36 ]
-      type : direct
-  - lane: #east - forward - turn left
-      leftbottom : [ 37, 33 ]
-      righttop : [ 64, 34 ]
-      type : turnleft
-  - lane: #east - backward
-      leftbottom : [ 37, 31 ]
-      righttop : [ 64, 32 ]
-      type : direct
-  - lane: #east - backward
-      leftbottom : [ 37, 29 ]
-      righttop : [ 64, 30 ]
-      type : direct
-  #------------------------------------------- north lanes ---------------------------------------------
-  - lane: #north - forward
-      leftbottom : [ 29, 37 ]
-      righttop : [ 30, 64 ]
-      type : direct
-  - lane: #north - forward - turn left
-      leftbottom : [ 31, 37 ]
-      righttop : [ 32, 64 ]
-      type : turnleft
-  - lane: #north - backward
-      leftbottom : [ 33, 37 ]
-      righttop : [ 34, 64 ]
-      type : direct
-  - lane: #north - backward
-      leftbottom : [ 35, 37 ]
-      righttop : [ 36, 64 ]
-      type : direct
-  #------------------------------------------- west lanes ---------------------------------------------
-  - lane: #west - forward
-      leftbottom : [ 1, 29 ]
-      righttop : [ 28, 30 ]
-      type : direct
-  - lane: #west - forward - turn left
-      leftbottom : [ 1, 31 ]
-      righttop : [ 28, 32 ]
-      type : turnleft
-  - lane: #west - backward
-      leftbottom : [ 1, 33 ]
-      righttop : [ 28, 34 ]
-      type : direct
-  - lane: #west - backward
-      leftbottom : [ 1, 35 ]
-      righttop : [ 28, 36 ]
-      type : direct
-  #------------------------------------------- south lanes ---------------------------------------------
-  - lane: #south - forward
-      leftbottom : [ 35, 1 ]
-      righttop : [ 36, 28 ]
-      type : direct
-  - lane: #south - forward - turn left
-      leftbottom : [ 33, 1 ]
-      righttop : [ 34, 28 ]
-      type : turnleft
-  - lane: #south - backward
-      leftbottom : [ 31, 1 ]
-      righttop : [ 32, 28 ]
-      type : direct
-  - lane: #south - backward
-      leftbottom : [ 29, 1 ]
-      righttop : [ 30, 28 ]
-      type : direct
-  #------------------------------------------- sidewalks ---------------------------------------------
-  - sidewalk: #east - north
-      leftbottom : [ 37, 37 ]
-      righttop : [ 64, 64 ]
-  - sidewalk: #west - north
-      leftbottom : [ 1, 37 ]
-      righttop : [ 28, 64 ]
-  - sidewalk: #west - south
-      leftbottom : [ 1, 1 ]
-      righttop : [ 28, 28 ]
-  - sidewalk: #east - south
-      leftbottom : [ 37, 1 ]
-      righttop : [ 64, 28 ]
-  #------------------------------------------- intersection ---------------------------------------------
-  - intersection :
-      leftbottom : [ 29, 29 ]
-      righttop : [ 36, 36 ]
 
 agents :
   vehicles :

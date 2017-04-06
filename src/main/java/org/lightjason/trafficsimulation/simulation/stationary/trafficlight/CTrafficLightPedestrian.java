@@ -58,7 +58,8 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
 
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                            final IAggregation p_aggregation,
-                           final IEnvironment p_environment
+                           final IEnvironment p_environment,
+                           final Object... p_arguments
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CTrafficLightPedestrian.class, p_environment );

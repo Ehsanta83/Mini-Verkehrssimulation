@@ -1,5 +1,6 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.view.IView;
@@ -37,6 +38,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * reference to external beliefbase
      */
     private final IView<T> m_external;
+    /**
+     * current position of the agent
+     */
+    private final DoubleMatrix1D m_position;
 
     /**
      * ctor
@@ -47,12 +52,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * @param p_name name of the object
      */
     @SuppressWarnings( "unchecked" )
-    protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor, final String p_name )
+    protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
+                           final String p_functor, final String p_name, final DoubleMatrix1D p_position )
     {
         super( p_configuration );
         m_functor = p_functor;
         m_name = p_name;
         m_environment = p_environment;
+        m_position = p_position;
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );

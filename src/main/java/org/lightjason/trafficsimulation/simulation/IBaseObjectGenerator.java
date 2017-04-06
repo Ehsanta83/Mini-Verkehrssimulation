@@ -64,7 +64,7 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
      * @param p_data creating arguments
      * @return agent object and group names
      */
-    protected abstract Pair<T,Stream<String>> generate( final Object... p_data );
+    protected abstract Pair<T, Stream<String>> generate( final Object... p_data );
 
 
     @Override

@@ -22,11 +22,6 @@ import java.util.stream.Stream;
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
     protected final static String GROUP = "moveable";
-    /**
-     * current position of the agent
-     * @todo can we remove position to iobject?
-     */
-    private final DoubleMatrix1D m_position;
 
 
     /**
@@ -38,8 +33,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
                              final String p_functor, final String p_name, final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name );
-        m_position = p_position;
+        super( p_configuration, p_environment, p_functor, p_name, p_position );
     }
 
 

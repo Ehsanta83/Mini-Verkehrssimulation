@@ -7,7 +7,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * general tests
+ * this class is defined for testing a code or a function in java (general). It is not related to simulation.
+ *
  * @deprecated did we need this?
  */
 @Deprecated

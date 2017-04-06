@@ -9,10 +9,7 @@ import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
 import org.lightjason.trafficsimulation.simulation.movable.CVehicle;
 import org.lightjason.trafficsimulation.simulation.stationary.trafficlight.CTrafficLightPedestrian;
 import org.lightjason.trafficsimulation.simulation.stationary.trafficlight.CTrafficLightVehicle;
-import org.lightjason.trafficsimulation.simulation.virtual.CIntersection;
-import org.lightjason.trafficsimulation.simulation.virtual.CLane;
-import org.lightjason.trafficsimulation.simulation.virtual.CSidewalk;
-import org.lightjason.trafficsimulation.simulation.virtual.CVehiclesWay;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -28,10 +25,7 @@ public enum EObjectFactory
 {
     ENVIRONMENT,
 
-    INTERSECTION,
-    LANE,
-    SIDEWALK,
-    VEHICLEWAY,
+    AREA,
 
     VEHICLE,
     VEHICLE_TRAFFICLIGHT,
@@ -46,14 +40,15 @@ public enum EObjectFactory
      *
      * @param p_stream asl input stream
      * @param p_actions action list
-     * @param p_aggregation
+     * @param p_aggregation aggregation
      * @param p_environment environment reference
      * @return agent generator
      *
      * @throws Exception on any error
      */
     public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
-                                                                 final IAggregation p_aggregation, final IEnvironment p_environment
+                                                                 final IAggregation p_aggregation, final IEnvironment p_environment,
+                                                                 final Object... p_arguments
     ) throws Exception
     {
         switch ( this )
@@ -61,33 +56,20 @@ public enum EObjectFactory
             case ENVIRONMENT:
                 return new CEnvironment.CGenerator( p_stream, p_actions, p_aggregation );
 
-
-            case INTERSECTION:
-                return new CIntersection.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
-            case LANE:
-                return new CLane.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
-            case SIDEWALK:
-                return new CSidewalk.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
-            case VEHICLEWAY:
-                return new CVehiclesWay.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
+            case AREA:
+                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case PEDESTRIAN:
-                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case PEDESTRIAN_TRAFFICLIGHT:
-                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
+                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case VEHICLE:
-                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             case VEHICLE_TRAFFICLIGHT:
-                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
-
+                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
 
             default:
                 throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );
@@ -95,11 +77,12 @@ public enum EObjectFactory
     }
 
     /**
+     * generator
      *
-     * @param p_stream
-     * @param p_actions
-     * @param p_aggregation
-     * @return
+     * @param p_stream steam
+     * @param p_actions actions
+     * @param p_aggregation aggregation
+     * @return agent generator
      * @throws Exception on any error
      */
     public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
@@ -114,11 +97,6 @@ public enum EObjectFactory
      */
     public static void resetcount()
     {
-        CIntersection.CGenerator.resetcount();
-        CLane.CGenerator.resetcount();
-        CSidewalk.CGenerator.resetcount();
-        CVehiclesWay.CGenerator.resetcount();
-
         CPedestrian.CGenerator.resetcount();
         CVehicle.CGenerator.resetcount();
 
