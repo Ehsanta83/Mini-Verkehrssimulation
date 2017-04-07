@@ -1,9 +1,10 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import org.junit.Assert;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.trafficsimulation.IBaseTest;
+import org.lightjason.trafficsimulation.math.EDistributionFactory;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,45 +19,48 @@ import java.util.stream.Collectors;
 public class TestCPedestrian extends IBaseTest
 {
 
-    private CPedestrian m_pedestrian;
+    /**
+     * area generator
+     */
+    private IAgentGenerator m_pedestrianGenerator;
 
     /**
      * initialize pedestrian
+     *
+     * @throws Exception on initialize environment error
      */
     @Before
-    public final void initialize()
+    public final void initialize() throws Exception
     {
-        m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
+        initializeenvironment();
+        m_pedestrianGenerator = generator(
+            EObjectFactory.PEDESTRIAN,
+            "src/test/resources/pedestrian.asl",
+            EDistributionFactory.NORMAL,
+            new double[]{5, 0.1},
+            new double[]{7, 0.1}
+        );
     }
 
-
     /**
-     * pedestrian test
+     * test pedestrian call
      *
      * @throws Exception on execution error
      */
     @Test
-    public final void test() throws Exception
+    public final void testagentcall() throws Exception
     {
-        Assume.assumeNotNull( m_pedestrian );
+        final CPedestrian l_pedestrian = (CPedestrian) m_pedestrianGenerator.generatesingle();
 
-        m_pedestrian.call();
-        System.out.println( m_pedestrian.literal().collect( Collectors.toSet() ) );
+        try
+        {
+            l_pedestrian.call();
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace();
+            Assert.assertTrue( false );
+        }
+        System.out.println( l_pedestrian.literal().collect( Collectors.toSet() ) );
     }
-
-    /**
-     * main method
-     * @param p_args args
-     *
-     * @throws Exception on any error
-     */
-    public static void main( final String[] p_args ) throws Exception
-    {
-        final TestCPedestrian l_test = new TestCPedestrian();
-
-        l_test.initializeenvironment();
-        l_test.initialize();
-        l_test.test();
-    }
-
 }

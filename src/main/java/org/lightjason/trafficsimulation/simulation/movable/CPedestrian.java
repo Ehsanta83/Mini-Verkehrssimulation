@@ -83,15 +83,15 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
-            m_distributionForX = ( (EDistributionFactory) p_arguments[0] ).generate( ( (DoubleMatrix1D) p_arguments[1] ).toArray() );
-            m_distributionForY = ( (EDistributionFactory) p_arguments[0] ).generate( ( (DoubleMatrix1D) p_arguments[2] ).toArray() );
+            m_distributionForX = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[1] );
+            m_distributionForY = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[2] );
         }
 
         @Override
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
-            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{m_distributionForX.sample(), m_distributionForY.sample()} );
+            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{(int) m_distributionForX.sample(), (int) m_distributionForY.sample()} );
             final CPedestrian l_pedestrian = new CPedestrian(
                 m_configuration,
                 m_environment,

@@ -5,19 +5,15 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 
-import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -30,9 +26,9 @@ public class TestCArea extends IBaseTest
 {
 
     /**
-     * agent generator
+     * area generator
      */
-    private IAgentGenerator m_agentgenerator;
+    private IAgentGenerator m_areaGenerator;
 
     /**
      * initialize
@@ -42,25 +38,7 @@ public class TestCArea extends IBaseTest
     public final void initialize() throws Exception
     {
         initializeenvironment();
-
-        final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
-
-        try
-            (
-                final FileInputStream l_stream = new FileInputStream( "src/test/resources/area.asl" );
-            )
-        {
-            m_agentgenerator = EObjectFactory.AREA.generate(
-                l_stream,
-                l_actions.stream(),
-                IAggregation.EMPTY,
-                m_environment );
-        }
-        catch ( final Exception l_exeption )
-        {
-            l_exeption.printStackTrace();
-            Assert.assertTrue( false );
-        }
+        m_areaGenerator = generator( EObjectFactory.AREA,  "src/test/resources/area.asl" );
     }
 
     /**
@@ -73,7 +51,7 @@ public class TestCArea extends IBaseTest
     {
         final List<CArea> l_areas = new LinkedList<>();
 
-        l_areas.add( (CArea) m_agentgenerator.generatesingle(
+        l_areas.add( (CArea) m_areaGenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{0, 0, 1, 1} ),
             true,
             EArea.DIRECTLANE,
@@ -81,7 +59,7 @@ public class TestCArea extends IBaseTest
              )
         );
 
-        l_areas.add( (CArea) m_agentgenerator.generatesingle(
+        l_areas.add( (CArea) m_areaGenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{10, 10, 11, 11} ),
             true,
             EArea.SIDEWALK,
@@ -120,7 +98,7 @@ public class TestCArea extends IBaseTest
                     try
                     {
                         l_areas.add(
-                            (CArea) m_agentgenerator.generatesingle(
+                            (CArea) m_areaGenerator.generatesingle(
                                 new DenseDoubleMatrix1D(
                                     Stream.concat(
                                         ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
@@ -149,7 +127,7 @@ public class TestCArea extends IBaseTest
     @Test
     public final void testPositionInEnvironment()
     {
-        final CArea l_area1 =  (CArea) m_agentgenerator.generatesingle(
+        final CArea l_area1 =  (CArea) m_areaGenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{37, 35, 64, 36} ),
             true,
             EArea.DIRECTLANE,
@@ -158,7 +136,7 @@ public class TestCArea extends IBaseTest
         // area2 has overlapping with area1
         try
         {
-            final CArea l_area2 =  (CArea) m_agentgenerator.generatesingle(
+            final CArea l_area2 =  (CArea) m_areaGenerator.generatesingle(
                 new DenseDoubleMatrix1D( new double[]{37, 36, 38, 37} ),
                 true,
                 EArea.DIRECTLANE,
@@ -170,7 +148,7 @@ public class TestCArea extends IBaseTest
         }
 
         // area 3 has no overlapping with area 1
-        final CArea l_area3 =  (CArea) m_agentgenerator.generatesingle(
+        final CArea l_area3 =  (CArea) m_areaGenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{37, 31, 64, 32} ),
             true,
             EArea.DIRECTLANE,
@@ -183,7 +161,7 @@ public class TestCArea extends IBaseTest
     @Test
     public final void testAreaGridContent()
     {
-        m_agentgenerator.generatesingle(
+        m_areaGenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{1, 1, 9, 9} ),
             true,
             EArea.SIDEWALK,

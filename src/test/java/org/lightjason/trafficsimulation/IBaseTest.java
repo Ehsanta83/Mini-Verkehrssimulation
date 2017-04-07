@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation;
 
 import org.junit.Assert;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
@@ -84,6 +85,30 @@ public abstract class IBaseTest
     public final void loadconfiguration()
     {
         CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
+    }
+
+    protected final IAgentGenerator generator( final EObjectFactory p_factory, final String p_asl, final Object... p_arguments )
+    {
+        final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
+
+        try
+            (
+                final FileInputStream l_stream = new FileInputStream( p_asl );
+            )
+        {
+            return  p_factory.generate(
+                l_stream,
+                l_actions.stream(),
+                IAggregation.EMPTY,
+                m_environment,
+                p_arguments );
+        }
+        catch ( final Exception l_exeption )
+        {
+            l_exeption.printStackTrace();
+            Assert.assertTrue( false );
+        }
+        return null;
     }
 
     /**
