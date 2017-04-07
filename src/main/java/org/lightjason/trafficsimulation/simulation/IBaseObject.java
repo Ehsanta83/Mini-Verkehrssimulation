@@ -117,6 +117,15 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     }
 
     /**
+     * position of the object
+     * @return position
+     */
+    public final DoubleMatrix1D position()
+    {
+        return m_position;
+    }
+
+    /**
      * environment beliefbase
      *
      * @bug missing methods

@@ -45,8 +45,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
 
 
     @Override
-    protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object
-    )
+    protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
     }
@@ -91,13 +90,19 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
-            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{(int) m_xdistribution.sample(), (int) m_ydistribution.sample()} );
+            final int l_xposition = (int) m_xdistribution.sample();
+            final int l_yposition = (int) m_ydistribution.sample();
+            // pedestrian take just one cell
+            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{l_xposition, l_yposition, l_xposition, l_yposition} );
             final CPedestrian l_pedestrian = new CPedestrian(
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                 l_position
             );
+
+            m_environment.positioningAnAgent( l_pedestrian );
+
             return new ImmutablePair<>( l_pedestrian, Stream.of( FUNCTOR, GROUP ) );
         }
 

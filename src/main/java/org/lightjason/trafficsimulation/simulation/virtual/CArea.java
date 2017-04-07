@@ -100,18 +100,17 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CArea, Stream<String>> generate( final Object... p_data ) throws RuntimeException
         {
-            final DoubleMatrix1D l_position = (DoubleMatrix1D) p_data[0];
             final CArea l_area = new CArea(
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                l_position,
+                (DoubleMatrix1D) p_data[0],
                 (boolean) p_data[1],
                 (EArea) p_data[2],
                 (Stream<EDirection>) p_data[3]
             );
 
-            m_environment.positionAnArea( l_area, l_position );
+            m_environment.positioningAnArea( l_area );
 
             return new ImmutablePair<>( l_area, Stream.of( FUNCTOR ) );
         }

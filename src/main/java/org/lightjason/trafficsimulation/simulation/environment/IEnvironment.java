@@ -2,6 +2,8 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
+import org.lightjason.agentspeak.agent.IAgent;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
@@ -120,10 +122,16 @@ public interface IEnvironment extends IObject<IEnvironment>
     boolean isinside( final DoubleMatrix1D p_position );
 
     /**
-     * position an area in the environment
+     * positioning an area in the environment
      *
      * @param p_area area
-     * @param p_position area position
      */
-    void positionAnArea( final CArea p_area, final DoubleMatrix1D p_position );
+    void positioningAnArea( final CArea p_area );
+
+    /**
+     * positioning an agent in the environment
+     *
+     * @param p_agent agent
+     */
+    void positioningAnAgent( final IBaseObject p_agent );
 }
