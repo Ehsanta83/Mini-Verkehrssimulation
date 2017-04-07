@@ -117,8 +117,8 @@ public abstract class IBaseTest
      * @param p_file filename
      * @param p_factory generator
      * @param p_arguments generating arguments
-     * @param <T>
-     * @return
+     * @param <T> IObject
+     * @return IObject
      */
     protected final <T extends IObject<?>> T generate( final String p_file, final EObjectFactory p_factory, final Object... p_arguments )
     {
@@ -148,10 +148,10 @@ public abstract class IBaseTest
      *
      * @param p_file filename
      * @param p_factory generator
-     * @param p_number
+     * @param p_number number of agents
      * @param p_arguments generating arguments
-     * @param <T>
-     * @return
+     * @param <T> IObject
+     * @return List of IObjects
      */
     protected final <T extends IObject<?>> List<T> generatemultiple( final String p_file, final EObjectFactory p_factory, final int p_number, final Object... p_arguments )
     {
@@ -164,7 +164,10 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatemultiple( p_number, p_arguments ).map( IAgent::<T>raw ).collect( Collectors.toList() );
+            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment )
+                .generatemultiple( p_number, p_arguments )
+                .map( IAgent::<T>raw )
+                .collect( Collectors.toList() );
 
         }
         catch ( final Exception l_exception )

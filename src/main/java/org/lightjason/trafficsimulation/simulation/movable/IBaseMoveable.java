@@ -21,8 +21,7 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
-    protected final static String GROUP = "moveable";
-
+    protected static final String GROUP = "moveable";
 
     /**
      * ctor
@@ -39,17 +38,17 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
 
     /**
      * generator
-     * @param <T>
+     * @param <T> IMoveable
      */
     protected abstract static class IGenerator<T extends IMoveable<?>> extends IBaseObjectGenerator<T>
     {
 
 
         /**
-         * @param p_stream
-         * @param p_actions
-         * @param p_aggregation
-         * @param p_environment
+         * @param p_stream stream
+         * @param p_actions action
+         * @param p_aggregation aggregation
+         * @param p_environment environment
          * @throws Exception on any error
          */
         protected IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,

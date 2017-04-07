@@ -28,7 +28,7 @@ public class TestCArea extends IBaseTest
     /**
      * area generator
      */
-    private IAgentGenerator m_areaGenerator;
+    private IAgentGenerator m_areagenerator;
 
     /**
      * initialize
@@ -38,7 +38,7 @@ public class TestCArea extends IBaseTest
     public final void initialize() throws Exception
     {
         initializeenvironment();
-        m_areaGenerator = generator( EObjectFactory.AREA,  "src/test/resources/area.asl" );
+        m_areagenerator = generator( EObjectFactory.AREA,  "src/test/resources/area.asl" );
     }
 
     /**
@@ -51,7 +51,7 @@ public class TestCArea extends IBaseTest
     {
         final List<CArea> l_areas = new LinkedList<>();
 
-        l_areas.add( (CArea) m_areaGenerator.generatesingle(
+        l_areas.add( (CArea) m_areagenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{0, 0, 1, 1} ),
             true,
             EArea.DIRECTLANE,
@@ -59,26 +59,26 @@ public class TestCArea extends IBaseTest
              )
         );
 
-        l_areas.add( (CArea) m_areaGenerator.generatesingle(
+        l_areas.add( (CArea) m_areagenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{10, 10, 11, 11} ),
             true,
             EArea.SIDEWALK,
             Stream.of( EDirection.NORTH, EDirection.NORTHWEST, EDirection.WEST ) )
         );
         l_areas.forEach( area ->
+            {
+                try
                 {
-                    try
-                    {
-                        area.call();
-                    }
-                    catch ( final Exception l_exception )
-                    {
-                        l_exception.printStackTrace();
-                        Assert.assertTrue( false );
-                    }
-                    System.out.println( area.literal().collect( Collectors.toSet() ) );
+                    area.call();
                 }
-            );
+                catch ( final Exception l_exception )
+                {
+                    l_exception.printStackTrace();
+                    Assert.assertTrue( false );
+                }
+                System.out.println( area.literal().collect( Collectors.toSet() ) );
+            }
+        );
     }
 
     /**
@@ -94,31 +94,31 @@ public class TestCArea extends IBaseTest
         final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
 
         l_areaconfiguration.forEach( i ->
+            {
+                try
                 {
-                    try
-                    {
-                        l_areas.add(
-                            (CArea) m_areaGenerator.generatesingle(
-                                new DenseDoubleMatrix1D(
-                                    Stream.concat(
-                                        ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
-                                        ( (List<Integer>) i.get( "righttop" ) ).stream() )
-                                        .mapToDouble( k -> k )
-                                        .toArray() ),
-                                true,
-                                EArea.from( (String) i.get( "type" ) ),
-                                ( (List<String>) i.get( "directions" ) ).stream()
-                                    .map( j -> EDirection.from( j ) )
-                            )
-                        );
-                    }
-                    catch ( final Exception l_exeption )
-                    {
-                        l_exeption.printStackTrace();
-                        Assert.assertTrue( false );
-                    }
+                    l_areas.add(
+                        (CArea) m_areagenerator.generatesingle(
+                            new DenseDoubleMatrix1D(
+                                Stream.concat(
+                                    ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
+                                    ( (List<Integer>) i.get( "righttop" ) ).stream() )
+                                    .mapToDouble( k -> k )
+                                    .toArray() ),
+                            true,
+                            EArea.from( (String) i.get( "type" ) ),
+                            ( (List<String>) i.get( "directions" ) ).stream()
+                                .map( j -> EDirection.from( j ) )
+                        )
+                    );
                 }
-            );
+                catch ( final Exception l_exeption )
+                {
+                    l_exeption.printStackTrace();
+                    Assert.assertTrue( false );
+                }
+            }
+        );
     }
 
     /**
@@ -127,7 +127,7 @@ public class TestCArea extends IBaseTest
     @Test
     public final void testPositionInEnvironment()
     {
-        final CArea l_area1 =  (CArea) m_areaGenerator.generatesingle(
+        final CArea l_area1 =  (CArea) m_areagenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{37, 35, 64, 36} ),
             true,
             EArea.DIRECTLANE,
@@ -136,7 +136,7 @@ public class TestCArea extends IBaseTest
         // area2 has overlapping with area1
         try
         {
-            final CArea l_area2 =  (CArea) m_areaGenerator.generatesingle(
+            final CArea l_area2 =  (CArea) m_areagenerator.generatesingle(
                 new DenseDoubleMatrix1D( new double[]{37, 36, 38, 37} ),
                 true,
                 EArea.DIRECTLANE,
@@ -148,7 +148,7 @@ public class TestCArea extends IBaseTest
         }
 
         // area 3 has no overlapping with area 1
-        final CArea l_area3 =  (CArea) m_areaGenerator.generatesingle(
+        final CArea l_area3 =  (CArea) m_areagenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{37, 31, 64, 32} ),
             true,
             EArea.DIRECTLANE,
@@ -161,7 +161,7 @@ public class TestCArea extends IBaseTest
     @Test
     public final void testAreaGridContent()
     {
-        m_areaGenerator.generatesingle(
+        m_areagenerator.generatesingle(
             new DenseDoubleMatrix1D( new double[]{1, 1, 9, 9} ),
             true,
             EArea.SIDEWALK,

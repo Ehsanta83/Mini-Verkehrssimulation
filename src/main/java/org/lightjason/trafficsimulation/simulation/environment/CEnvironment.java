@@ -15,7 +15,6 @@ import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -126,6 +125,8 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     /**
+     * move object
+     *
      * @param p_object object, which should be moved (must store the current position)
      * @param p_position new position
      * @return object reference
@@ -163,6 +164,8 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     /**
+     * remove object
+     *
      * @param p_object element
      * @return
      *

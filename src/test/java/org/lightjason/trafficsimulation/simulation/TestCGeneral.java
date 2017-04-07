@@ -2,11 +2,7 @@ package org.lightjason.trafficsimulation.simulation;
 
 import org.lightjason.trafficsimulation.CCommon;
 
-import java.util.Collections;
 import java.util.logging.LogManager;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * this class is defined for testing a code or a function in java (general). It is not related to simulation.

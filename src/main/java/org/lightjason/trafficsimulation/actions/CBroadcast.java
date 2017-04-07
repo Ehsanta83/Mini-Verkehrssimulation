@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
+/**
+ * class broadcast
+ */
 public final class CBroadcast extends IBaseAction
 {
 

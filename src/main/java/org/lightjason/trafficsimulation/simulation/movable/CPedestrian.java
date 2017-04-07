@@ -60,11 +60,11 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         /**
          * distribution for X axis
          */
-        private final AbstractRealDistribution m_distributionForX;
+        private final AbstractRealDistribution m_xdistribution;
         /**
          * distribution for Y axis
          */
-        private final AbstractRealDistribution m_distributionForY;
+        private final AbstractRealDistribution m_ydistribution;
 
 
 
@@ -83,15 +83,15 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
-            m_distributionForX = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[1] );
-            m_distributionForY = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[2] );
+            m_xdistribution = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[1] );
+            m_ydistribution = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[2] );
         }
 
         @Override
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
-            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{(int) m_distributionForX.sample(), (int) m_distributionForY.sample()} );
+            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{(int) m_xdistribution.sample(), (int) m_ydistribution.sample()} );
             final CPedestrian l_pedestrian = new CPedestrian(
                 m_configuration,
                 m_environment,

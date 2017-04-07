@@ -22,15 +22,15 @@ import java.util.stream.Stream;
 public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightVehicle, ELightColorVehicle>
 {
     private static final String FUNCTOR = "vehiclelight";
-    private static final AtomicLong m_counter = new AtomicLong();
+    private static final AtomicLong COUNTER = new AtomicLong();
 
     /**
      * ctor
      *
      * @param p_configuration agent configuration
      * @param p_environment environment reference
-     * @param p_position
-     * @param p_rotation
+     * @param p_position position
+     * @param p_rotation rotation
      */
     private CTrafficLightVehicle(
         final IAgentConfiguration<CTrafficLightVehicle> p_configuration,
@@ -75,7 +75,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
                                         new CTrafficLightVehicle(
                                                                   m_configuration,
                                                                   p_environment,
-                                                                  MessageFormat.format( "{0} {1}", FUNCTOR, m_counter.getAndIncrement() ),
+                                                                  MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                                                                   p_position,
                                                                   p_rotation
                                         ),
@@ -89,7 +89,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
          */
         public static void resetcount()
         {
-            m_counter.set( 0 );
+            COUNTER.set( 0 );
         }
     }
 

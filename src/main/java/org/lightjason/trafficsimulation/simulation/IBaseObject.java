@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * base agent object
  *
- * @param <T>
+ * @param <T> IObject
  */
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
 {

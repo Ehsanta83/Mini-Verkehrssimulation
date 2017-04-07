@@ -12,7 +12,8 @@ import java.util.stream.Stream;
 /**
  * environment interface
  *
- * @todo can be build the full environment e.g. lane structure, car generators and other things to an agent execution model, so can the environment agent create the full simulation structure?
+ * @todo can be build the full environment e.g. lane structure, car generators and other things to an agent execution model,
+ * so can the environment agent create the full simulation structure?
  */
 public interface IEnvironment extends IObject<IEnvironment>
 {

@@ -38,10 +38,10 @@ public abstract class IBaseObjectGenerator<T extends IObject<?>> extends IBaseAg
     protected final IEnvironment m_environment;
 
     /**
-     * @param p_stream
-     * @param p_actions
-     * @param p_aggregation
-     * @param p_environment
+     * @param p_stream stream
+     * @param p_actions action
+     * @param p_aggregation aggregation
+     * @param p_environment environment
      * @throws Exception on any error
      */
     protected IBaseObjectGenerator( final InputStream p_stream, final Stream<IAction> p_actions,

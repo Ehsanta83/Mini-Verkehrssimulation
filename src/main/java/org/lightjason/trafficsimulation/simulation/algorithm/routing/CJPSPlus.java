@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * JPS+ algorithm
  */
-final public class CJPSPlus implements IRouting
+public final class CJPSPlus implements IRouting
 {
 
     @Override
@@ -93,20 +93,16 @@ final public class CJPSPlus implements IRouting
     )
     {
         IntStream.rangeClosed( -1, 1 )
-                 .forEach( i -> IntStream.rangeClosed( -1, 1 )
-                                         .filter( j -> ( i != 0 || j != 0 )
-                                                       && !this
-                                             .isNotNeighbour( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j,
-                                                              p_closedlist
-                                             )
-                                                       && !this
-                                             .isOccupied( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j ) )
-                                         .forEach( j ->
-                                                   {
-                                                       final DoubleMatrix1D l_nextjumpnode = this.jump( p_curnode.coordinate(), p_target, i, j, p_objects );
-                                                       this.addsuccessors( l_nextjumpnode, p_closedlist, p_openlist, p_curnode, p_target );
-                                                   } )
-                 );
+            .forEach( i -> IntStream.rangeClosed( -1, 1 )
+                .filter( j -> ( i != 0 || j != 0 )
+                    && !this.isNotNeighbour( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j, p_closedlist )
+                    && !this.isOccupied( p_objects, p_curnode.coordinate().getQuick( 0 ) + i, p_curnode.coordinate().getQuick( 1 ) + j ) )
+                .forEach( j ->
+                {
+                    final DoubleMatrix1D l_nextjumpnode = this.jump( p_curnode.coordinate(), p_target, i, j, p_objects );
+                    this.addsuccessors( l_nextjumpnode, p_closedlist, p_openlist, p_curnode, p_target );
+                } )
+            );
     }
 
     /**

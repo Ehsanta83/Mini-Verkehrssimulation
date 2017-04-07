@@ -22,7 +22,7 @@ public class TestCPedestrian extends IBaseTest
     /**
      * area generator
      */
-    private IAgentGenerator m_pedestrianGenerator;
+    private IAgentGenerator m_pedestriangenerator;
 
     /**
      * initialize pedestrian
@@ -33,7 +33,7 @@ public class TestCPedestrian extends IBaseTest
     public final void initialize() throws Exception
     {
         initializeenvironment();
-        m_pedestrianGenerator = generator(
+        m_pedestriangenerator = generator(
             EObjectFactory.PEDESTRIAN,
             "src/test/resources/pedestrian.asl",
             EDistributionFactory.NORMAL,
@@ -50,7 +50,7 @@ public class TestCPedestrian extends IBaseTest
     @Test
     public final void testagentcall() throws Exception
     {
-        final CPedestrian l_pedestrian = (CPedestrian) m_pedestrianGenerator.generatesingle();
+        final CPedestrian l_pedestrian = (CPedestrian) m_pedestriangenerator.generatesingle();
 
         try
         {
