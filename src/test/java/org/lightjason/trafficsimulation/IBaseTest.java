@@ -67,7 +67,7 @@ public abstract class IBaseTest
         {
             m_environment = EObjectFactory.ENVIRONMENT
                 .generate( l_stream, m_actions.stream(), IAggregation.EMPTY )
-                .generatesingle( 100, 100, 25, ERoutingFactory.JPSPLUS.get() )
+                .generatesingle( 64, 64, 25, ERoutingFactory.JPSPLUS.get() )
                 .raw();
         }
         catch ( final Exception l_exception )

@@ -45,10 +45,6 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * in which direction one can move in this area
      */
     private final Stream<EDirection> m_directions;
-    /**
-     * position
-     */
-    private DoubleMatrix1D m_position;
 
 
     /**
@@ -59,13 +55,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_name          name of the object
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final boolean p_passable, final EArea p_type, final Stream<EDirection> p_directions, final DoubleMatrix1D p_position )
+                   final DoubleMatrix1D p_position, final boolean p_passable, final EArea p_type, final Stream<EDirection> p_directions )
     {
         super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions;
-        m_position = p_position;
     }
 
     @Override
@@ -105,15 +100,15 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CArea, Stream<String>> generate( final Object... p_data ) throws RuntimeException
         {
-            final DoubleMatrix1D l_position = (DoubleMatrix1D) p_data[3];
+            final DoubleMatrix1D l_position = (DoubleMatrix1D) p_data[0];
             final CArea l_area = new CArea(
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                (boolean) p_data[0],
-                (EArea) p_data[1],
-                (Stream<EDirection>) p_data[2],
-                l_position
+                l_position,
+                (boolean) p_data[1],
+                (EArea) p_data[2],
+                (Stream<EDirection>) p_data[3]
             );
 
             m_environment.positionAnArea( l_area, l_position );

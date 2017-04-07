@@ -1,12 +1,15 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.math.EDistributionFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -22,14 +25,14 @@ import java.util.stream.Stream;
 public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
     private static final String FUNCTOR = "pedestrian";
-    private static final AtomicLong m_counter = new AtomicLong();
+    private static final AtomicLong COUNTER = new AtomicLong();
 
     /**
      * ctor
      *
      * @param p_configuration agent configuration
-     * @param p_environment
-     * @param p_position
+     * @param p_environment environment
+     * @param p_position position
      */
     private CPedestrian(
         final IAgentConfiguration<CPedestrian> p_configuration,
@@ -49,18 +52,29 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
     }
 
 
+    /**
+     * generator class
+     */
     public static final class CGenerator extends IGenerator<CPedestrian>
     {
         /**
-         *
+         * distribution for X axis
          */
-        private final DoubleMatrix1D m_position;
+        private final AbstractRealDistribution m_distributionForX;
+        /**
+         * distribution for Y axis
+         */
+        private final AbstractRealDistribution m_distributionForY;
+
+
 
         /**
-         * @param p_stream
-         * @param p_actions
-         * @param p_aggregation
-         * @param p_environment
+         * ctor
+         *
+         * @param p_stream stream
+         * @param p_actions actions
+         * @param p_aggregation aggregation
+         * @param p_environment environment
          * @throws Exception on any error
          */
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
@@ -69,23 +83,22 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
-            m_position = (DoubleMatrix1D) p_arguments[0];
+            m_distributionForX = ( (EDistributionFactory) p_arguments[0] ).generate( ( (DoubleMatrix1D) p_arguments[1] ).toArray() );
+            m_distributionForY = ( (EDistributionFactory) p_arguments[0] ).generate( ( (DoubleMatrix1D) p_arguments[2] ).toArray() );
         }
 
         @Override
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
-            return new ImmutablePair<>(
-                                        new CPedestrian(
-                                                         m_configuration,
-                                                         m_environment,
-                                                         MessageFormat.format( "{0} {1}", FUNCTOR, m_counter.getAndIncrement() ),
-                                                         (DoubleMatrix1D) p_data[0]
-                                        ),
-
-                                        Stream.of( FUNCTOR, GROUP )
+            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{m_distributionForX.sample(), m_distributionForY.sample()} );
+            final CPedestrian l_pedestrian = new CPedestrian(
+                m_configuration,
+                m_environment,
+                MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
+                l_position
             );
+            return new ImmutablePair<>( l_pedestrian, Stream.of( FUNCTOR, GROUP ) );
         }
 
         /**
@@ -93,7 +106,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
          */
         public static void resetcount()
         {
-            m_counter.set( 0 );
+            COUNTER.set( 0 );
         }
     }
 }

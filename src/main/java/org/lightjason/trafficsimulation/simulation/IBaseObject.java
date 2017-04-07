@@ -23,6 +23,10 @@ import java.util.stream.Stream;
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
 {
     /**
+     * current position of the agent
+     */
+    protected DoubleMatrix1D m_position;
+    /**
      * functor definition
      */
     private final String m_functor;
@@ -38,10 +42,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * reference to external beliefbase
      */
     private final IView<T> m_external;
-    /**
-     * current position of the agent
-     */
-    private final DoubleMatrix1D m_position;
 
     /**
      * ctor
