@@ -7,7 +7,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IAgent;
-import org.lightjason.agentspeak.common.*;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
@@ -16,7 +15,6 @@ import org.lightjason.trafficsimulation.simulation.algorithm.routing.CJPSPlus;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +49,7 @@ public final class CMain
      *
      * @param p_args arguments
      * @throws IOException on io errors
-     * @throws URISyntaxException on URI syntax error
+     * @throws Exception on URI syntax error
      */
     public static void main( final String[] p_args ) throws Exception
     {
@@ -122,7 +120,9 @@ public final class CMain
                 IAggregation.EMPTY
             ).generatesingle( 25, 25, 2.5, new CJPSPlus() ).<IEnvironment>raw()
 
-        ).generatemultiple( 3, new DenseDoubleMatrix1D( 2 ) ).forEach( i -> {} );
+        ).generatemultiple( 3, new DenseDoubleMatrix1D( 2 ) ).forEach( i ->
+        {
+        } );
         // -------------------------------------------------------------------------------
 
 

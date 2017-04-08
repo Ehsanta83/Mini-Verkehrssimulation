@@ -42,12 +42,12 @@ public abstract class IBaseEnvironmentGenerator extends IBaseAgentGenerator<IEnv
     /**
      * generate
      *
-     * @param p_configuration
-     * @param p_rows
-     * @param p_columns
-     * @param p_cellsize
-     * @param p_routing
-     * @return
+     * @param p_configuration configuration
+     * @param p_rows rows
+     * @param p_columns columns
+     * @param p_cellsize cellsize
+     * @param p_routing routing
+     * @return IEnvironment
      */
     protected abstract IEnvironment generate( final IAgentConfiguration<IEnvironment> p_configuration,
                                               final int p_rows, final int p_columns, final double p_cellsize,

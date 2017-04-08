@@ -1,7 +1,6 @@
 package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
@@ -11,7 +10,6 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
-import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -31,10 +29,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     private final AtomicReference<L> m_color;
     /**
-     * defines the left bottom position (row / column), width, height
-     */
-    private final DoubleMatrix1D m_position;
-    /**
      * rotation of the traffic light
      */
     private final int m_rotation;
@@ -45,18 +39,17 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      *
      * @param p_configuration agent configuration
      * @param p_environment environment reference
-     * @param p_functor
+     * @param p_functor functor
      * @param p_light light class
-     * @param p_position
-     * @param p_rotation
+     * @param p_position position
+     * @param p_rotation rotation
      */
     protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                                  final String p_functor, final String p_name, final Class<L> p_light,
                                  final DoubleMatrix1D p_position, final int p_rotation
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name );
-        m_position = p_position;
+        super( p_configuration, p_environment, p_functor, p_name, p_position );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
     }
@@ -85,10 +78,10 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
 
 
         /**
-         * @param p_stream
-         * @param p_actions
-         * @param p_aggregation
-         * @param p_environment
+         * @param p_stream stream
+         * @param p_actions action
+         * @param p_aggregation aggregation
+         * @param p_environment environment
          * @throws Exception on any error
          */
         public IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
@@ -109,10 +102,10 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         /**
          * generates the agent
          *
-         * @param p_environment
-         * @param p_position
-         * @param p_rotation
-         * @return
+         * @param p_environment environment
+         * @param p_position position
+         * @param p_rotation rotation
+         * @return pair of IBaseTrafficLight and stream of strings,
          */
         protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation );
 

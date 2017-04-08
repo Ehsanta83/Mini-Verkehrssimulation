@@ -11,7 +11,7 @@ public interface ITrafficLightColor<T extends Enum<?>>
     /**
      * returns the path of the light texture
      *
-     * @return
+     * @return path
      */
     String path();
 

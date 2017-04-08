@@ -2,7 +2,10 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
+import org.lightjason.agentspeak.agent.IAgent;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -11,7 +14,8 @@ import java.util.stream.Stream;
 /**
  * environment interface
  *
- * @todo can be build the full environment e.g. lane structure, car generators and other things to an agent execution model, so can the environment agent create the full simulation structure?
+ * @todo can be build the full environment e.g. lane structure, car generators and other things to an agent execution model,
+ * so can the environment agent create the full simulation structure?
  */
 public interface IEnvironment extends IObject<IEnvironment>
 {
@@ -48,11 +52,18 @@ public interface IEnvironment extends IObject<IEnvironment>
     int cellsize();
 
     /**
-     * returns lanes positions
+     * returns area grid
      *
-     * @return matrix of lane positions
+     * @return matrix of area positions
      */
-    ObjectMatrix2D lanespositions();
+    ObjectMatrix2D areagrid();
+
+    /**
+     * returns agent grid
+     *
+     * @return matrix of agent positions
+     */
+    ObjectMatrix2D agentgrid();
 
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------
@@ -117,4 +128,17 @@ public interface IEnvironment extends IObject<IEnvironment>
      */
     boolean isinside( final DoubleMatrix1D p_position );
 
+    /**
+     * positioning an area in the environment
+     *
+     * @param p_area area
+     */
+    void positioningAnArea( final CArea p_area );
+
+    /**
+     * positioning an agent in the environment
+     *
+     * @param p_agent agent
+     */
+    void positioningAnAgent( final IBaseObject p_agent );
 }

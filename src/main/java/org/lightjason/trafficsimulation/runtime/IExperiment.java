@@ -21,7 +21,7 @@ public interface IExperiment
     /**
      * maximum simulation steps
      *
-     * @simulation steps
+     * @return simulation steps
      */
     int simulationsteps();
 

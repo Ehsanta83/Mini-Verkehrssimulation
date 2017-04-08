@@ -5,7 +5,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.servlet.ServletContainer;
-import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.rest.CApplication;
 import org.lightjason.trafficsimulation.simulation.IObject;
 

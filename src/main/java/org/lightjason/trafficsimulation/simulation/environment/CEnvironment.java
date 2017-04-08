@@ -9,8 +9,11 @@ import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CCommon;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -22,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * environment class
  */
-public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
+public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
     private static final String FUNCTOR = "environment";
 
@@ -47,13 +50,13 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
      */
     private final int m_cellsize;
     /**
-     * matrix with ways positions
+     * matrix with area positions
      */
-    private final ObjectMatrix2D m_lanespositions;
+    private final ObjectMatrix2D m_areagrid;
     /**
      * matrix with agents positions
      */
-    private final ObjectMatrix2D m_agentspostions;
+    private final ObjectMatrix2D m_agentgrid;
 
     /**
      * ctor
@@ -78,8 +81,8 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         m_column = p_cellcolumns;
         m_cellsize = (int) p_cellsize;
         m_routing = p_routing;
-        m_lanespositions = new SparseObjectMatrix2D( m_row, m_column );
-        m_agentspostions = new SparseObjectMatrix2D( m_row, m_column );
+        m_areagrid = new SparseObjectMatrix2D( m_row, m_column );
+        m_agentgrid = new SparseObjectMatrix2D( m_row, m_column );
     }
 
 
@@ -102,9 +105,16 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         return m_cellsize;
     }
 
-    public final ObjectMatrix2D lanespositions()
+    @Override
+    public final ObjectMatrix2D areagrid()
     {
-        return m_lanespositions;
+        return m_areagrid;
+    }
+
+    @Override
+    public final ObjectMatrix2D agentgrid()
+    {
+        return m_agentgrid;
     }
 
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
@@ -113,7 +123,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_agentspostions, p_start, p_end );
+        return m_routing.route( m_agentgrid, p_start, p_end );
     }
 
     @Override
@@ -123,6 +133,8 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     }
 
     /**
+     * move object
+     *
      * @param p_object object, which should be moved (must store the current position)
      * @param p_position new position
      * @return object reference
@@ -136,14 +148,14 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
 
         // check of the target position is free, if not return object, which blocks the cell
-        final IObject l_object = (IObject) m_agentspostions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
+        final IObject l_object = (IObject) m_agentgrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
         if ( l_object != null )
             return l_object;
 
         // cell is free, move the position and return updated object
         /*
-        m_agentspostions.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
-        m_agentspostions.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
+        m_agentgrid.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
+        m_agentgrid.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
         p_object.position().setQuick( 0, l_position.getQuick( 0 ) );
         p_object.position().setQuick( 1, l_position.getQuick( 1 ) );
         */
@@ -155,11 +167,13 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     @SuppressWarnings( "unchecked" )
     public final synchronized IObject get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_agentspostions.getQuick(
+        return (IObject) m_agentgrid.getQuick(
             (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
     }
 
     /**
+     * remove object
+     *
      * @param p_object element
      * @return
      *
@@ -169,7 +183,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     public final synchronized IObject remove( final IObject p_object )
     {
         //final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
-        //m_agentspostions.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
+        //m_agentgrid.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
 
         return p_object;
     }
@@ -178,7 +192,7 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     public final synchronized boolean empty( final DoubleMatrix1D p_position )
     {
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
-        return m_agentspostions.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
+        return m_agentgrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
     }
 
     @Override
@@ -218,8 +232,6 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
         return FUNCTOR;
     }
 
-    // --- visualization ---------------------------------------------------------------------------------------------------------------------------------------
-
     /**
      * value clipping
      *
@@ -233,6 +245,43 @@ public class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironme
     }
 
 
+    @Override
+    public void positioningAnArea( final CArea p_area )
+    {
+        final DoubleMatrix1D l_position = p_area.position();
+        CCommon.inttupelstream( (int) l_position.get( 0 ), (int) l_position.get( 2 ), (int) l_position.get( 1 ), (int) l_position.get( 3 ) )
+            .forEach( i ->
+                {
+                    if ( m_areagrid.getQuick( i.getLeft(), i.getRight() ) == null )
+                    {
+                        m_areagrid.setQuick( i.getLeft(), i.getRight(), p_area );
+                    }
+                    else
+                    {
+                        throw new RuntimeException( "Overlapping of the areas is not allowed." );
+                    }
+                }
+            );
+    }
+
+    @Override
+    public void positioningAnAgent( final IBaseObject p_agent )
+    {
+        final DoubleMatrix1D l_position = p_agent.position();
+        CCommon.inttupelstream( (int) l_position.get( 0 ), (int) l_position.get( 2 ), (int) l_position.get( 1 ), (int) l_position.get( 3 ) )
+            .forEach( i ->
+                {
+                    if ( m_agentgrid.getQuick( i.getLeft(), i.getRight() ) == null )
+                    {
+                        m_agentgrid.setQuick( i.getLeft(), i.getRight(), p_agent );
+                    }
+                    else
+                    {
+                        throw new RuntimeException( "Positioning the agent is not possible. The position is occupied." );
+                    }
+                }
+            );
+    }
 
     /**
      * generator of the environment

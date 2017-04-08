@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     private static final String FUNCTOR = "vehicle";
-    private static final AtomicLong m_counter = new AtomicLong();
+    private static final AtomicLong COUNTER = new AtomicLong();
 
 
     /**
@@ -42,8 +42,8 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
      * ctor
      *
      * @param p_configuration agent configuration
-     * @param p_environment
-     * @param p_position
+     * @param p_environment environment
+     * @param p_position position
      */
     private CVehicle(
         final IAgentConfiguration<CVehicle> p_configuration,
@@ -77,18 +77,23 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
     }
 
 
+    /**
+     * generator class
+     */
     public static final class CGenerator extends IGenerator<CVehicle>
     {
 
         /**
-         * @param p_stream
-         * @param p_actions
-         * @param p_aggregation
-         * @param p_environment
+         * generator
+         *
+         * @param p_stream stream
+         * @param p_actions action
+         * @param p_aggregation aggregation
+         * @param p_environment environment
          * @throws Exception on any error
          */
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions, final IAggregation p_aggregation,
-                           final IEnvironment p_environment
+                           final IEnvironment p_environment, final Object... p_arguments
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CVehicle.class, p_environment );
@@ -102,7 +107,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
                                         new CVehicle(
                                                       m_configuration,
                                                       m_environment,
-                                                      MessageFormat.format( "{0} {1}", FUNCTOR, m_counter.getAndIncrement() ),
+                                                      MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                                                       (DoubleMatrix1D) p_data[0]
                                         ),
 
@@ -115,7 +120,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
          */
         public static void resetcount()
         {
-            m_counter.set( 0 );
+            COUNTER.set( 0 );
         }
     }
 }

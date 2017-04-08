@@ -1,5 +1,6 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.view.IView;
@@ -17,10 +18,14 @@ import java.util.stream.Stream;
 /**
  * base agent object
  *
- * @param <T>
+ * @param <T> IObject
  */
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
 {
+    /**
+     * current position of the agent
+     */
+    protected DoubleMatrix1D m_position;
     /**
      * functor definition
      */
@@ -47,12 +52,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * @param p_name name of the object
      */
     @SuppressWarnings( "unchecked" )
-    protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor, final String p_name )
+    protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
+                           final String p_functor, final String p_name, final DoubleMatrix1D p_position )
     {
         super( p_configuration );
         m_functor = p_functor;
         m_name = p_name;
         m_environment = p_environment;
+        m_position = p_position;
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );
@@ -107,6 +114,15 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     public final boolean equals( final Object p_object )
     {
         return ( p_object != null ) && ( p_object instanceof IObject<?> ) && ( this.hashCode() == p_object.hashCode() );
+    }
+
+    /**
+     * position of the object
+     * @return position
+     */
+    public final DoubleMatrix1D position()
+    {
+        return m_position;
     }
 
     /**

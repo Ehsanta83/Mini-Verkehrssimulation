@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+/**
+ * send action
+ */
 public final class CSend extends IBaseAction
 {
     /**

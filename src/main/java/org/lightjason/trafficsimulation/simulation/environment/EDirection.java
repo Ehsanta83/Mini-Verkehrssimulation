@@ -7,20 +7,22 @@ import cern.colt.matrix.linalg.Algebra;
 import cern.jet.math.Functions;
 import org.lightjason.trafficsimulation.simulation.CMath;
 
+import java.util.Locale;
+
 
 /**
  * direction enum (counter clockwise)
  */
 public enum EDirection
 {
-    FORWARD( 0 ),
-    FORWARDLEFT( 45 ),
-    LEFT( 90 ),
-    BACKWARDLEFT( 135 ),
-    BACKWARD( 180 ),
-    BACKWARDRIGHT( 225 ),
-    RIGHT( 270 ),
-    FORWARDRIGHT( 315 );
+    EAST( 0 ),
+    NORTHEAST( 45 ),
+    NORTH( 90 ),
+    NORTHWEST( 135 ),
+    WEST( 180 ),
+    SOUTHWEST( 225 ),
+    SOUTH( 270 ),
+    SOUTHEAST( 315 );
 
 
     /**
@@ -79,5 +81,16 @@ public enum EDirection
                 : p_angle
             ) / 45
             ];
+    }
+
+    /**
+     * get enum from string
+     *
+     * @param p_name string name
+     * @return area
+     */
+    public static EDirection from( final String p_name )
+    {
+        return EDirection.valueOf( p_name.toUpperCase( Locale.ROOT ) );
     }
 }
