@@ -54,9 +54,16 @@ public interface IEnvironment extends IObject<IEnvironment>
     /**
      * returns area grid
      *
-     * @return matrix of lane positions
+     * @return matrix of area positions
      */
     ObjectMatrix2D areagrid();
+
+    /**
+     * returns agent grid
+     *
+     * @return matrix of agent positions
+     */
+    ObjectMatrix2D agentgrid();
 
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------

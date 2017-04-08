@@ -105,9 +105,16 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return m_cellsize;
     }
 
+    @Override
     public final ObjectMatrix2D areagrid()
     {
         return m_areagrid;
+    }
+
+    @Override
+    public final ObjectMatrix2D agentgrid()
+    {
+        return m_agentgrid;
     }
 
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------

@@ -82,47 +82,17 @@ public class TestCArea extends IBaseTest
     }
 
     /**
-     * get area configuration from yaml
-     * @todo why doesn't ".raw()" work?
+     * test initialize area
      */
     @Test
     public final void testInitializeFromConfiguration()
     {
-        loadconfiguration();
-
-        final List<CArea> l_areas = new LinkedList<>();
-        final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
-
-        l_areaconfiguration.forEach( i ->
-            {
-                try
-                {
-                    l_areas.add(
-                        (CArea) m_areagenerator.generatesingle(
-                            new DenseDoubleMatrix1D(
-                                Stream.concat(
-                                    ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
-                                    ( (List<Integer>) i.get( "righttop" ) ).stream() )
-                                    .mapToDouble( k -> k )
-                                    .toArray() ),
-                            true,
-                            EArea.from( (String) i.get( "type" ) ),
-                            ( (List<String>) i.get( "directions" ) ).stream()
-                                .map( j -> EDirection.from( j ) )
-                        )
-                    );
-                }
-                catch ( final Exception l_exeption )
-                {
-                    l_exeption.printStackTrace();
-                    Assert.assertTrue( false );
-                }
-            }
-        );
+        initializeArea();
     }
 
     /**
      * test overlapping two areas
+     * @todo why doesn't ".raw()" work?
      */
     @Test
     public final void testPositionInEnvironment()

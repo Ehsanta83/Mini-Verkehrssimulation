@@ -1,5 +1,6 @@
 package org.lightjason.trafficsimulation;
 
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Assert;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
@@ -7,6 +8,7 @@ import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.junit.Assume;
 import org.junit.Before;
@@ -14,6 +16,8 @@ import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
+import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.FileInputStream;
 import java.util.List;
@@ -85,6 +89,39 @@ public abstract class IBaseTest
     public final void loadconfiguration()
     {
         CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
+    }
+
+    public final void initializeArea()
+    {
+        loadconfiguration();
+
+        final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
+        final IAgentGenerator l_areagenerator = generator( EObjectFactory.AREA,  "src/test/resources/area.asl" );
+        l_areaconfiguration.forEach( i ->
+            {
+                try
+                {
+                    l_areagenerator.generatesingle(
+                        new DenseDoubleMatrix1D(
+                            Stream.concat(
+                                ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
+                                ( (List<Integer>) i.get( "righttop" ) ).stream() )
+                                .mapToDouble( k -> k )
+                                .toArray() ),
+                        true,
+                        EArea.from( (String) i.get( "type" ) ),
+                        ( (List<String>) i.get( "directions" ) ).stream()
+                            .map( j -> EDirection.from( j ) )
+
+                    );
+                }
+                catch ( final Exception l_exeption )
+                {
+                    l_exeption.printStackTrace();
+                    Assert.assertTrue( false );
+                }
+            }
+        );
     }
 
     protected final IAgentGenerator generator( final EObjectFactory p_factory, final String p_asl, final Object... p_arguments )
