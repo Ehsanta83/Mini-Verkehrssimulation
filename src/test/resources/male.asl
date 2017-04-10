@@ -1,7 +1,7 @@
 !main.
 
 +!main
-    <-  generic/print("Hallo")
+    <-  generic/print("hello pedestrian")
 .
 
 +!pedestrian( gender(G), speed(S), type(T), visibility(V))

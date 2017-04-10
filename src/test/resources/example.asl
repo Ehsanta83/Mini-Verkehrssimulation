@@ -1,7 +1,7 @@
 !main.
 
 +!main <-
-    generic/print("Hallo")
+    generic/print("hello")
 .
 
 +!vehicleway( this(X), position(Y) ) <-

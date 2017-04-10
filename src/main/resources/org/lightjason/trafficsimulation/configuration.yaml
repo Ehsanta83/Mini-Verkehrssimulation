@@ -1,0 +1,221 @@
+openbrowser : true
+
+httpserver:
+    enable: true
+    port: 8000
+    host: localhost
+
+
+#areas
+area :
+  #------------------------------------------- east lanes ---------------------------------------------
+  #east - forward
+  - leftbottom : [ 37, 35 ]
+    righttop : [ 64, 36 ]
+    type : directlane
+    directions : [ west ]
+  #east - forward - turn left
+  - leftbottom : [ 37, 33 ]
+    righttop : [ 64, 34 ]
+    type : turnleftlane
+    directions : [ west ]
+  #east - backward
+  - leftbottom : [ 37, 31 ]
+    righttop : [ 64, 32 ]
+    type : directlane
+    directions : [ east ]
+  #east - backward
+  - leftbottom : [ 37, 29 ]
+    righttop : [ 64, 30 ]
+    type : directlane
+    directions : [ east ]
+#------------------------------------------- north lanes ---------------------------------------------
+  #north - forward
+  - leftbottom : [ 29, 37 ]
+    righttop : [ 30, 64 ]
+    type : directlane
+    directions : [ south ]
+  #north - forward - turn left
+  - leftbottom : [ 31, 37 ]
+    righttop : [ 32, 64 ]
+    type : turnleftlane
+    directions : [ south ]
+  #north - backward
+  - leftbottom : [ 33, 37 ]
+    righttop : [ 34, 64 ]
+    type : directlane
+    directions : [ north ]
+  #north - backward
+  - leftbottom : [ 35, 37 ]
+    righttop : [ 36, 64 ]
+    type : directlane
+    directions : [ north ]
+#------------------------------------------- west lanes ---------------------------------------------
+  #west - forward
+  - leftbottom : [ 1, 29 ]
+    righttop : [ 28, 30 ]
+    type : directlane
+    directions : [ east ]
+  #west - forward - turn left
+  - leftbottom : [ 1, 31 ]
+    righttop : [ 28, 32 ]
+    type : turnleftlane
+    directions : [ east ]
+  #west - backward
+  - leftbottom : [ 1, 33 ]
+    righttop : [ 28, 34 ]
+    type : directlane
+    directions : [ west ]
+  #west - backward
+  - leftbottom : [ 1, 35 ]
+    righttop : [ 28, 36 ]
+    type : directlane
+    directions : [ west ]
+#------------------------------------------- south lanes ---------------------------------------------
+  #south - forward
+  - leftbottom : [ 35, 1 ]
+    righttop : [ 36, 28 ]
+    type : directlane
+    directions : [ north ]
+  #south - forward - turn left
+  - leftbottom : [ 33, 1 ]
+    righttop : [ 34, 28 ]
+    type : turnleftlane
+    directions : [ north ]
+  #south - backward
+  - leftbottom : [ 31, 1 ]
+    righttop : [ 32, 28 ]
+    type : directlane
+    directions : [ south ]
+  #south - backward
+  - leftbottom : [ 29, 1 ]
+    righttop : [ 30, 28 ]
+    type : directlane
+    directions : [ south ]
+#------------------------------------------- sidewalks ---------------------------------------------
+  #east - north
+  - leftbottom : [ 37, 37 ]
+    righttop : [ 64, 64 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #west - north
+  - leftbottom : [ 1, 37 ]
+    righttop : [ 28, 64 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #west - south
+  - leftbottom : [ 1, 1 ]
+    righttop : [ 28, 28 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #east - south
+  - leftbottom : [ 37, 1 ]
+    righttop : [ 64, 28 ]
+    type : sidewalk
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+  #------------------------------------------- intersection ---------------------------------------------
+  - leftbottom : [ 29, 29 ]
+    righttop : [ 36, 36 ]
+    type : intersection
+    directions : [ EAST, NORTHEAST, NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST ]
+
+
+
+
+
+
+
+
+
+# enable / disable logger
+logging : false
+
+# show stacktrace on error
+stacktrace : true
+
+# agent print call will be shown
+agentprint : false
+
+# number of simulation steps - optional if not set, Integer.Max_Value is used
+#steps : 2000
+
+# thread-sleep (in milliseconds) time to slow down the simulation speed
+threadsleeptime : 100
+
+# screen size of the window - optional with default 1024x1024 pixel
+window :
+  width : 1024
+  height : 1024
+
+# environment (grid) resolution - required
+environment :
+  cellsize : 16 #pixel
+  rows     : 64
+  columns  : 64
+  routing  : "jpsplus"
+
+# traffic lights
+# position in row and col number of the left bottom of the sprite
+# durations in 0.1 second
+# rotation in degree
+# width and height in pixel
+trafficlights:
+  - vehicles : #west
+      startcolor  : green
+      startcolorduration : 50
+      duration : [ 240, 10, 50, 20 ]
+      position : [ 23, 27 ]
+      rotation: 270
+      width : 15
+      height : 43
+  - vehicles : #south
+      startcolor  : red
+      startcolorduration : 70
+      duration : [ 240, 10, 50, 20 ]
+      position : [ 37, 23 ]
+      rotation: 0
+      width : 15
+      height : 43
+  - vehicles : #east
+      startcolor  : red
+      startcolorduration : 150
+      duration : [ 240, 10, 50, 20 ]
+      position : [ 41, 37 ]
+      rotation: 90
+      width : 15
+      height : 43
+  - vehicles : #north
+      startcolor  : red
+      startcolorduration : 230
+      duration : [ 240, 10, 50, 20 ]
+      position : [ 27, 41 ]
+      rotation: 180
+      width : 15
+      height : 43
+
+
+agents :
+  vehicles :
+    - type : car
+      number : 15
+      width : 32
+      height: 16
+      asl : "vehicle.asl"
+    - type : bus
+      number : 5
+      width : 64
+      height: 16
+      asl : "vehicle.asl"
+  vehiclesrandomgeneratepositions : #the vehicles will be generated randomly on these coordinations
+    - position : [ 0, 0 ]
+      rotation: 0
+    - position : [ 0, 0 ]
+      rotation: 90
+    - position : [ 0, 0 ]
+      rotation: 180
+    - position : [ 0, 0 ]
+      rotation: 270
+
+  pedestrians :
+    number : 20
+    asl : "pedestrian.asl"

@@ -1,0 +1,41 @@
+body {
+  font-family: Pridi, serif;
+  font-size: 14px;
+}
+
+.selectable {
+    list-style: none;
+}
+
+.selectable li {
+    margin: 0.5em;
+    font-size: 120%;
+    height: 18px;
+    line-height: 20px;
+}
+
+.selectable .ui-selecting {
+    background: #feca40;
+}
+
+.selectable .ui-selected {
+    background: #f39814;
+    color: white;
+}
+
+.horizontalcontentcontainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#agentcontainer {
+    width: 15%;
+    margin-right: 0.5em;
+}
+
+#agentdetail {
+    width: 85%;
+    margin-left: 0.5em;
+}
