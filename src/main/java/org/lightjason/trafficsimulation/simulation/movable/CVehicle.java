@@ -12,6 +12,7 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
+import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -27,7 +28,10 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     private static final String FUNCTOR = "vehicle";
     private static final AtomicLong COUNTER = new AtomicLong();
-
+    /**
+     * in which areas a vehicle allowed to move
+     */
+    private static final Stream<EArea> ALLOWED_AREAS = Stream.of( EArea.DIRECTLANE, EArea.TURNLEFTLANE, EArea.INTERSECTION );
 
     /**
      * width
@@ -74,6 +78,12 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
     private void deccelerate( final Number p_value )
     {
 
+    }
+
+    @Override
+    public Stream<EArea> allowedareas()
+    {
+        return allowedareas();
     }
 
 

@@ -12,6 +12,7 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.math.EDistributionFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
+import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -26,6 +27,10 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
     private static final String FUNCTOR = "pedestrian";
     private static final AtomicLong COUNTER = new AtomicLong();
+    /**
+     * in which areas a pedestrian allowed to move
+     */
+    private static final Stream<EArea> ALLOWED_AREAS = Stream.of( EArea.SIDEWALK );
 
     /**
      * ctor
@@ -48,6 +53,12 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
     protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
+    }
+
+    @Override
+    public Stream<EArea> allowedareas()
+    {
+        return ALLOWED_AREAS;
     }
 
 

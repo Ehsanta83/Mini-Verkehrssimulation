@@ -4,6 +4,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
@@ -133,34 +134,52 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     /**
-     * move object
+     * move a moveable
      *
-     * @param p_object object, which should be moved (must store the current position)
-     * @param p_position new position
+     * @param p_moveable object, which should be moved (must store the current position)
+     * @param p_newposition new position
      * @return object reference
      *
      * @bug check parameter and generics
      */
     @Override
     @SuppressWarnings( "unchecked" )
-    public final synchronized IObject move( final IObject p_object, final DoubleMatrix1D p_position )
+    public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
-        final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
+        final Stream<Pair<Integer, Integer>> l_newcells = CCommon.inttupelstream( (int) p_newposition.get( 0 ), (int) p_newposition.get( 2 ), (int) p_newposition.get( 1 ), (int) p_newposition.get( 3 ) );
+        l_newcells.forEach( i ->
+            {
+                if ( !p_moveable.allowedareas().anyMatch( ( (CArea) m_areagrid.getQuick( i.getLeft(), i.getRight() ) ).type() :: equals ) )
+                {
+                    throw new RuntimeException( "Can't move: Forbidden area." );
+                }
+            }
+        );
 
-        // check of the target position is free, if not return object, which blocks the cell
-        final IObject l_object = (IObject) m_moveablegrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
-        if ( l_object != null )
-            return l_object;
+        l_newcells.forEach( i ->
+            {
+                if ( m_moveablegrid.getQuick( i.getLeft(), i.getRight() ) != null )
+                {
+                    throw new RuntimeException( "Can't move: new position occupied." );
+                }
+            }
+        );
 
-        // cell is free, move the position and return updated object
-        /*
-        m_moveablegrid.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
-        m_moveablegrid.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
-        p_object.position().setQuick( 0, l_position.getQuick( 0 ) );
-        p_object.position().setQuick( 1, l_position.getQuick( 1 ) );
-        */
+        CCommon.inttupelstream(
+            (int) p_moveable.position().get( 0 ),
+            (int) p_moveable.position().get( 2 ),
+            (int) p_moveable.position().get( 1 ),
+            (int) p_moveable.position().get( 3 )
+        ).forEach( i -> m_moveablegrid.setQuick( i.getLeft(), i.getRight(), null ) );
 
-        return p_object;
+        l_newcells.forEach( i -> m_moveablegrid.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
+
+        p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
+        p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
+        p_moveable.position().setQuick( 2, p_newposition.getQuick( 2 ) );
+        p_moveable.position().setQuick( 3, p_newposition.getQuick( 3 ) );
+
+        return p_moveable;
     }
 
     @Override

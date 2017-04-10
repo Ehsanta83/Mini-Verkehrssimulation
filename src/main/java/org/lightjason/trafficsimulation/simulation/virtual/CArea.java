@@ -74,6 +74,15 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     }
 
     /**
+     * get area type
+     * @return type
+     */
+    public EArea type()
+    {
+        return m_type;
+    }
+
+    /**
      * generator class
      */
     public static final class CGenerator extends IBaseObjectGenerator<CArea>

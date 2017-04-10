@@ -94,7 +94,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @param p_position new position
      * @return updated object or object which uses the cell
      */
-    IObject move( final IObject p_object, final DoubleMatrix1D p_position );
+    IMoveable move( final IMoveable p_object, final DoubleMatrix1D p_position );
 
     /**
      * returns an object from the given position
