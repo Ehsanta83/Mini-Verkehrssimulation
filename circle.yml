@@ -30,7 +30,7 @@ dependencies:
 
 checkout:
     post:
-        - get -xdf
+        - git -xdf
         - git fetch -p
         - git gc --prune=now
         - mvn clean dependency:purge-local-repository -DreResolve=false -DactTransitively=true
