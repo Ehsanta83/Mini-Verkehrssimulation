@@ -51,11 +51,7 @@ public final class TestCTrafficLightVehicle extends IBaseTest
      */
     public static void main( final String[] p_args ) throws Exception
     {
-        final TestCTrafficLightVehicle l_test = new TestCTrafficLightVehicle();
-
-        l_test.initializeenvironment();
-        l_test.initialize();
-        l_test.test();
+        new TestCTrafficLightVehicle().invoketest();
     }
 
 

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * test pedestrian traffic light
  */
-public final class TestCTrafficLightPedestriant extends IBaseTest
+public final class TestCTrafficLightPedestrian extends IBaseTest
 {
 
     private CTrafficLightPedestrian m_pedestrianlight;
@@ -50,16 +50,10 @@ public final class TestCTrafficLightPedestriant extends IBaseTest
     /**
      * main method
      * @param p_args args
-     *
-     * @throws Exception on any error
      */
-    public static void main( final String[] p_args ) throws Exception
+    public static void main( final String[] p_args )
     {
-        final TestCTrafficLightPedestriant l_test = new TestCTrafficLightPedestriant();
-
-        l_test.initializeenvironment();
-        l_test.initialize();
-        l_test.test();
+        new TestCTrafficLightPedestrian().invoketest();
     }
 
 }

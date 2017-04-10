@@ -1,7 +1,10 @@
 package org.lightjason.trafficsimulation;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
@@ -20,8 +23,12 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.FileInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.LogManager;
@@ -213,6 +220,107 @@ public abstract class IBaseTest
             assertTrue( false );
             return null;
         }
+    }
+
+    /**
+     * invoke all test manually
+     */
+    protected final void invoketest()
+    {
+        final Set<Method> l_before = this.before();
+
+        Arrays.stream( this.getClass().getMethods() )
+              .filter( i -> i.getAnnotation( Test.class ) != null )
+              .filter( i -> i.getAnnotation( Ignore.class ) == null )
+              .forEach( i -> this.invoke( i, l_before ) );
+    }
+
+    /**
+     * invoke method and read if possible the data-provider
+     *
+     * @param p_method method
+     * @param p_before before method
+     */
+    private void invoke( final Method p_method, final Set<Method> p_before )
+    {
+        // method uses a data-provider
+        if ( p_method.getAnnotation( UseDataProvider.class ) == null )
+            this.execute( p_method, p_before );
+        else
+        {
+            final Object[] l_arguments;
+
+            try
+            {
+                l_arguments = (Object[]) this.getClass().getDeclaredMethod( p_method.getAnnotation( UseDataProvider.class ).value() ).invoke( null );
+
+            }
+            catch ( final InvocationTargetException l_exception )
+            {
+                Assert.assertTrue( l_exception.getTargetException().toString(), false );
+                return;
+            }
+            catch ( final IllegalAccessException | NoSuchMethodException l_exception )
+            {
+                Assert.assertTrue( l_exception.toString(), false );
+                return;
+            }
+
+            Arrays.stream( l_arguments ).forEach( i -> this.execute( p_method, p_before, i ) );
+        }
+    }
+
+    /**
+     * invokes the method within the current object context
+     *
+     * @param p_method method
+     * @param p_before before method
+     * @param p_arguments optional arguments
+     */
+    private void execute( final Method p_method, final Set<Method> p_before, final Object... p_arguments )
+    {
+        try
+        {
+            if ( !p_before.isEmpty() )
+                p_before.forEach( i -> {
+                    try
+                    {
+                        i.invoke( this );
+                    }
+                    catch ( final IllegalAccessException | InvocationTargetException l_exception )
+                    {
+                        l_exception.printStackTrace();
+                        Assert.assertTrue( false );
+                    }
+                } );
+
+            p_method.invoke( this, p_arguments );
+        }
+        catch ( final InvocationTargetException l_exception )
+        {
+            if ( !p_method.getAnnotation( Test.class ).expected().isInstance( l_exception.getTargetException() ) )
+            {
+                l_exception.getTargetException().printStackTrace();
+                Assert.assertTrue( false );
+            }
+        }
+        catch ( final IllegalAccessException l_exception )
+        {
+            Assert.assertTrue( l_exception.toString(), false );
+        }
+    }
+
+    /**
+     * reads the before annotated methods
+     *
+     * @return optional before method
+     */
+    private Set<Method> before()
+    {
+        return Arrays.stream( this.getClass().getMethods() )
+                     .filter( i -> i.getAnnotation( Before.class ) != null )
+                     .filter( i -> i.getAnnotation( Ignore.class ) == null )
+                     .collect( Collectors.toSet() );
     }
 
 }

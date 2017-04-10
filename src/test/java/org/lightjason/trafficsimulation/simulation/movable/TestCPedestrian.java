@@ -63,4 +63,15 @@ public class TestCPedestrian extends IBaseTest
         }
         System.out.println( l_pedestrian.literal().collect( Collectors.toSet() ) );
     }
+
+
+    /**
+     * test call
+     *
+     * @param p_args command-line arguments
+     */
+    public static void main( final String[] p_args )
+    {
+        new TestCPedestrian().invoketest();
+    }
 }

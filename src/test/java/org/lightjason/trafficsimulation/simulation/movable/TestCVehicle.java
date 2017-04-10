@@ -47,17 +47,12 @@ public final class TestCVehicle extends IBaseTest
 
     /**
      * main method
-     * @param p_args args
      *
-     * @throws Exception on any error
+     * @param p_args args
      */
-    public static void main( final String[] p_args ) throws Exception
+    public static void main( final String[] p_args )
     {
-        final TestCVehicle l_test = new TestCVehicle();
-
-        l_test.initializeenvironment();
-        l_test.initialize();
-        l_test.test();
+        new TestCVehicle().invoketest();
     }
 
 }

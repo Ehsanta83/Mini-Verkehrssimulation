@@ -2,11 +2,13 @@ package org.lightjason.trafficsimulation.math;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.junit.Test;
+import org.lightjason.trafficsimulation.IBaseTest;
+
 
 /**
  * test distribution factory
  */
-public class TestCDistributionFactory
+public class TestCDistributionFactory extends IBaseTest
 {
     /**
      * test
@@ -24,8 +26,6 @@ public class TestCDistributionFactory
      */
     public static void main( final String[] p_args )
     {
-        final TestCDistributionFactory l_test = new TestCDistributionFactory();
-
-        l_test.test();
+        new TestCDistributionFactory().invoketest();
     }
 }
