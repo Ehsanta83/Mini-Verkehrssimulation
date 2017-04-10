@@ -116,10 +116,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         return ( p_object != null ) && ( p_object instanceof IObject<?> ) && ( this.hashCode() == p_object.hashCode() );
     }
 
-    /**
-     * position of the object
-     * @return position
-     */
+    @Override
     public final DoubleMatrix1D position()
     {
         return m_position;

@@ -1,5 +1,6 @@
 package org.lightjason.trafficsimulation.simulation;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.ILiteral;
 
@@ -34,5 +35,11 @@ public interface IObject<T extends IAgent<?>> extends IAgent<T>
      * @return string name
      */
     String name();
+
+    /**
+     * position of the object
+     * @return position
+     */
+    DoubleMatrix1D position();
 
 }

@@ -4,6 +4,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.util.List;
@@ -58,11 +59,11 @@ public interface IEnvironment extends IObject<IEnvironment>
     ObjectMatrix2D areagrid();
 
     /**
-     * returns agent grid
+     * returns moveable grid
      *
-     * @return matrix of agent positions
+     * @return matrix of moveable positions
      */
-    ObjectMatrix2D agentgrid();
+    ObjectMatrix2D moveablegrid();
 
 
     // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------
@@ -135,9 +136,9 @@ public interface IEnvironment extends IObject<IEnvironment>
     void positioningAnArea( final CArea p_area );
 
     /**
-     * positioning an agent in the environment
+     * positioning a moveable in the environment
      *
-     * @param p_agent agent
+     * @param p_moveable moveable
      */
-    void positioningAnAgent( final IBaseObject p_agent );
+    void positioningAMoveble( final IMoveable p_moveable );
 }

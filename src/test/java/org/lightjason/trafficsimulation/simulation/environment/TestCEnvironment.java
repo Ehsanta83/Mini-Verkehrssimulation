@@ -81,7 +81,7 @@ public final class TestCEnvironment extends IBaseTest
     @Test
     public final void testAgentGrid()
     {
-        final ObjectMatrix2D l_agentgrid = m_environment.agentgrid();
+        final ObjectMatrix2D l_agentgrid = m_environment.moveablegrid();
         IntStream.rangeClosed( 1, l_agentgrid.rows() ).forEach( i ->
         {
             IntStream.rangeClosed( 1, l_agentgrid.columns() ).forEach( j ->

@@ -10,9 +10,9 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CCommon;
-import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
+import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     /**
      * matrix with agents positions
      */
-    private final ObjectMatrix2D m_agentgrid;
+    private final ObjectMatrix2D m_moveablegrid;
 
     /**
      * ctor
@@ -82,7 +82,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_cellsize = (int) p_cellsize;
         m_routing = p_routing;
         m_areagrid = new SparseObjectMatrix2D( m_row, m_column );
-        m_agentgrid = new SparseObjectMatrix2D( m_row, m_column );
+        m_moveablegrid = new SparseObjectMatrix2D( m_row, m_column );
     }
 
 
@@ -112,9 +112,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     @Override
-    public final ObjectMatrix2D agentgrid()
+    public final ObjectMatrix2D moveablegrid()
     {
-        return m_agentgrid;
+        return m_moveablegrid;
     }
 
     // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_agentgrid, p_start, p_end );
+        return m_routing.route( m_moveablegrid, p_start, p_end );
     }
 
     @Override
@@ -148,14 +148,14 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
 
         // check of the target position is free, if not return object, which blocks the cell
-        final IObject l_object = (IObject) m_agentgrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
+        final IObject l_object = (IObject) m_moveablegrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) );
         if ( l_object != null )
             return l_object;
 
         // cell is free, move the position and return updated object
         /*
-        m_agentgrid.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
-        m_agentgrid.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
+        m_moveablegrid.set( (int) p_object.position().get( 0 ), (int) p_object.position().get( 1 ), null );
+        m_moveablegrid.set( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ), p_object );
         p_object.position().setQuick( 0, l_position.getQuick( 0 ) );
         p_object.position().setQuick( 1, l_position.getQuick( 1 ) );
         */
@@ -167,7 +167,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @SuppressWarnings( "unchecked" )
     public final synchronized IObject get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_agentgrid.getQuick(
+        return (IObject) m_moveablegrid.getQuick(
             (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
     }
 
@@ -183,7 +183,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public final synchronized IObject remove( final IObject p_object )
     {
         //final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
-        //m_agentgrid.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
+        //m_moveablegrid.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
 
         return p_object;
     }
@@ -192,7 +192,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public final synchronized boolean empty( final DoubleMatrix1D p_position )
     {
         final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
-        return m_agentgrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
+        return m_moveablegrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
     }
 
     @Override
@@ -204,6 +204,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                && ( p_position.getQuick( 1 ) < m_column );
     }
 
+    /**
+     * @todo change this to 4 entries
+     */
     @Override
     public final DoubleMatrix1D clip( final DoubleMatrix1D p_position )
     {
@@ -230,6 +233,12 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public final String name()
     {
         return FUNCTOR;
+    }
+
+    @Override
+    public DoubleMatrix1D position()
+    {
+        return null;
     }
 
     /**
@@ -265,15 +274,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     @Override
-    public void positioningAnAgent( final IBaseObject p_agent )
+    public void positioningAMoveble( final IMoveable p_moveable )
     {
-        final DoubleMatrix1D l_position = p_agent.position();
+        final DoubleMatrix1D l_position = p_moveable.position();
         CCommon.inttupelstream( (int) l_position.get( 0 ), (int) l_position.get( 2 ), (int) l_position.get( 1 ), (int) l_position.get( 3 ) )
             .forEach( i ->
                 {
-                    if ( m_agentgrid.getQuick( i.getLeft(), i.getRight() ) == null )
+                    if ( m_moveablegrid.getQuick( i.getLeft(), i.getRight() ) == null )
                     {
-                        m_agentgrid.setQuick( i.getLeft(), i.getRight(), p_agent );
+                        m_moveablegrid.setQuick( i.getLeft(), i.getRight(), p_moveable );
                     }
                     else
                     {
