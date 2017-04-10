@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.ObjectMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.junit.Test;
@@ -65,6 +66,34 @@ public final class TestCEnvironment extends IBaseTest
     @Test
     public final void testAreaGrid()
     {
+        printAreaGrid();
+    }
+
+    /**
+     * test moveable grid
+     */
+    @Test
+    public final void testMoveableGrid()
+    {
+        printMoveableGrid();
+    }
+
+    /**
+     * test moving pedestrian
+     */
+    @Test
+    public final void testMovingPedestrian()
+    {
+        printMoveableGrid();
+        m_environment.move( m_pedestrian, new DenseDoubleMatrix1D( new double[]{1, 2, 1, 2} ) );
+        printMoveableGrid();
+    }
+
+    /**
+     * print area grid
+     */
+    private void printAreaGrid()
+    {
         final ObjectMatrix2D l_areagrid = m_environment.areagrid();
         IntStream.rangeClosed( 1, l_areagrid.rows() ).forEach( i ->
         {
@@ -75,11 +104,7 @@ public final class TestCEnvironment extends IBaseTest
         } );
     }
 
-    /**
-     * test agent grid
-     */
-    @Test
-    public final void testAgentGrid()
+    private void printMoveableGrid()
     {
         final ObjectMatrix2D l_agentgrid = m_environment.moveablegrid();
         IntStream.rangeClosed( 1, l_agentgrid.rows() ).forEach( i ->
@@ -89,15 +114,6 @@ public final class TestCEnvironment extends IBaseTest
                 System.out.println( "[" + i + ", " + j + "]: " + l_agentgrid.getQuick( i, j ) );
             } );
         } );
-    }
-
-    /**
-     * test moving pedestrian
-     */
-    @Test
-    public final void testMovingPedestrian()
-    {
-
     }
 
     /**
