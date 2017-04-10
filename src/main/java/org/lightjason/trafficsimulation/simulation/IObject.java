@@ -1,6 +1,5 @@
 package org.lightjason.trafficsimulation.simulation;
 
-import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.ILiteral;
 

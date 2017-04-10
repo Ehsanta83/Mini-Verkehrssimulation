@@ -19,7 +19,6 @@ import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.FileInputStream;
@@ -28,7 +27,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.LogManager;
@@ -98,6 +96,9 @@ public abstract class IBaseTest
         CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
     }
 
+    /**
+     * initialize area from configuration
+     */
     public final void initializeArea()
     {
         loadconfiguration();
@@ -131,6 +132,14 @@ public abstract class IBaseTest
         );
     }
 
+    /**
+     * create the generator of the agent
+     *
+     * @param p_factory factory
+     * @param p_asl asl
+     * @param p_arguments arguments
+     * @return generator
+     */
     protected final IAgentGenerator generator( final EObjectFactory p_factory, final String p_asl, final Object... p_arguments )
     {
         final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
@@ -282,7 +291,8 @@ public abstract class IBaseTest
         try
         {
             if ( !p_before.isEmpty() )
-                p_before.forEach( i -> {
+                p_before.forEach( i ->
+                {
                     try
                     {
                         i.invoke( this );

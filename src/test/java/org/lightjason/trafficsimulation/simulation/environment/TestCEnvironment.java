@@ -1,14 +1,12 @@
 package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.ObjectMatrix2D;
-import org.junit.Assert;
 import org.junit.Before;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.math.EDistributionFactory;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
-import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.text.MessageFormat;
 import java.util.stream.IntStream;
@@ -25,8 +23,11 @@ public final class TestCEnvironment extends IBaseTest
      * pedestrian
      */
     private CPedestrian m_pedestrian;
+
     /**
      * initialize
+     *
+     * @throws Exception on any error
      */
     @Before
     public final void initilize() throws Exception
@@ -42,7 +43,7 @@ public final class TestCEnvironment extends IBaseTest
             new double[]{7, 0.1}
         ).generatesingle();
 
-        System.out.println( MessageFormat.format( "pedestrian position: [{0},{1}]", m_pedestrian.position().get( 0 ), m_pedestrian.position().get( 1 ) ));
+        System.out.println( MessageFormat.format( "pedestrian position: [{0},{1}]", m_pedestrian.position().get( 0 ), m_pedestrian.position().get( 1 ) ) );
     }
 
     /**

@@ -2,7 +2,6 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
-import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
