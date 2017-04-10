@@ -27,6 +27,13 @@ dependencies:
         - git clone https://github.com/LightJason/REST.git && cd REST && mvn install -DskipTests
 
 
+checkout:
+    post:
+        - git fetch -p
+        - git gc --prune=now
+        - mvn clean dependency:purge-local-repository -DreResolve=false -DactTransitively=true
+
+
 test:
     override:
         - mvn -Dbuild.number=${CIRCLE_BUILD_NUM} -Dcoverall.token=${COVERALL_TOKEN} -Dbuild.commit=${CIRCLE_SHA1} -DperformRelease=false -DskipTests=true
