@@ -18,6 +18,7 @@ import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 /**
@@ -40,7 +41,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * the type of area
      */
-    private final EArea m_type;
+    private final AtomicReference<EArea> m_type;
     /**
      * in which direction one can move in this area
      */
@@ -59,7 +60,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     {
         super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
         m_passable = p_passable;
-        m_type = p_type;
+        m_type = new AtomicReference<>( p_type );
         m_directions = p_directions;
     }
 
@@ -79,7 +80,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     public EArea type()
     {
-        return m_type;
+        return m_type.get();
     }
 
     /**
