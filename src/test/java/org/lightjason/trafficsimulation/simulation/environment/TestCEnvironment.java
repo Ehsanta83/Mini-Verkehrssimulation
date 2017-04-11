@@ -52,7 +52,7 @@ public final class TestCEnvironment extends IBaseTest
      *
      * @throws Exception on execution error
      */
-    @Test
+    //@Test
     public final void testEnvironmentCall() throws Exception
     {
         m_environment.call();
@@ -63,7 +63,7 @@ public final class TestCEnvironment extends IBaseTest
      *
      * @throws Exception on execution error
      */
-    @Test
+    //@Test
     public final void testAreaGrid()
     {
         printAreaGrid();
@@ -72,7 +72,7 @@ public final class TestCEnvironment extends IBaseTest
     /**
      * test moveable grid
      */
-    @Test
+    //@Test
     public final void testMoveableGrid()
     {
         printMoveableGrid();

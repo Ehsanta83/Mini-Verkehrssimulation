@@ -67,7 +67,6 @@ public abstract class IBaseTest
      *
      * @throws Exception on any error
      */
-    @Before
     public final void initializeenvironment() throws Exception
     {
         try
@@ -90,7 +89,6 @@ public abstract class IBaseTest
     /**
      * load configuration from yaml file
      */
-    @Before
     public final void loadconfiguration()
     {
         CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
