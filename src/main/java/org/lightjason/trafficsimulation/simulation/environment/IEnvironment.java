@@ -13,60 +13,9 @@ import java.util.stream.Stream;
 
 /**
  * environment interface
- *
- * @todo can be build the full environment e.g. lane structure, car generators and other things to an agent execution model,
- * so can the environment agent create the full simulation structure?
  */
 public interface IEnvironment extends IObject<IEnvironment>
 {
-
-    // --- main elements ---------------------------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * clip position data
-     *
-     * @param p_position position vector
-     * @return modified clipped vector
-     */
-    DoubleMatrix1D clip( final DoubleMatrix1D p_position );
-
-    /**
-     * returns the number of rows
-     *
-     * @return rows
-     */
-    int row();
-
-    /**
-     * returns the number of columns
-     *
-     * @return columns
-     */
-    int column();
-
-    /**
-     * returns the cell size
-     *
-     * @return cell size
-     */
-    int cellsize();
-
-    /**
-     * returns area grid
-     *
-     * @return matrix of area positions
-     */
-    ObjectMatrix2D areagrid();
-
-    /**
-     * returns moveable grid
-     *
-     * @return matrix of moveable positions
-     */
-    ObjectMatrix2D moveablegrid();
-
-
-    // --- dynamic object access -------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * calculate route
@@ -120,25 +69,4 @@ public interface IEnvironment extends IObject<IEnvironment>
      */
     boolean empty( final DoubleMatrix1D p_position );
 
-    /**
-     * checks if a position is inside the environment
-     *
-     * @param p_position position
-     * @return boolean result
-     */
-    boolean isinside( final DoubleMatrix1D p_position );
-
-    /**
-     * positioning an area in the environment
-     *
-     * @param p_area area
-     */
-    void positioningAnArea( final CArea p_area );
-
-    /**
-     * positioning a moveable in the environment
-     *
-     * @param p_moveable moveable
-     */
-    void positioningAMoveble( final IMoveable p_moveable );
 }
