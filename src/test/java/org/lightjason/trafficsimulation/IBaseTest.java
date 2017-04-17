@@ -3,6 +3,7 @@ package org.lightjason.trafficsimulation;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Assert;
+import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
@@ -306,8 +307,14 @@ public abstract class IBaseTest
 
             p_method.invoke( this, p_arguments );
         }
+        catch ( final AssumptionViolatedException l_exception )
+        {
+        }
         catch ( final InvocationTargetException l_exception )
         {
+            if ( l_exception.getTargetException() instanceof AssumptionViolatedException )
+                return;
+
             if ( !p_method.getAnnotation( Test.class ).expected().isInstance( l_exception.getTargetException() ) )
             {
                 l_exception.getTargetException().printStackTrace();
