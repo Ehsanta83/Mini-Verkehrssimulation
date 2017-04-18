@@ -5,7 +5,6 @@ import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -40,7 +39,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      * generator
      * @param <T> IMoveable
      */
-    protected abstract static class IGenerator<T extends IMoveable<?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IGenerator<T extends IMoveable<?>> extends IBaseGenerator<T>
     {
 
 

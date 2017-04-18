@@ -64,6 +64,8 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
 
     /**
      * generator class
+     *
+     * @bug environment position setter must be refactored
      */
     public static final class CGenerator extends IGenerator<CPedestrian>
     {
@@ -112,7 +114,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
                 l_position
             );
 
-            m_environment.positioningAMoveble( l_pedestrian );
+            //m_environment.positioningAMoveble( l_pedestrian );
 
             return new ImmutablePair<>( l_pedestrian, Stream.of( FUNCTOR, GROUP ) );
         }

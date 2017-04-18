@@ -10,7 +10,6 @@ import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -84,8 +83,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 
     /**
      * generator class
+     *
+     * @bug environment position setter must be refactored
      */
-    public static final class CGenerator extends IBaseObjectGenerator<CArea>
+    public static final class CGenerator extends IBaseGenerator<CArea>
     {
         /**
          * ctor
@@ -119,7 +120,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 (Stream<EDirection>) p_data[3]
             );
 
-            m_environment.positioningAnArea( l_area );
+            //m_environment.positioningAnArea( l_area );
 
             return new ImmutablePair<>( l_area, Stream.of( FUNCTOR ) );
         }
