@@ -34,9 +34,6 @@ public final class TestCEnvironment extends IBaseTest
     @Before
     public final void initilize() throws Exception
     {
-        initializeenvironment();
-        initializeArea();
-
         m_pedestrian = (CPedestrian) generator(
             EObjectFactory.PEDESTRIAN,
             "src/test/resources/pedestrian.asl",

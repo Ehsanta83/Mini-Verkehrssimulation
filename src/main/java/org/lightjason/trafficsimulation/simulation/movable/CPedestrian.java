@@ -27,10 +27,6 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
     private static final String FUNCTOR = "pedestrian";
     private static final AtomicLong COUNTER = new AtomicLong();
-    /**
-     * in which areas a pedestrian allowed to move
-     */
-    private static final Stream<EArea> ALLOWED_AREAS = Stream.of( EArea.SIDEWALK );
 
     /**
      * ctor
@@ -45,7 +41,7 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, new DenseDoubleMatrix1D( 2 ) );
     }
 
 
@@ -53,12 +49,6 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
     protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
-    }
-
-    @Override
-    public Stream<EArea> allowedareas()
-    {
-        return ALLOWED_AREAS;
     }
 
 

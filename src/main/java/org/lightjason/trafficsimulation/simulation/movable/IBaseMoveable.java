@@ -22,16 +22,19 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
 {
     protected static final String GROUP = "moveable";
 
+    protected final DoubleMatrix1D m_size;
+
     /**
      * ctor
      *
      * @param p_configuration agent configuration
      */
     protected IBaseMoveable( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
-                             final String p_functor, final String p_name, final DoubleMatrix1D p_position
-    )
+                             final String p_functor, final String p_name, final DoubleMatrix1D p_position,
+                             final DoubleMatrix1D p_size )
     {
         super( p_configuration, p_environment, p_functor, p_name, p_position );
+        m_size = p_size;
     }
 
 

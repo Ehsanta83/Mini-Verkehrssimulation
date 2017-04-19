@@ -92,39 +92,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @SuppressWarnings( "unchecked" )
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
-        final Supplier<Stream<Pair<Integer, Integer>>> l_newcells = () -> CCommon.inttupelstream( (int) p_newposition.get( 0 ), (int) p_newposition.get( 2 ), (int) p_newposition.get( 1 ), (int) p_newposition.get( 3 ) );
-        l_newcells.get().forEach( i ->
-            {
-                if ( !p_moveable.allowedareas().anyMatch( ( (CArea) m_metainformation.getQuick( i.getLeft(), i.getRight() ) ).type() :: equals ) )
-                {
-                    throw new RuntimeException( "Can't move: Forbidden area." );
-                }
-            }
-        );
-
-        l_newcells.get().forEach( i ->
-            {
-                if ( m_physical.getQuick( i.getLeft(), i.getRight() ) != null )
-                {
-                    throw new RuntimeException( "Can't move: new position occupied." );
-                }
-            }
-        );
-
-        CCommon.inttupelstream(
-            (int) p_moveable.position().get( 0 ),
-            (int) p_moveable.position().get( 2 ),
-            (int) p_moveable.position().get( 1 ),
-            (int) p_moveable.position().get( 3 )
-        ).forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), null ) );
-
-        l_newcells.get().forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
-
-        p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
-        p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-        p_moveable.position().setQuick( 2, p_newposition.getQuick( 2 ) );
-        p_moveable.position().setQuick( 3, p_newposition.getQuick( 3 ) );
-
         return p_moveable;
     }
 
