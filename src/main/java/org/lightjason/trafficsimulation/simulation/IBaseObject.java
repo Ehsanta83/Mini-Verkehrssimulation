@@ -165,7 +165,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * @tparam T agent type
      * @todo can we add a naming method, which can generate unique names for each agent?
      */
-    protected static abstract class IBaseGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T>
+    protected abstract static class IBaseGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T>
     {
         protected final IEnvironment m_environment;
 
@@ -177,7 +177,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
          * @throws Exception on any error
          */
         protected IBaseGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                                  final IAggregation p_aggregation, final Class<T> p_agentclass, final IEnvironment p_environment
+                                  final IAggregation p_aggregation, final Class<? extends T> p_agentclass, final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_agentclass ) ).collect( Collectors.toSet() ), p_aggregation );
