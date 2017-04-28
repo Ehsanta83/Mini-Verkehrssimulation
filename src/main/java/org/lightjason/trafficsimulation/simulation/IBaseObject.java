@@ -165,7 +165,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * @tparam T agent type
      * @todo can we add a naming method, which can generate unique names for each agent?
      */
-    protected abstract static class IBaseGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T>
+    protected abstract static class IBaseGenerator<T extends IObject<?>> extends IBaseAgentGenerator<T> implements IGenerator<T>
     {
         protected final IEnvironment m_environment;
 

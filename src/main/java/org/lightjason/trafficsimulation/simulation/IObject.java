@@ -2,6 +2,7 @@ package org.lightjason.trafficsimulation.simulation;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.agentspeak.agent.IAgent;
+import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.agentspeak.language.ILiteral;
 
 import java.util.stream.Stream;
@@ -41,5 +42,15 @@ public interface IObject<T extends IAgent<?>> extends IAgent<T>
      * @return position
      */
     DoubleMatrix1D position();
+
+    /**
+     * generator interface
+     *
+     * @tparam T element generator
+     */
+    interface IGenerator<T extends IObject<?>> extends IAgentGenerator<T>
+    {
+
+    }
 
 }
