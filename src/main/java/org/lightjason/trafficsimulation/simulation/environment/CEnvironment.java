@@ -2,15 +2,12 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -18,8 +15,9 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Map;
 import java.util.stream.Stream;
 
 
@@ -42,6 +40,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * matrix with agents positions
      */
     private final ObjectMatrix2D m_physical;
+    /**
+     * map of the areas
+     */
+    private final Map<String, CArea> m_areas;
 
     /**
      * ctor
@@ -65,6 +67,13 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_routing = p_routing;
         m_metainformation = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
         m_physical = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
+        m_areas = new HashMap<>();
+    }
+
+    @Override
+    public final void addArea( final CArea p_area )
+    {
+        m_areas.put( p_area.name(), p_area );
     }
 
     @Override
@@ -92,6 +101,19 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @SuppressWarnings( "unchecked" )
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
+        m_areas.forEach( ( p_name, p_area ) ->
+            {
+                if( p_area.isInside( p_newposition ) )
+                {
+                    p_area.addPhysical( p_moveable );
+                }
+                else
+                {
+                    p_area.removePhysical( p_moveable );
+                }
+            }
+
+        );
         return p_moveable;
     }
 

@@ -46,6 +46,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      */
     protected DoubleMatrix1D m_position;
     /**
+     * environment reference
+     */
+    protected final IEnvironment m_environment;
+    /**
      * functor definition
      */
     private final String m_functor;
@@ -53,10 +57,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * name of the object
      */
     private final String m_name;
-    /**
-     * environment reference
-     */
-    private final IEnvironment m_environment;
     /**
      * reference to external beliefbase
      */

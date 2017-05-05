@@ -16,7 +16,12 @@ import java.util.stream.Stream;
  */
 public interface IEnvironment extends IObject<IEnvironment>
 {
-
+    /**
+     * add an area to the environment
+     *
+     * @param p_area area
+     */
+    void addArea( final CArea p_area );
     /**
      * calculate route
      *

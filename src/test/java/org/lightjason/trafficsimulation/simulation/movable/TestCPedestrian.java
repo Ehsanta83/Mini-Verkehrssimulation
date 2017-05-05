@@ -33,6 +33,7 @@ public class TestCPedestrian extends IBaseTest
     public final void initialize() throws Exception
     {
         initializeenvironment();
+        /*
         m_pedestriangenerator = generator(
             EObjectFactory.PEDESTRIAN,
             "src/test/resources/pedestrian.asl",
@@ -40,6 +41,7 @@ public class TestCPedestrian extends IBaseTest
             new double[]{5, 0.1},
             new double[]{7, 0.1}
         );
+        */
     }
 
     /**
