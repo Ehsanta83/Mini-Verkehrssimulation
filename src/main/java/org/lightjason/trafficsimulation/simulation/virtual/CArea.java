@@ -8,6 +8,8 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
@@ -20,6 +22,7 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -88,8 +91,8 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     public boolean isInside( final DoubleMatrix1D p_position )
     {
-        return ( ( ( p_position.get( 0 ) - m_position.get( 0 ) ) >= 0 ) && ( ( p_position.get( 2 ) - m_position.get( 2 ) ) <= 0 )
-            && ( ( p_position.get( 1 ) - m_position.get( 1 ) ) >= 0 ) && ( ( p_position.get( 3 ) - m_position.get( 3 ) ) <= 0 ) );
+        return ( ( p_position.get( 0 ) - m_position.get( 0 ) ) >= 0 ) && ( ( p_position.get( 2 ) - m_position.get( 2 ) ) <= 0 )
+            && ( ( p_position.get( 1 ) - m_position.get( 1 ) ) >= 0 ) && ( ( p_position.get( 3 ) - m_position.get( 3 ) ) <= 0 );
     }
 
     /**
@@ -99,19 +102,26 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     public void addPhysical( final IMoveable p_physical )
     {
-        m_physical.add( p_physical );
+        if ( this.isInside( p_physical.position() ) )
+        {
+            m_physical.add( p_physical );
+            this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "addphysical", CRawTerm.from( p_physical ) ) ) );
+        }
     }
 
-    /**
-     * remove a physical agent from the area
-     *
-     * @param p_physical physical agent
-     */
-    public void removePhysical( final IMoveable p_physical )
+    @Override
+    public CArea call() throws Exception
     {
-        m_physical.remove( p_physical );
+        m_physical.stream()
+            .filter( i -> !this.isInside( i.position() ) )
+            .forEach( i -> this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) ) );
+        m_physical.removeAll(
+            m_physical.stream()
+                .filter( i -> !this.isInside( i.position() ) )
+                .collect( Collectors.toSet() )
+        );
+        return super.call();
     }
-
 
     /**
      * get area type
