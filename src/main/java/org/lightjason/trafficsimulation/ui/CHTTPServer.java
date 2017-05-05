@@ -1,4 +1,4 @@
-package org.lightjason.trafficsimulation;
+package org.lightjason.trafficsimulation.ui;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.server.Server;
@@ -6,6 +6,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.lightjason.rest.CApplication;
+import org.lightjason.trafficsimulation.CCommon;
+import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.simulation.IObject;
 
 import java.awt.*;

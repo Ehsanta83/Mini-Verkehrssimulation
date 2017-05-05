@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.math.EDistributionFactory;
@@ -22,7 +23,7 @@ public class TestCPedestrian extends IBaseTest
     /**
      * area generator
      */
-    private IAgentGenerator m_pedestriangenerator;
+    private IAgentGenerator<CPedestrian> m_pedestriangenerator;
 
     /**
      * initialize pedestrian
@@ -32,14 +33,7 @@ public class TestCPedestrian extends IBaseTest
     @Before
     public final void initialize() throws Exception
     {
-        initializeenvironment();
-        m_pedestriangenerator = generator(
-            EObjectFactory.PEDESTRIAN,
-            "src/test/resources/pedestrian.asl",
-            EDistributionFactory.NORMAL,
-            new double[]{5, 0.1},
-            new double[]{7, 0.1}
-        );
+        //m_pedestriangenerator = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN );
     }
 
     /**
@@ -50,18 +44,13 @@ public class TestCPedestrian extends IBaseTest
     @Test
     public final void testagentcall() throws Exception
     {
-        final CPedestrian l_pedestrian = (CPedestrian) m_pedestriangenerator.generatesingle();
+        Assume.assumeNotNull( m_pedestriangenerator );
 
-        try
-        {
-            l_pedestrian.call();
-        }
-        catch ( final Exception l_exception )
-        {
-            l_exception.printStackTrace();
-            Assert.assertTrue( false );
-        }
-        System.out.println( l_pedestrian.literal().collect( Collectors.toSet() ) );
+        System.out.println(
+            executeagent(
+                m_pedestriangenerator.generatesingle()
+            ).literal().collect( Collectors.toSet() )
+        );
     }
 
 

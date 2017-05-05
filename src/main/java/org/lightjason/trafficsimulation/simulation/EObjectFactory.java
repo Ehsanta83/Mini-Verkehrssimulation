@@ -47,8 +47,7 @@ public enum EObjectFactory
      * @throws Exception on any error
      */
     public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
-                                                                 final IAggregation p_aggregation, final IEnvironment p_environment,
-                                                                 final Object... p_arguments
+                                                                 final IAggregation p_aggregation, final IEnvironment p_environment
     ) throws Exception
     {
         switch ( this )
@@ -60,16 +59,16 @@ public enum EObjectFactory
                 return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             case PEDESTRIAN:
-                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
+                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             case PEDESTRIAN_TRAFFICLIGHT:
-                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
+                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             case VEHICLE:
-                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
+                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             case VEHICLE_TRAFFICLIGHT:
-                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment, p_arguments );
+                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
 
             default:
                 throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );

@@ -117,7 +117,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment, p_arguments ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )
@@ -163,6 +163,41 @@ public abstract class IBaseTest
             return null;
         }
     }
+
+    /**
+     * executes a stream of agents
+     *
+     * @param p_agent agent stream
+     * @tparam T agent type
+     * @return agent stream
+     */
+    protected static <T extends IAgent<?>> Stream<T> executeagent( final Stream<T> p_agent )
+    {
+        return p_agent.map( IBaseTest::executeagent );
+    }
+
+    /**
+     * execute a single agent
+     *
+     * @param p_agent agent
+     * @tparam T agent type
+     * @return agent
+     */
+    protected static <T extends IAgent<?>> T executeagent( final T p_agent )
+    {
+        try
+        {
+            p_agent.call();
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace();
+            assertTrue( false );
+        }
+        return p_agent;
+    }
+
+
 
     /**
      * invoke all test manually

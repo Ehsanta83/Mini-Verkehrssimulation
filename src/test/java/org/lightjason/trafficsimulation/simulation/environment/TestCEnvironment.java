@@ -34,15 +34,7 @@ public final class TestCEnvironment extends IBaseTest
     @Before
     public final void initilize() throws Exception
     {
-        m_pedestrian = (CPedestrian) generator(
-            EObjectFactory.PEDESTRIAN,
-            "src/test/resources/pedestrian.asl",
-            EDistributionFactory.NORMAL,
-            new double[]{5, 0.1},
-            new double[]{7, 0.1}
-        ).generatesingle();
-
-        System.out.println( MessageFormat.format( "pedestrian position: [{0},{1}]", m_pedestrian.position().get( 0 ), m_pedestrian.position().get( 1 ) ) );
+        this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN );
     }
 
     /**

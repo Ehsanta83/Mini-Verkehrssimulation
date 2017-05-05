@@ -32,16 +32,15 @@ public final class TestCVehicle extends IBaseTest
 
     /**
      * pedestrian test
-     *
-     * @throws Exception on execution error
      */
     @Test
-    public final void test() throws Exception
+    public final void test()
     {
         Assume.assumeNotNull( m_vehicle );
 
-        m_vehicle.call();
-        System.out.println( m_vehicle.literal().collect( Collectors.toSet() ) );
+        System.out.println(
+            executeagent( m_vehicle ).literal().collect( Collectors.toSet() )
+        );
     }
 
 

@@ -59,16 +59,6 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
      */
     public static final class CGenerator extends IGenerator<CPedestrian>
     {
-        /**
-         * distribution for X axis
-         */
-        private final AbstractRealDistribution m_xdistribution;
-        /**
-         * distribution for Y axis
-         */
-        private final AbstractRealDistribution m_ydistribution;
-
-
 
         /**
          * ctor
@@ -81,30 +71,22 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
          */
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
                               final IAggregation p_aggregation,
-                              final IEnvironment p_environment, final Object... p_arguments
+                              final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
-            m_xdistribution = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[1] );
-            m_ydistribution = ( (EDistributionFactory) p_arguments[0] ).generate( (double[]) p_arguments[2] );
         }
 
         @Override
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
-            final int l_xposition = (int) m_xdistribution.sample();
-            final int l_yposition = (int) m_ydistribution.sample();
-            // pedestrian take just one cell
-            final DoubleMatrix1D l_position = new DenseDoubleMatrix1D( new double[]{l_xposition, l_yposition, l_xposition, l_yposition} );
             final CPedestrian l_pedestrian = new CPedestrian(
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                l_position
+                new DenseDoubleMatrix1D( 2 )
             );
-
-            //m_environment.positioningAMoveble( l_pedestrian );
 
             return new ImmutablePair<>( l_pedestrian, Stream.of( FUNCTOR, GROUP ) );
         }
