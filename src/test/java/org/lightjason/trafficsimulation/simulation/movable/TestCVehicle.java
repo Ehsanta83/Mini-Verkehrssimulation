@@ -22,26 +22,28 @@ public final class TestCVehicle extends IBaseTest
 
     /**
      * initialize vehicle
+     *
+     * @throws Exception on any error
      */
     @Before
-    public final void initialize()
+    public final void initialize() throws Exception
     {
+        this.initializeenvironment();
         m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
     }
 
 
     /**
      * pedestrian test
-     *
-     * @throws Exception on execution error
      */
     @Test
-    public final void test() throws Exception
+    public final void test()
     {
         Assume.assumeNotNull( m_vehicle );
 
-        m_vehicle.call();
-        System.out.println( m_vehicle.literal().collect( Collectors.toSet() ) );
+        System.out.println(
+            executeagent( m_vehicle ).literal().collect( Collectors.toSet() )
+        );
     }
 
 
