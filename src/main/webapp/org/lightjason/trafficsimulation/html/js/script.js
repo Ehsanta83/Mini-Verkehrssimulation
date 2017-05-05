@@ -53,15 +53,25 @@ jQuery(function() {
     });
 
     // initialize game-engine
+    // http://rotates.org/phaser/iso/
+    // https://gamedevacademy.org/html5-phaser-tutorial-top-down-games-with-tiled/
+    // https://developer.tizen.org/community/tip-tech/creating-isometric-world-phaser.js-using-isometric-plugin
     new Phaser.Game(
-        800, 600, Phaser.CANVAS, "screen",
+        800, 600, Phaser.AUTO, "screen",
         { create : function() {
-
+            /*
+            this.plugins.add( new Phaser.Plugin.Isometric(this) );
+            this.world.setBounds(0, 0, 2048, 1024);
+            this.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
+            this.iso.anchor.setTo(0.5, 0);
+            */
+            /*
             this.add.text(
                 this.world.centerX-300, 0,
                 "Mini-Traffic Simulation",
                 { font: "65px Arial", fill: "#ff0044", align: "center" }
             );
+            */
 
         }
     });
