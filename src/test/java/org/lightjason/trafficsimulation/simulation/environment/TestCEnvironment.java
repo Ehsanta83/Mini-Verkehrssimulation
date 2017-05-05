@@ -3,6 +3,7 @@ package org.lightjason.trafficsimulation.simulation.environment;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.math.EDistributionFactory;
@@ -33,9 +34,6 @@ public final class TestCEnvironment extends IBaseTest
     @Before
     public final void initilize() throws Exception
     {
-        initializeenvironment();
-        initializeArea();
-
         m_pedestrian = (CPedestrian) generator(
             EObjectFactory.PEDESTRIAN,
             "src/test/resources/pedestrian.asl",
@@ -53,67 +51,20 @@ public final class TestCEnvironment extends IBaseTest
      * @throws Exception on execution error
      */
     @Test
+    @Ignore
     public final void testEnvironmentCall() throws Exception
     {
         m_environment.call();
     }
 
     /**
-     * are grid test
-     *
-     * @throws Exception on execution error
-     */
-    @Test
-    public final void testAreaGrid()
-    {
-        printAreaGrid();
-    }
-
-    /**
-     * test moveable grid
-     */
-    @Test
-    public final void testMoveableGrid()
-    {
-        printMoveableGrid();
-    }
-
-    /**
      * test moving pedestrian
      */
     @Test
+    @Ignore
     public final void testMovingPedestrian()
     {
-        printMoveableGrid();
         m_environment.move( m_pedestrian, new DenseDoubleMatrix1D( new double[]{1, 2, 1, 2} ) );
-        printMoveableGrid();
-    }
-
-    /**
-     * print area grid
-     */
-    private void printAreaGrid()
-    {
-        final ObjectMatrix2D l_areagrid = m_environment.areagrid();
-        IntStream.rangeClosed( 1, l_areagrid.rows() ).forEach( i ->
-        {
-            IntStream.rangeClosed( 1, l_areagrid.columns() ).forEach( j ->
-            {
-                System.out.println( "[" + i + ", " + j + "]: " + l_areagrid.getQuick( i, j ) );
-            } );
-        } );
-    }
-
-    private void printMoveableGrid()
-    {
-        final ObjectMatrix2D l_agentgrid = m_environment.moveablegrid();
-        IntStream.rangeClosed( 1, l_agentgrid.rows() ).forEach( i ->
-        {
-            IntStream.rangeClosed( 1, l_agentgrid.columns() ).forEach( j ->
-            {
-                System.out.println( "[" + i + ", " + j + "]: " + l_agentgrid.getQuick( i, j ) );
-            } );
-        } );
     }
 
     /**

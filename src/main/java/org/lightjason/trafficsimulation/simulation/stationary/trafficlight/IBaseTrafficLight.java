@@ -9,7 +9,6 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -73,7 +72,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      *
      * @bug fix documentation
      */
-    protected abstract static class IGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseObjectGenerator<T>
+    protected abstract static class IGenerator<T extends IBaseTrafficLight<?, ?>> extends IBaseGenerator<T>
     {
 
 

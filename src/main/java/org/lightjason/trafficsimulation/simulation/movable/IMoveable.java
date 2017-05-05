@@ -13,10 +13,5 @@ import java.util.stream.Stream;
  */
 public interface IMoveable<T extends IMoveable<?>> extends IObject<T>
 {
-    /**
-     * get the areas in which a moveable is allowed to move
-     *
-     * @return stream of areas
-     */
-    Stream<EArea> allowedareas();
+
 }
