@@ -53,14 +53,17 @@ jQuery(function() {
     });
 
     // initialize game-engine
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, "screen", { create: create });
-    function create() {
+    new Phaser.Game(
+        800, 600, Phaser.CANVAS, "screen",
+        { create : function() {
 
-        var text = "Mini-Traffic Simulation.";
-        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+            this.add.text(
+                this.world.centerX-300, 0,
+                "Mini-Traffic Simulation",
+                { font: "65px Arial", fill: "#ff0044", align: "center" }
+            );
 
-        var t = game.add.text(game.world.centerX-300, 0, text, style);
-
-    }
+        }
+    });
 
 });
