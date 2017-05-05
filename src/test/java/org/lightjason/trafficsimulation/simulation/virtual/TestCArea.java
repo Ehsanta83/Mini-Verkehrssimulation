@@ -7,7 +7,7 @@ import org.lightjason.trafficsimulation.IBaseTest;
 /**
  * test area
  */
-public class TestCArea extends IBaseTest
+public final class TestCArea extends IBaseTest
 {
 
     /**
