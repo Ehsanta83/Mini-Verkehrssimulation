@@ -24,11 +24,11 @@
 package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import org.lightjason.trafficsimulation.IBaseTest;
-import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.lightjason.trafficsimulation.IBaseTest;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 
 import java.util.stream.Collectors;
 

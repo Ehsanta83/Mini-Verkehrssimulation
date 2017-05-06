@@ -38,7 +38,6 @@ import org.lightjason.trafficsimulation.simulation.algorithm.routing.CJPSPlus;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +71,6 @@ public final class CMain
      * main method
      *
      * @param p_args arguments
-     * @throws IOException on io errors
      * @throws Exception on URI syntax error
      */
     public static void main( final String[] p_args ) throws Exception
