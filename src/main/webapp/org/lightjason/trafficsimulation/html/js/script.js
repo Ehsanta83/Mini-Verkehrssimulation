@@ -53,9 +53,6 @@ jQuery(function() {
     });
 
     // initialize game-engine
-    // http://rotates.org/phaser/iso/
-    // https://gamedevacademy.org/html5-phaser-tutorial-top-down-games-with-tiled/
-    // https://developer.tizen.org/community/tip-tech/creating-isometric-world-phaser.js-using-isometric-plugin
     new Phaser.Game(
         800, 600, Phaser.AUTO, "screen",
         { create : function() {
