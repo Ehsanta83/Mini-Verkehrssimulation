@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- defines the main project information -->
-	<groupId>org.lightjason</groupId>
+	<groupId>org.lightjason.examples</groupId>
 	<artifactId>trafficsimulation</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -12,6 +12,42 @@
 	<!-- project meta information -->
 	<name>Multi-Agent Traffic Simulation</name>
 	<description>Micro-based traffic simulation based on the multi-agent BDI framework LightJason AgentSpeak(L++)</description>
+
+	<organization>
+		<name>LightJason</name>
+		<url>http://lightjason.org</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License 3</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.en.html</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>ehsan</id>
+			<name>Ehsan Tatasadi</name>
+			<email>ehsan.tatasadi@tu-clausthal.de</email>
+			<timezone>Europe/Berlin</timezone>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+
+		<developer>
+			<id>flashpixx</id>
+			<name>Philipp Kraus</name>
+			<email>philipp@lightjason.org</email>
+			<timezone>Europe/Berlin</timezone>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
 
 	<!-- project build configuration -->
 	<prerequisites>
@@ -37,9 +73,7 @@
 	<!-- defines any project dependencies, the items can be found on http://mvnrepository.com/ -->
 	<dependencies>
 
-		<!-- must installed manually into the local Maven repository
-             https://github.com/LightJason/AgentSpeak
-        -->
+		<!-- LightJason -->
 		<dependency>
 			<groupId>org.lightjason</groupId>
 			<artifactId>rest</artifactId>
@@ -165,8 +199,6 @@
 				<version>3.7</version>
 				<configuration>
 					<excludes>
-						<exclude>**/CASTVisitorAgent.java</exclude>
-						<exclude>**/CASTVisitorPlanBundle.java</exclude>
 						<exclude>**/generated/*.java</exclude>
 					</excludes>
 					<linkXRef>false</linkXRef>
@@ -207,6 +239,12 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+
 		</plugins>
 
 	</reporting>
@@ -214,7 +252,7 @@
 	<!-- defines the build settings -->
 	<build>
 		<!-- default goal is set to package and checking dependency & plugin updates -->
-		<defaultGoal>install versions:display-dependency-updates versions:display-plugin-updates versions:display-property-updates</defaultGoal>
+		<defaultGoal>package versions:display-dependency-updates versions:display-plugin-updates versions:display-property-updates</defaultGoal>
 
 		<!-- include resource directory with replacing configuration variables -->
 		<resources>
@@ -302,7 +340,6 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <!-- here is the class defined, which has got the "public static coid main( final String[] p_args )" class -->
                                         <Main-Class>org.lightjason.trafficsimulation.CMain</Main-Class>
                                     </manifestEntries>
                                 </transformer>
@@ -311,6 +348,33 @@
                     </execution>
                 </executions>
             </plugin>
+
+			<!-- License -->
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<header>src/analysis/license/licensetemplate.txt</header>
+					<useDefaultExcludes>true</useDefaultExcludes>
+					<headerDefinitions>
+						<headerDefinition>src/analysis/license/style.xml</headerDefinition>
+					</headerDefinitions>
+					<excludes>
+						<exclude>**/*.txt</exclude>
+						<exclude>**/*.yml</exclude>
+						<exclude>**/*.md</exclude>
+						<exclude>**/*.htm</exclude>
+						<exclude>**/*.doxyfile</exclude>
+						<exclude>**/*.xslt</exclude>
+						<exclude>target/**</exclude>
+					</excludes>
+					<mapping>
+						<g4>javadoc_style</g4>
+						<asl>javadoc_style</asl>
+					</mapping>
+				</configuration>
+			</plugin>
 
 			<!-- on the command "mvn clean" we clean-up some additional files -->
 			<plugin>
