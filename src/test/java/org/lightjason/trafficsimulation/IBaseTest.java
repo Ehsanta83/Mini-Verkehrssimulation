@@ -3,6 +3,7 @@ package org.lightjason.trafficsimulation;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Assert;
+import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
@@ -95,74 +96,6 @@ public abstract class IBaseTest
     }
 
     /**
-     * initialize area from configuration
-     */
-    public final void initializeArea()
-    {
-        loadconfiguration();
-
-        final List<Map<String, ?>> l_areaconfiguration = CConfiguration.INSTANCE.get( "area" );
-        final IAgentGenerator l_areagenerator = generator( EObjectFactory.AREA,  "src/test/resources/area.asl" );
-        l_areaconfiguration.forEach( i ->
-            {
-                try
-                {
-                    l_areagenerator.generatesingle(
-                        new DenseDoubleMatrix1D(
-                            Stream.concat(
-                                ( (List<Integer>) i.get( "leftbottom" ) ).stream(),
-                                ( (List<Integer>) i.get( "righttop" ) ).stream() )
-                                .mapToDouble( k -> k )
-                                .toArray() ),
-                        true,
-                        EArea.from( (String) i.get( "type" ) ),
-                        ( (List<String>) i.get( "directions" ) ).stream()
-                            .map( j -> EDirection.from( j ) )
-
-                    );
-                }
-                catch ( final Exception l_exeption )
-                {
-                    l_exeption.printStackTrace();
-                    Assert.assertTrue( false );
-                }
-            }
-        );
-    }
-
-    /**
-     * create the generator of the agent
-     *
-     * @param p_factory factory
-     * @param p_asl asl
-     * @param p_arguments arguments
-     * @return generator
-     */
-    protected final IAgentGenerator generator( final EObjectFactory p_factory, final String p_asl, final Object... p_arguments )
-    {
-        final Set<IAction> l_actions = org.lightjason.agentspeak.common.CCommon.actionsFromPackage().collect( Collectors.toSet() );
-
-        try
-            (
-                final FileInputStream l_stream = new FileInputStream( p_asl );
-            )
-        {
-            return  p_factory.generate(
-                l_stream,
-                l_actions.stream(),
-                IAggregation.EMPTY,
-                m_environment,
-                p_arguments );
-        }
-        catch ( final Exception l_exeption )
-        {
-            l_exeption.printStackTrace();
-            Assert.assertTrue( false );
-        }
-        return null;
-    }
-
-    /**
      * runs the object generation proecess
      *
      * @param p_file filename
@@ -182,7 +115,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment, p_arguments ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )
@@ -228,6 +161,41 @@ public abstract class IBaseTest
             return null;
         }
     }
+
+    /**
+     * executes a stream of agents
+     *
+     * @param p_agent agent stream
+     * @tparam T agent type
+     * @return agent stream
+     */
+    protected static <T extends IAgent<?>> Stream<T> executeagent( final Stream<T> p_agent )
+    {
+        return p_agent.map( IBaseTest::executeagent );
+    }
+
+    /**
+     * execute a single agent
+     *
+     * @param p_agent agent
+     * @tparam T agent type
+     * @return agent
+     */
+    protected static <T extends IAgent<?>> T executeagent( final T p_agent )
+    {
+        try
+        {
+            p_agent.call();
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace();
+            assertTrue( false );
+        }
+        return p_agent;
+    }
+
+
 
     /**
      * invoke all test manually
@@ -304,8 +272,14 @@ public abstract class IBaseTest
 
             p_method.invoke( this, p_arguments );
         }
+        catch ( final AssumptionViolatedException l_exception )
+        {
+        }
         catch ( final InvocationTargetException l_exception )
         {
+            if ( l_exception.getTargetException() instanceof AssumptionViolatedException )
+                return;
+
             if ( !p_method.getAnnotation( Test.class ).expected().isInstance( l_exception.getTargetException() ) )
             {
                 l_exception.getTargetException().printStackTrace();

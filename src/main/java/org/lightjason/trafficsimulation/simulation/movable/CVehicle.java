@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -28,19 +29,6 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     private static final String FUNCTOR = "vehicle";
     private static final AtomicLong COUNTER = new AtomicLong();
-    /**
-     * in which areas a vehicle allowed to move
-     */
-    private static final Stream<EArea> ALLOWED_AREAS = Stream.of( EArea.DIRECTLANE, EArea.TURNLEFTLANE, EArea.INTERSECTION );
-
-    /**
-     * width
-     */
-    private int m_width;
-    /**
-     * height
-     */
-    private int m_height;
 
     /**
      * ctor
@@ -55,7 +43,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         final DoubleMatrix1D p_position
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, new DenseDoubleMatrix1D( 2 ) );
 
     }
 
@@ -80,12 +68,6 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
 
     }
 
-    @Override
-    public Stream<EArea> allowedareas()
-    {
-        return allowedareas();
-    }
-
 
     /**
      * generator class
@@ -103,7 +85,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
          * @throws Exception on any error
          */
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions, final IAggregation p_aggregation,
-                           final IEnvironment p_environment, final Object... p_arguments
+                           final IEnvironment p_environment
         ) throws Exception
         {
             super( p_stream, p_actions, p_aggregation, CVehicle.class, p_environment );

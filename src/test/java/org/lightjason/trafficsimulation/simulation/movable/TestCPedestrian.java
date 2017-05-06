@@ -1,9 +1,8 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
-import org.junit.Assert;
-import org.lightjason.agentspeak.generator.IAgentGenerator;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import org.junit.Assume;
 import org.lightjason.trafficsimulation.IBaseTest;
-import org.lightjason.trafficsimulation.math.EDistributionFactory;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +15,13 @@ import java.util.stream.Collectors;
  *
  * @todo create test cases
  */
-public class TestCPedestrian extends IBaseTest
+public final class TestCPedestrian extends IBaseTest
 {
 
     /**
      * area generator
      */
-    private IAgentGenerator m_pedestriangenerator;
+    private CPedestrian m_pedestrian;
 
     /**
      * initialize pedestrian
@@ -32,14 +31,8 @@ public class TestCPedestrian extends IBaseTest
     @Before
     public final void initialize() throws Exception
     {
-        initializeenvironment();
-        m_pedestriangenerator = generator(
-            EObjectFactory.PEDESTRIAN,
-            "src/test/resources/pedestrian.asl",
-            EDistributionFactory.NORMAL,
-            new double[]{5, 0.1},
-            new double[]{7, 0.1}
-        );
+        this.initializeenvironment();
+        m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
     }
 
     /**
@@ -50,18 +43,13 @@ public class TestCPedestrian extends IBaseTest
     @Test
     public final void testagentcall() throws Exception
     {
-        final CPedestrian l_pedestrian = (CPedestrian) m_pedestriangenerator.generatesingle();
+        Assume.assumeNotNull( m_pedestrian );
 
-        try
-        {
-            l_pedestrian.call();
-        }
-        catch ( final Exception l_exception )
-        {
-            l_exception.printStackTrace();
-            Assert.assertTrue( false );
-        }
-        System.out.println( l_pedestrian.literal().collect( Collectors.toSet() ) );
+        System.out.println(
+            executeagent(
+                m_pedestrian
+            ).literal().collect( Collectors.toSet() )
+        );
     }
 
 

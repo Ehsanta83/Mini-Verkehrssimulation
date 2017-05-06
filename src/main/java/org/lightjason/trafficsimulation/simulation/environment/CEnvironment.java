@@ -2,7 +2,6 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -18,9 +17,11 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -32,33 +33,21 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     private static final String FUNCTOR = "environment";
 
     /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger( CEnvironment.class.getName() );
-    /**
      * routing algorithm
      */
     private final IRouting m_routing;
     /**
-     * row number
-     */
-    private final int m_row;
-    /**
-     * column number
-     */
-    private final int m_column;
-    /**
-     * cell size
-     */
-    private final int m_cellsize;
-    /**
      * matrix with area positions
      */
-    private final ObjectMatrix2D m_areagrid;
+    private final ObjectMatrix2D m_metainformation;
     /**
      * matrix with agents positions
      */
-    private final ObjectMatrix2D m_moveablegrid;
+    private final ObjectMatrix2D m_physical;
+    /**
+     * map of the areas
+     */
+    private final Map<String, CArea> m_areas;
 
     /**
      * ctor
@@ -79,53 +68,22 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
 
-        m_row = p_cellrows;
-        m_column = p_cellcolumns;
-        m_cellsize = (int) p_cellsize;
         m_routing = p_routing;
-        m_areagrid = new SparseObjectMatrix2D( m_row, m_column );
-        m_moveablegrid = new SparseObjectMatrix2D( m_row, m_column );
-    }
-
-
-
-    @Override
-    public final int row()
-    {
-        return m_row;
+        m_metainformation = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
+        m_physical = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
+        m_areas = new HashMap<>();
     }
 
     @Override
-    public final int column()
+    public final void addArea( final CArea p_area )
     {
-        return m_column;
+        m_areas.put( p_area.name(), p_area );
     }
-
-    @Override
-    public final int cellsize()
-    {
-        return m_cellsize;
-    }
-
-    @Override
-    public final ObjectMatrix2D areagrid()
-    {
-        return m_areagrid;
-    }
-
-    @Override
-    public final ObjectMatrix2D moveablegrid()
-    {
-        return m_moveablegrid;
-    }
-
-    // --- grid-access (routing & position) --------------------------------------------------------------------------------------------------------------------
-    //ToDo: change all methods with two matrices
 
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_moveablegrid, p_start, p_end );
+        return m_routing.route( m_physical, p_start, p_end );
     }
 
     @Override
@@ -144,51 +102,37 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug check parameter and generics
      */
     @Override
-    @SuppressWarnings( "unchecked" )
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
         final Supplier<Stream<Pair<Integer, Integer>>> l_newcells = () -> CCommon.inttupelstream( (int) p_newposition.get( 0 ), (int) p_newposition.get( 2 ), (int) p_newposition.get( 1 ), (int) p_newposition.get( 3 ) );
-        l_newcells.get().forEach( i ->
-            {
-                if ( !p_moveable.allowedareas().anyMatch( ( (CArea) m_areagrid.getQuick( i.getLeft(), i.getRight() ) ).type() :: equals ) )
-                {
-                    throw new RuntimeException( "Can't move: Forbidden area." );
-                }
-            }
-        );
-
-        l_newcells.get().forEach( i ->
-            {
-                if ( m_moveablegrid.getQuick( i.getLeft(), i.getRight() ) != null )
-                {
-                    throw new RuntimeException( "Can't move: new position occupied." );
-                }
-            }
-        );
+        l_newcells.get()
+            .filter( i -> ( ( m_physical.getQuick( i.getLeft(), i.getRight() ) != null ) && ( m_physical.getQuick( i.getLeft(), i.getRight() ) != p_moveable ) ) )
+            .findFirst()
+            .orElseThrow( () -> new RuntimeException( "Can't move: new position occupied." ) );
 
         CCommon.inttupelstream(
             (int) p_moveable.position().get( 0 ),
             (int) p_moveable.position().get( 2 ),
             (int) p_moveable.position().get( 1 ),
             (int) p_moveable.position().get( 3 )
-        ).forEach( i -> m_moveablegrid.setQuick( i.getLeft(), i.getRight(), null ) );
+        ).forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), null ) );
 
-        l_newcells.get().forEach( i -> m_moveablegrid.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
+        l_newcells.get().forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
 
         p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
         p_moveable.position().setQuick( 2, p_newposition.getQuick( 2 ) );
         p_moveable.position().setQuick( 3, p_newposition.getQuick( 3 ) );
 
+        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
+
         return p_moveable;
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public final synchronized IObject get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_moveablegrid.getQuick(
-            (int) CEnvironment.clip( p_position.get( 0 ), m_row ), (int) CEnvironment.clip( p_position.get( 1 ), m_column ) );
+        return (IObject) m_physical.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
     }
 
     /**
@@ -211,30 +155,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized boolean empty( final DoubleMatrix1D p_position )
     {
-        final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_position.toArray() ) );
-        return m_moveablegrid.getQuick( (int) l_position.getQuick( 0 ), (int) l_position.getQuick( 1 ) ) == null;
-    }
-
-    @Override
-    public final boolean isinside( final DoubleMatrix1D p_position )
-    {
-        return ( p_position.getQuick( 0 ) >= 0 )
-               && ( p_position.getQuick( 1 ) >= 0 )
-               && ( p_position.getQuick( 0 ) < m_row )
-               && ( p_position.getQuick( 1 ) < m_column );
-    }
-
-    /**
-     * @todo change this to 4 entries
-     */
-    @Override
-    public final DoubleMatrix1D clip( final DoubleMatrix1D p_position )
-    {
-        // clip position values if needed
-        p_position.setQuick( 0, CEnvironment.clip( p_position.getQuick( 0 ), m_row ) );
-        p_position.setQuick( 1, CEnvironment.clip( p_position.getQuick( 1 ), m_column ) );
-
-        return p_position;
+        return m_physical.getQuick( (int) p_position.getQuick( 0 ), (int) p_position.getQuick( 1 ) ) == null;
     }
 
     @Override
@@ -273,44 +194,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
     }
 
-
-    @Override
-    public void positioningAnArea( final CArea p_area )
-    {
-        final DoubleMatrix1D l_position = p_area.position();
-        CCommon.inttupelstream( (int) l_position.get( 0 ), (int) l_position.get( 2 ), (int) l_position.get( 1 ), (int) l_position.get( 3 ) )
-            .forEach( i ->
-                {
-                    if ( m_areagrid.getQuick( i.getLeft(), i.getRight() ) == null )
-                    {
-                        m_areagrid.setQuick( i.getLeft(), i.getRight(), p_area );
-                    }
-                    else
-                    {
-                        throw new RuntimeException( "Overlapping of the areas is not allowed." );
-                    }
-                }
-            );
-    }
-
-    @Override
-    public void positioningAMoveble( final IMoveable p_moveable )
-    {
-        final DoubleMatrix1D l_position = p_moveable.position();
-        CCommon.inttupelstream( (int) l_position.get( 0 ), (int) l_position.get( 2 ), (int) l_position.get( 1 ), (int) l_position.get( 3 ) )
-            .forEach( i ->
-                {
-                    if ( m_moveablegrid.getQuick( i.getLeft(), i.getRight() ) == null )
-                    {
-                        m_moveablegrid.setQuick( i.getLeft(), i.getRight(), p_moveable );
-                    }
-                    else
-                    {
-                        throw new RuntimeException( "Positioning the agent is not possible. The position is occupied." );
-                    }
-                }
-            );
-    }
 
     /**
      * generator of the environment

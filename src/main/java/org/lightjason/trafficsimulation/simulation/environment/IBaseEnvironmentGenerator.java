@@ -4,7 +4,7 @@ import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.CHTTPServer;
+import org.lightjason.trafficsimulation.ui.CHTTPServer;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 
 import java.io.InputStream;

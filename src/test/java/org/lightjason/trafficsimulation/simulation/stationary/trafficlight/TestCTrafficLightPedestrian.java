@@ -24,6 +24,8 @@ public final class TestCTrafficLightPedestrian extends IBaseTest
     @Before
     public final void initialize()
     {
+
+
         m_pedestrianlight = this.generate( "src/test/resources/pedestrianlight.asl",
             EObjectFactory.PEDESTRIAN_TRAFFICLIGHT,
             new DenseDoubleMatrix1D( new double[]{0, 0} ),

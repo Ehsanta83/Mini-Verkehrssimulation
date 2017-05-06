@@ -8,17 +8,22 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IBaseObjectGenerator;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
+import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -46,7 +51,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * in which direction one can move in this area
      */
     private final Stream<EDirection> m_directions;
-
+    /**
+     * a set of the phisical agents in the area
+     */
+    private final Set<IMoveable> m_physical;
 
     /**
      * ctor
@@ -62,6 +70,8 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         m_passable = p_passable;
         m_type = new AtomicReference<>( p_type );
         m_directions = p_directions;
+        m_physical = new HashSet();
+        m_environment.addArea( this );
     }
 
     @Override
@@ -75,6 +85,46 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     }
 
     /**
+     * check if a position is inside the area
+     *
+     * @param p_position position
+     * @return boolean
+     */
+    public boolean isInside( final DoubleMatrix1D p_position )
+    {
+        return ( ( p_position.get( 0 ) - m_position.get( 0 ) ) >= 0 ) && ( ( p_position.get( 2 ) - m_position.get( 2 ) ) <= 0 )
+            && ( ( p_position.get( 1 ) - m_position.get( 1 ) ) >= 0 ) && ( ( p_position.get( 3 ) - m_position.get( 3 ) ) <= 0 );
+    }
+
+    /**
+     * add a physical agent to the area
+     *
+     * @param p_physical physical agent
+     */
+    public void addPhysical( final IMoveable p_physical )
+    {
+        if ( this.isInside( p_physical.position() ) )
+        {
+            m_physical.add( p_physical );
+            this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "addphysical", CRawTerm.from( p_physical ) ) ) );
+        }
+    }
+
+    @Override
+    public CArea call() throws Exception
+    {
+        m_physical.stream()
+            .filter( i -> !this.isInside( i.position() ) )
+            .forEach( i -> this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) ) );
+        m_physical.removeAll(
+            m_physical.stream()
+                .filter( i -> !this.isInside( i.position() ) )
+                .collect( Collectors.toSet() )
+        );
+        return super.call();
+    }
+
+    /**
      * get area type
      * @return type
      */
@@ -85,8 +135,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 
     /**
      * generator class
+     *
+     * @bug environment position setter must be refactored
      */
-    public static final class CGenerator extends IBaseObjectGenerator<CArea>
+    public static final class CGenerator extends IBaseGenerator<CArea>
     {
         /**
          * ctor
@@ -120,7 +172,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 (Stream<EDirection>) p_data[3]
             );
 
-            m_environment.positioningAnArea( l_area );
+            //m_environment.positioningAnArea( l_area );
 
             return new ImmutablePair<>( l_area, Stream.of( FUNCTOR ) );
         }

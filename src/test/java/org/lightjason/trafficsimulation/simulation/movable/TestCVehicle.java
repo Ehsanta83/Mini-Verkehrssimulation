@@ -22,26 +22,39 @@ public final class TestCVehicle extends IBaseTest
 
     /**
      * initialize vehicle
+     *
+     * @throws Exception on any error
      */
     @Before
-    public final void initialize()
+    public final void initialize() throws Exception
     {
-        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
+        this.initializeenvironment();
+        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE, new DenseDoubleMatrix1D( new double[]{35, 1, 35, 2} ) );
     }
 
 
     /**
-     * pedestrian test
-     *
-     * @throws Exception on execution error
+     * vehicle test
      */
     @Test
-    public final void test() throws Exception
+    public final void test()
     {
         Assume.assumeNotNull( m_vehicle );
 
-        m_vehicle.call();
-        System.out.println( m_vehicle.literal().collect( Collectors.toSet() ) );
+        System.out.println(
+            executeagent( m_vehicle ).literal().collect( Collectors.toSet() )
+        );
+    }
+
+    /**
+     * test moving a vehicle
+     */
+    @Test
+    public final void testMoving()
+    {
+        System.out.println( m_vehicle.position() );
+        m_environment.move( m_vehicle, new DenseDoubleMatrix1D( new double[]{35, 2, 35, 3} ) );
+        System.out.println( m_vehicle.position() );
     }
 
 
