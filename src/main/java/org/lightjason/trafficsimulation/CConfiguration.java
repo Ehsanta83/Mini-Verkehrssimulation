@@ -29,6 +29,8 @@ import org.lightjason.agentspeak.beliefbase.view.IView;
 import org.lightjason.agentspeak.beliefbase.view.IViewGenerator;
 import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.common.IPath;
+import org.lightjason.agentspeak.language.CLiteral;
+import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -42,6 +44,8 @@ import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
@@ -220,9 +224,18 @@ public final class CConfiguration
      * @tparam T returning type
      * @return value or null
      */
+    @SuppressWarnings( "unchecked" )
     public final <T> T get( final String... p_path )
     {
-        return recursivedescent( m_configuration, p_path );
+        return (T) recursivedescent( m_configuration, p_path ).findFirst()
+                                                              .map( Map.Entry::getValue )
+                                                              .orElseThrow(
+                                                                  () -> new RuntimeException(
+                                                                            MessageFormat.format(
+                                                                                "path {0] not found",
+                                                                                Arrays.toString( p_path )
+                                                                            ) )
+                                                              );
     }
 
 
@@ -235,33 +248,45 @@ public final class CConfiguration
      * @tparam T returning type
      * @return value / default vaue
      */
+    @SuppressWarnings( "unchecked" )
     public final <T> T getOrDefault( final T p_default, final String... p_path )
     {
-        final T l_result = recursivedescent( m_configuration, p_path );
-        return l_result == null
-               ? p_default
-               : l_result;
+        return (T) recursivedescent( m_configuration, p_path ).findFirst().map( Map.Entry::getValue ).orElseGet( () -> p_default );
+    }
+
+    /**
+     * returns a beliefbase view
+     *
+     * @param p_parent parent view
+     * @return new view
+     */
+    public final IView<IEnvironment> view( final IView<IEnvironment> p_parent )
+    {
+        return new CView( p_parent );
     }
 
 
     /**
      * recursive descent
      *
-     * @param p_map configuration map
-     * @param p_path path
-     * @tparam T returning type parameter
-     * @return value
+     * @param p_map start map
+     * @param p_path path of the item
+     * @return stream of items
      */
     @SuppressWarnings( "unchecked" )
-    private static <T> T recursivedescent( final Map<String, ?> p_map, final String... p_path )
+    private static Stream<Map.Entry<String, Object>> recursivedescent( final Map<String, ?> p_map, final String... p_path )
     {
-        if ( ( p_path == null ) || ( p_path.length == 0 ) )
-            throw new RuntimeException( "path need not to be empty" );
+        final String l_key = p_path[0].toLowerCase( Locale.ROOT );
+        final Object l_data =  p_map.get( l_key );
+        return ( p_path.length == 1 )
 
-        final Object l_data = p_map.get( p_path[0].toLowerCase( Locale.ROOT ) );
-        return ( p_path.length == 1 ) || ( l_data == null )
-               ? (T) l_data
-               : (T) recursivedescent( (Map<String, ?>) l_data, Arrays.copyOfRange( p_path, 1, p_path.length ) );
+               ? l_data instanceof Map<?, ?>
+                 ? ( (Map<String, Object>) l_data ).entrySet().stream()
+                 : Stream.of( new AbstractMap.SimpleImmutableEntry<>( l_key, l_data ) )
+
+               : l_data instanceof Map<?, ?>
+                 ? recursivedescent( (Map<String, Object>) l_data, Arrays.copyOfRange( p_path, 1, p_path.length ) )
+                 : Stream.of();
     }
 
 
@@ -365,8 +390,10 @@ public final class CConfiguration
         @Override
         public final Stream<ILiteral> stream( final IPath... p_path )
         {
-
-            return Stream.of();
+            return ( p_path == null ) || ( p_path.length == 1 )
+                   ? recursivedescent( m_configuration ).map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) )
+                   : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, i.stream().toArray( String[]::new ) ) )
+                                            .map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) );
         }
 
         @Override
