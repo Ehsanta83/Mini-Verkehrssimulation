@@ -52,7 +52,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     private final Stream<EDirection> m_directions;
     /**
-     * a set of the phisical agents in the area
+     * a set of the physical agents in the area
      */
     private final Set<IMoveable> m_physical;
 
@@ -91,8 +91,8 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     public boolean isInside( final DoubleMatrix1D p_position )
     {
-        return ( ( p_position.get( 0 ) - m_position.get( 0 ) ) >= 0 ) && ( ( p_position.get( 2 ) - m_position.get( 2 ) ) <= 0 )
-            && ( ( p_position.get( 1 ) - m_position.get( 1 ) ) >= 0 ) && ( ( p_position.get( 3 ) - m_position.get( 3 ) ) <= 0 );
+        return ( Math.abs( m_position.get( 0 ) - p_position.get( 0 ) + p_position.get( 2 ) / 2 ) < m_position.get( 2 ) )
+            && ( Math.abs( m_position.get( 1 ) - p_position.get( 1 ) + p_position.get( 3 ) / 2 ) < m_position.get( 3 ) );
     }
 
     /**
