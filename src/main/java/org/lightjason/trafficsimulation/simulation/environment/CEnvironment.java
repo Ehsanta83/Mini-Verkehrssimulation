@@ -3,13 +3,11 @@ package org.lightjason.trafficsimulation.simulation.environment;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -20,8 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -74,11 +70,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_areas = new HashMap<>();
     }
 
-    @Override
-    public final void addArea( final CArea p_area )
-    {
-        m_areas.put( p_area.name(), p_area );
-    }
 
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
@@ -104,28 +95,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
-        final Supplier<Stream<Pair<Integer, Integer>>> l_newcells = () -> CCommon.inttupelstream( (int) p_newposition.get( 0 ), (int) p_newposition.get( 2 ), (int) p_newposition.get( 1 ), (int) p_newposition.get( 3 ) );
-        l_newcells.get()
-            .filter( i -> ( ( m_physical.getQuick( i.getLeft(), i.getRight() ) != null ) && ( m_physical.getQuick( i.getLeft(), i.getRight() ) != p_moveable ) ) )
-            .findFirst()
-            .orElseThrow( () -> new RuntimeException( "Can't move: new position occupied." ) );
-
-        CCommon.inttupelstream(
-            (int) p_moveable.position().get( 0 ),
-            (int) p_moveable.position().get( 2 ),
-            (int) p_moveable.position().get( 1 ),
-            (int) p_moveable.position().get( 3 )
-        ).forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), null ) );
-
-        l_newcells.get().forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
-
-        p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
-        p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-        p_moveable.position().setQuick( 2, p_newposition.getQuick( 2 ) );
-        p_moveable.position().setQuick( 3, p_newposition.getQuick( 3 ) );
-
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
-
         return p_moveable;
     }
 

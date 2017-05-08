@@ -71,7 +71,6 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
         m_type = new AtomicReference<>( p_type );
         m_directions = p_directions;
         m_physical = new HashSet();
-        m_environment.addArea( this );
     }
 
     @Override
