@@ -31,6 +31,7 @@ import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -194,18 +195,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         }
 
         @Override
+        @SuppressWarnings( "unchecked" )
         protected final IEnvironment generate( final IAgentConfiguration<IEnvironment> p_configuration, final int p_rows, final int p_columns,
                                                final double p_cellsize,
                                                final IRouting p_routing
         )
         {
-            return new CEnvironment(
-                                     p_configuration,
-                                     p_rows,
-                                     p_columns,
-                                     p_cellsize,
-                                     p_routing
-            );
+            final IEnvironment l_agent = new CEnvironment( p_configuration, p_rows, p_columns, p_cellsize, p_routing );
+            l_agent.beliefbase().add( CConfiguration.INSTANCE.view( l_agent.beliefbase() ) );
+            return l_agent;
         }
     }
 }

@@ -32,6 +32,7 @@ import org.lightjason.agentspeak.common.IPath;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
+import org.lightjason.agentspeak.language.ITerm;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.yaml.snakeyaml.Yaml;
@@ -47,6 +48,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -407,10 +409,27 @@ public final class CConfiguration
         public final Stream<ILiteral> stream( final IPath... p_path )
         {
             return ( p_path == null ) || ( p_path.length == 0 )
-                   ? mapstream( m_configuration ).map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) )
+                   ? mapstream( m_configuration ).map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) )
                    : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, 0, i.stream().toArray( String[]::new ) ) )
-                                            .map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) );
+                                            .map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) );
         }
+
+
+        @SuppressWarnings( "unchecked" )
+        private Stream<ITerm> toterm( final Object p_value )
+        {
+            if ( p_value instanceof Collection<?> )
+                return ( (Collection<Object>) p_value ).stream().flatMap( this::toterm );
+
+            if ( p_value instanceof Map<?, ?> )
+                return ( (Map<String, Object>) p_value ).entrySet().stream().map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) );
+
+            if ( p_value instanceof Integer )
+                return Stream.of( CRawTerm.from( ( (Number) p_value ).longValue() ) );
+
+            return Stream.of( CRawTerm.from( p_value ) );
+        }
+
 
         @Override
         public final Stream<ILiteral> stream( final boolean p_negated, final IPath... p_path )
