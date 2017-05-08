@@ -113,6 +113,8 @@ public final class CMain
         // load configuration and start the http server (if possible)
         CConfiguration.INSTANCE.loadfile( l_cli.getOptionValue( "config", "" ) );
 
+        CConfiguration.INSTANCE.view( null ).stream().forEach( System.out::println );
+
         // initialize server
         CHTTPServer.initialize();
 

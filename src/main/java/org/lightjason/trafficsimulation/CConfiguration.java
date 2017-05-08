@@ -227,7 +227,7 @@ public final class CConfiguration
     @SuppressWarnings( "unchecked" )
     public final <T> T get( final String... p_path )
     {
-        return (T) recursivedescent( m_configuration, p_path ).findFirst()
+        return (T) recursivedescent( m_configuration, 0, p_path ).findFirst()
                                                               .map( Map.Entry::getValue )
                                                               .orElseThrow(
                                                                   () -> new RuntimeException(
@@ -251,7 +251,7 @@ public final class CConfiguration
     @SuppressWarnings( "unchecked" )
     public final <T> T getOrDefault( final T p_default, final String... p_path )
     {
-        return (T) recursivedescent( m_configuration, p_path ).findFirst().map( Map.Entry::getValue ).orElseGet( () -> p_default );
+        return (T) recursivedescent( m_configuration, 0, p_path ).findFirst().map( Map.Entry::getValue ).orElseGet( () -> p_default );
     }
 
     /**
@@ -267,16 +267,17 @@ public final class CConfiguration
 
 
     /**
-     * recursive descent
+     * recursive descent of a given path
      *
      * @param p_map start map
+     * @param p_index index of path
      * @param p_path path of the item
      * @return stream of items
      */
     @SuppressWarnings( "unchecked" )
-    private static Stream<Map.Entry<String, Object>> recursivedescent( final Map<String, ?> p_map, final String... p_path )
+    private static Stream<Map.Entry<String, Object>> recursivedescent( final Map<String, ?> p_map, final int p_index, final String... p_path )
     {
-        final String l_key = p_path[0].toLowerCase( Locale.ROOT );
+        final String l_key = p_path[p_index].toLowerCase( Locale.ROOT );
         final Object l_data =  p_map.get( l_key );
         return ( p_path.length == 1 )
 
@@ -285,14 +286,29 @@ public final class CConfiguration
                  : Stream.of( new AbstractMap.SimpleImmutableEntry<>( l_key, l_data ) )
 
                : l_data instanceof Map<?, ?>
-                 ? recursivedescent( (Map<String, Object>) l_data, Arrays.copyOfRange( p_path, 1, p_path.length ) )
+                 ? recursivedescent( (Map<String, Object>) l_data, p_index + 1, p_path )
                  : Stream.of();
+    }
+
+    /**
+     *
+     * @param p_map map
+     * @return stream of all items within the map
+     * @todo fix path name
+     */
+    @SuppressWarnings( "unchecked" )
+    private static Stream<Map.Entry<String, Object>> mapstream( final Map<String, Object> p_map )
+    {
+        return p_map.entrySet()
+                    .stream()
+                    .flatMap( i -> i.getValue() instanceof Map<?, ?> ? mapstream( (Map<String, Object>) i.getValue() ) : Stream.of( i ) );
     }
 
 
 
     /**
      * view of the configuration
+     * @todo literal stream with type configuration
      */
     private final class CView implements IView<IEnvironment>
     {
@@ -390,9 +406,9 @@ public final class CConfiguration
         @Override
         public final Stream<ILiteral> stream( final IPath... p_path )
         {
-            return ( p_path == null ) || ( p_path.length == 1 )
-                   ? recursivedescent( m_configuration ).map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) )
-                   : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, i.stream().toArray( String[]::new ) ) )
+            return ( p_path == null ) || ( p_path.length == 0 )
+                   ? mapstream( m_configuration ).map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) )
+                   : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, 0, i.stream().toArray( String[]::new ) ) )
                                             .map( i -> CLiteral.from( i.getKey(), CRawTerm.from( i.getValue() ) ) );
         }
 
@@ -456,14 +472,14 @@ public final class CConfiguration
         @Override
         public final boolean containsLiteral( final IPath p_path )
         {
-            final Object l_value = recursivedescent( m_configuration, p_path.stream().toArray( String[]::new ) );
+            final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
             return ( l_value != null ) && ( !( l_value instanceof Map<?, ?> ) );
         }
 
         @Override
         public final boolean containsView( final IPath p_path )
         {
-            final Object l_value = recursivedescent( m_configuration, p_path.stream().toArray( String[]::new ) );
+            final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
             return ( l_value != null ) && ( l_value instanceof Map<?, ?> );
         }
 
