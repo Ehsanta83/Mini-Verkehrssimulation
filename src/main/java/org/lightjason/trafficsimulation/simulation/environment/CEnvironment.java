@@ -108,34 +108,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     {
         if ( p_moveable.moveable( m_physical, p_newposition ) )
         {
-
+            p_moveable.move( m_physical, p_newposition );
+            m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         }
-
-
-
-        final Supplier<Stream<Pair<Integer, Integer>>> l_newcells = () -> CCommon.inttupelstream(
-            (int) ( p_newposition.get( 0 ) - p_newposition.get( 2 ) / 2 ),
-            (int) ( p_newposition.get( 0 ) + p_newposition.get( 2 ) / 2 ),
-            (int) ( p_newposition.get( 1 ) - p_newposition.get( 3 ) / 2 ),
-            (int) ( p_newposition.get( 1 ) + p_newposition.get( 3 ) / 2 )
-        );
-        l_newcells.get()
-            .filter( i -> ( m_physical.getQuick( i.getLeft(), i.getRight() ) != null ) && ( m_physical.getQuick( i.getLeft(), i.getRight() ) != p_moveable ) )
-            .findFirst()
-            .orElseThrow( () -> new RuntimeException( "Can't move: new position occupied." ) );
-
-        CCommon.inttupelstream(
-            (int) ( p_moveable.position().get( 0 ) - p_moveable.position().get( 2 ) / 2 ),
-            (int) ( p_moveable.position().get( 0 ) + p_moveable.position().get( 2 ) / 2 ),
-            (int) ( p_moveable.position().get( 1 ) - p_moveable.position().get( 3 ) / 2 ),
-            (int) ( p_moveable.position().get( 1 ) + p_moveable.position().get( 3 ) / 2 )
-        ).forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), null ) );
-
-        l_newcells.get().forEach( i -> m_physical.setQuick( i.getLeft(), i.getRight(), p_moveable ) );
-
-        p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
-        p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         return p_moveable;
     }
 
