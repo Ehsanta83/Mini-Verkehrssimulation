@@ -4,6 +4,10 @@ import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.binding.CMethodAction;
+import org.lightjason.agentspeak.agent.IAgent;
+import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.math.EDistributionFactory;
@@ -11,6 +15,9 @@ import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 

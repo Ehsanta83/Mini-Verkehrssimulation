@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.environment;
 
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
@@ -20,10 +21,10 @@ import java.util.stream.Stream;
 public abstract class IBaseEnvironmentGenerator extends IBaseAgentGenerator<IEnvironment>
 {
     public IBaseEnvironmentGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                                      final IAggregation p_aggregation
+                                      final IAggregation p_aggregation, final Class<? extends IEnvironment> p_environmentclass
     ) throws Exception
     {
-        super( p_stream, p_actions.collect( Collectors.toSet() ), p_aggregation );
+        super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_environmentclass ) ).collect( Collectors.toSet() ), p_aggregation );
     }
 
     @Override

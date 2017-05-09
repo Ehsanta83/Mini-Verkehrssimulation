@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.ObjectMatrix2D;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
@@ -35,6 +36,12 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     {
         super( p_configuration, p_environment, p_functor, p_name, p_position );
         m_size = p_size;
+    }
+
+    @Override
+    public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
+    {
+        return true;
     }
 
 
