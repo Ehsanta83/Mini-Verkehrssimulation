@@ -21,10 +21,6 @@ import java.util.stream.IntStream;
  */
 public final class TestCEnvironment extends IBaseTest
 {
-    /**
-     * pedestrian
-     */
-    private CPedestrian m_pedestrian;
 
     /**
      * initialize
@@ -34,7 +30,7 @@ public final class TestCEnvironment extends IBaseTest
     @Before
     public final void initilize() throws Exception
     {
-        this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN );
+        this.initializeenvironment();
     }
 
     /**
@@ -43,26 +39,9 @@ public final class TestCEnvironment extends IBaseTest
      * @throws Exception on execution error
      */
     @Test
-    @Ignore
     public final void testEnvironmentCall() throws Exception
     {
         m_environment.call();
-    }
-
-    /**
-     * are grid test
-     *
-     * @throws Exception on execution error
-     */
-
-    /**
-     * test moving pedestrian
-     */
-    @Test
-    @Ignore
-    public final void testMovingPedestrian()
-    {
-        m_environment.move( m_pedestrian, new DenseDoubleMatrix1D( new double[]{1, 2, 1, 2} ) );
     }
 
     /**
