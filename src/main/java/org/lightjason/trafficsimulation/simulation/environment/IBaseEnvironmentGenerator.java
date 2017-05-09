@@ -5,8 +5,8 @@ import org.lightjason.agentspeak.common.CCommon;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.ui.CHTTPServer;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
+import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
 import java.io.InputStream;
 import java.util.stream.Collectors;

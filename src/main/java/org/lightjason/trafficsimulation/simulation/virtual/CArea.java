@@ -24,12 +24,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * area class
+ * @todo check redundant call
+ * @todo check generics
+ * @todo check initialization
  */
 public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 {

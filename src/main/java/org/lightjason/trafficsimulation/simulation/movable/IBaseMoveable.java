@@ -44,6 +44,8 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      * get a stream of cells from position
      * @param p_position position
      * @return cells
+     * @todo can it be optimized with refactoring inttuple with automatic cast?
+     * @todo should be static?
      */
     private Stream<Pair<Integer, Integer>> cells( final DoubleMatrix1D p_position )
     {
@@ -55,6 +57,10 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         );
     }
 
+    /**
+     *
+     * @todo should be static ?
+     */
     @Override
     public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {
@@ -63,6 +69,10 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         );
     }
 
+    /**
+     *
+     * @todo should be static ?
+     */
     @Override
     public void move( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {

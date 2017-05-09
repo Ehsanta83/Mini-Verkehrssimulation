@@ -3,7 +3,6 @@ package org.lightjason.trafficsimulation.simulation.environment;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -12,7 +11,6 @@ import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
@@ -24,10 +22,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -102,6 +97,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @return object reference
      *
      * @bug check parameter and generics
+     * @todo change to early return call
      */
     @Override
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
@@ -185,6 +181,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @param p_file asl file
      * @param p_data data
      * @throws Exception any error
+     * @todo generator must be refactor for better file access
+     * @todo modify exception handling with agent plan failure
+     * @todo create better action naming schema
      */
     @IAgentActionFilter
     @IAgentActionName( name = "addarea" )
