@@ -13,7 +13,6 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
-import org.lightjason.trafficsimulation.simulation.virtual.EArea;
 
 import java.io.InputStream;
 import java.text.MessageFormat;

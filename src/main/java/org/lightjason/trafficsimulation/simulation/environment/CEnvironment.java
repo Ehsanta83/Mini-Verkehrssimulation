@@ -5,11 +5,14 @@ import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
+import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CCommon;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -17,10 +20,12 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -70,7 +75,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_routing = p_routing;
         m_metainformation = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
         m_physical = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
-        m_areas = new HashMap<>();
+        m_areas = new ConcurrentHashMap<>();
     }
 
 
@@ -98,6 +103,11 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
     {
+        /*
+        if ( p_moveable.movable( m_physical, p_newposition ) )
+
+
+
         final Supplier<Stream<Pair<Integer, Integer>>> l_newcells = () -> CCommon.inttupelstream(
             (int) ( p_newposition.get( 0 ) - p_newposition.get( 2 ) / 2 ),
             (int) ( p_newposition.get( 0 ) + p_newposition.get( 2 ) / 2 ),
@@ -120,7 +130,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
 
         p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-
+*/
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         return p_moveable;
     }
@@ -190,6 +200,26 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
     }
 
+    /**
+     * add an area to the environment
+     *
+     * @param p_file asl file
+     * @param p_data data
+     * @throws Exception any error
+     * @todo change actions ?
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "addarea" )
+    private void addArea( final String p_file, final Object... p_data ) throws Exception
+    {
+        final CArea l_area = EObjectFactory.AREA.generate(
+            CEnvironment.class.getResourceAsStream( p_file ),
+            org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
+            IAggregation.EMPTY)
+            .generatesingle( p_data )
+            .raw();
+        m_areas.put( l_area.name(), l_area );
+    }
 
     /**
      * generator of the environment

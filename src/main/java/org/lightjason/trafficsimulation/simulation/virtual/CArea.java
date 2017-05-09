@@ -1,6 +1,7 @@
 package org.lightjason.trafficsimulation.simulation.virtual;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -20,6 +21,7 @@ import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -46,7 +48,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * the type of area
      */
-    private final AtomicReference<EArea> m_type;
+    private final String m_type;
     /**
      * in which direction one can move in this area
      */
@@ -64,12 +66,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_name          name of the object
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final DoubleMatrix1D p_position, final boolean p_passable, final EArea p_type, final Stream<EDirection> p_directions )
+                   final List<Double> p_position, final boolean p_passable, final String p_type, final List<String> p_directions )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position );
+        super( p_configuration, p_environment, FUNCTOR, p_name, new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> i ).toArray() ) );
         m_passable = p_passable;
-        m_type = new AtomicReference<>( p_type );
-        m_directions = p_directions;
+        m_type = p_type;
+        m_directions = p_directions.stream().map( i -> EDirection.from( i ) );
         m_physical = new HashSet();
     }
 
@@ -127,9 +129,9 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * get area type
      * @return type
      */
-    public EArea type()
+    public String type()
     {
-        return m_type.get();
+        return m_type;
     }
 
     /**
@@ -165,10 +167,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                (DoubleMatrix1D) p_data[0],
+                (List<Double>) p_data[0],
                 (boolean) p_data[1],
-                (EArea) p_data[2],
-                (Stream<EDirection>) p_data[3]
+                (String) p_data[2],
+                (List<String>) p_data[3]
             );
 
             //m_environment.positioningAnArea( l_area );
