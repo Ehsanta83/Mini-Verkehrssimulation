@@ -100,7 +100,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @todo change to early return call
      */
     @Override
-    public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
+    public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition )
     {
         if ( p_moveable.moveable( m_physical, p_newposition ) )
         {
@@ -111,7 +111,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     @Override
-    public final synchronized IObject get( final DoubleMatrix1D p_position )
+    public final synchronized IObject<?> get( final DoubleMatrix1D p_position )
     {
         return (IObject) m_physical.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
     }
@@ -125,7 +125,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug check parameter
      */
     @Override
-    public final synchronized IObject remove( final IObject p_object )
+    public final synchronized IObject<?> remove( final IObject<?> p_object )
     {
         //final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
         //m_moveablegrid.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );

@@ -58,26 +58,26 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     }
 
     /**
-     *
+     * moveable
      * @todo should be static ?
      */
     @Override
     public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {
-        return cells( p_newposition )
+        return this.cells( p_newposition )
             .noneMatch( i -> ( p_grid.getQuick( i.getLeft(), i.getRight() ) != null ) && ( p_grid.getQuick( i.getLeft(), i.getRight() ) != this )
         );
     }
 
     /**
-     *
+     * move
      * @todo should be static ?
      */
     @Override
     public void move( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {
-        cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
-        cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
+        this.cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
+        this.cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
         this.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         this.position().setQuick( 1, p_newposition.getQuick( 1 ) );
     }

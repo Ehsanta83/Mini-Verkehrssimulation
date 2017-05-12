@@ -58,7 +58,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * a set of the physical agents in the area
      */
-    private final Set<IMoveable> m_physical;
+    private final Set<IMoveable<?>> m_physical = new HashSet<>();
 
     /**
      * ctor
@@ -68,13 +68,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_name          name of the object
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final List<CRawTerm> p_position, final boolean p_passable, final String p_type, final List<CRawTerm> p_directions )
+                   final List<CRawTerm<?>> p_position, final boolean p_passable, final String p_type, final List<CRawTerm<?>> p_directions )
     {
         super( p_configuration, p_environment, FUNCTOR, p_name, new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ) );
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions.stream().map( i -> EDirection.from( i.toString() ) );
-        m_physical = new HashSet();
     }
 
     @Override
@@ -104,7 +103,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      *
      * @param p_physical physical agent
      */
-    public void addPhysical( final IMoveable p_physical )
+    public void addPhysical( final IMoveable<?> p_physical )
     {
         if ( this.isInside( p_physical.position() ) )
         {
@@ -169,10 +168,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                (List<CRawTerm>) p_data[0],
+                (List<CRawTerm<?>>) p_data[0],
                 (boolean) p_data[1],
                 (String) p_data[2],
-                (List<CRawTerm>) p_data[3]
+                (List<CRawTerm<?>>) p_data[3]
             );
 
             //m_environment.positioningAnArea( l_area );
