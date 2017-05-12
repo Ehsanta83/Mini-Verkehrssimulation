@@ -97,16 +97,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @return object reference
      *
      * @bug check parameter and generics
-     * @todo change to early return call
      */
     @Override
     public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition )
     {
-        if ( p_moveable.moveable( m_physical, p_newposition ) )
-        {
-            p_moveable.move( m_physical, p_newposition );
-            m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
-        }
+        if ( !p_moveable.moveable( m_physical, p_newposition ) )
+            return p_moveable;
+
+        p_moveable.move( m_physical, p_newposition );
+        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         return p_moveable;
     }
 

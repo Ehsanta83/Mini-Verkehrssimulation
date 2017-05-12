@@ -29,9 +29,6 @@ import java.util.stream.Stream;
 
 /**
  * area class
- * @todo check redundant call
- * @todo check generics
- * @todo check initialization
  */
 public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 {
@@ -115,12 +112,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     @Override
     public CArea call() throws Exception
     {
-        m_physical.stream()
-            .filter( i -> !this.isInside( i.position() ) )
-            .forEach( i -> this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) ) );
         m_physical.removeAll(
             m_physical.stream()
                 .filter( i -> !this.isInside( i.position() ) )
+                .peek( i -> this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) ) )
                 .collect( Collectors.toSet() )
         );
         return super.call();
