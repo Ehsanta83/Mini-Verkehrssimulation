@@ -39,6 +39,7 @@ import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.FileInputStream;
@@ -85,10 +86,10 @@ public abstract class IBaseTest
     /**
      * initialize environment
      *
+     * @note must be called on the before-test method
      * @throws Exception on any error
      */
-    @Before
-    public final void initializeenvironment() throws Exception
+    protected final void initializeenvironment( final int p_row, final int p_column, final double p_size, final IRouting p_routing ) throws Exception
     {
         try
         (
@@ -97,7 +98,7 @@ public abstract class IBaseTest
         {
             m_environment = EObjectFactory.ENVIRONMENT
                 .generate( l_stream, m_actions.stream(), IAggregation.EMPTY )
-                .generatesingle( 64, 64, 25, ERoutingFactory.JPSPLUS.get() )
+                .generatesingle( p_row, p_column, p_size, p_routing )
                 .raw();
         }
         catch ( final Exception l_exception )

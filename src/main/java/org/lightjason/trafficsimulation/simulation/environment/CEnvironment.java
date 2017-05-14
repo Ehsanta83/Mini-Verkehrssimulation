@@ -65,24 +65,24 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * ctor
      *
      * @param p_configuration agent configuration
-     * @param p_cellrows number of row cells
-     * @param p_cellcolumns number of column cells
-     * @param p_cellsize cell size
+     * @param p_row number of row cells
+     * @param p_column number of column cells
+     * @param p_size cell size
      * @bug fix cell size to floating-point
      */
     private CEnvironment(
         final IAgentConfiguration<IEnvironment> p_configuration,
-        final int p_cellrows, final int p_cellcolumns, final double p_cellsize, final IRouting p_routing
+        final int p_row, final int p_column, final double p_size, final IRouting p_routing
     )
     {
         super( p_configuration );
 
-        if ( ( p_cellcolumns < 1 ) || ( p_cellrows < 1 ) || ( p_cellsize < 1 ) )
+        if ( ( p_column < 1 ) || ( p_row < 1 ) || ( p_size < 1 ) )
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
 
         m_routing = p_routing;
-        m_metainformation = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
-        m_physical = new SparseObjectMatrix2D( p_cellrows, p_cellcolumns );
+        m_metainformation = new SparseObjectMatrix2D( p_row, p_column );
+        m_physical = new SparseObjectMatrix2D( p_row, p_column );
     }
 
     @Override
