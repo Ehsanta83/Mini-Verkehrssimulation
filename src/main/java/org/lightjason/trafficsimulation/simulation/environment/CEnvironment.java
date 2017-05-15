@@ -21,29 +21,39 @@
  * @endcond
  */
 
+
 package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.binding.IAgentAction;
+import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
+import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 
 /**
  * environment class
  */
+@IAgentAction
 public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
     private static final String FUNCTOR = "environment";
@@ -60,6 +70,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * matrix with agents positions
      */
     private final ObjectMatrix2D m_physical;
+    /**
+     * map of the areas
+     */
+    private final Map<String, CArea> m_areas;
 
     /**
      * ctor
@@ -83,6 +97,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_routing = p_routing;
         m_metainformation = new SparseObjectMatrix2D( p_row, p_column );
         m_physical = new SparseObjectMatrix2D( p_row, p_column );
+        m_areas = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -107,15 +122,18 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug check parameter and generics
      */
     @Override
-    @SuppressWarnings( "unchecked" )
-    public final synchronized IMoveable move( final IMoveable p_moveable, final DoubleMatrix1D p_newposition )
+    public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition )
     {
+        if ( !p_moveable.moveable( m_physical, p_newposition ) )
+            return p_moveable;
+
+        p_moveable.move( m_physical, p_newposition );
+        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         return p_moveable;
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public final synchronized IObject get( final DoubleMatrix1D p_position )
+    public final synchronized IObject<?> get( final DoubleMatrix1D p_position )
     {
         return (IObject) m_physical.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
     }
@@ -129,7 +147,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug check parameter
      */
     @Override
-    public final synchronized IObject remove( final IObject p_object )
+    public final synchronized IObject<?> remove( final IObject<?> p_object )
     {
         //final DoubleMatrix1D l_position = this.clip( new DenseDoubleMatrix1D( p_object.position().toArray() ) );
         //m_moveablegrid.set( (int) l_position.get( 0 ), (int) l_position.get( 1 ), null );
@@ -179,6 +197,38 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return Math.max( Math.min( p_value, p_max - 1 ), 0 );
     }
 
+    /**
+     * add an area to the environment
+     *
+     * @param p_file asl file
+     * @param p_data data
+     * @throws Exception any error
+     * @todo generator must be refactor for better file access
+     * @todo modify exception handling with agent plan failure
+     * @todo create better action naming schema
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "addarea" )
+    private void addArea( final String p_file, final Object... p_data )
+    {
+        try
+            (
+                final FileInputStream l_stream = new FileInputStream( p_file );
+            )
+        {
+            final CArea l_area = EObjectFactory.AREA.generate(
+                l_stream,
+                org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
+                IAggregation.EMPTY )
+                .generatesingle( p_data )
+                .raw();
+            m_areas.put( l_area.name(), l_area );
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace();
+        }
+    }
 
     /**
      * generator of the environment
@@ -190,7 +240,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                            final IAggregation p_aggregation
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation );
+            super( p_stream, p_actions, p_aggregation, CEnvironment.class );
         }
 
         @Override

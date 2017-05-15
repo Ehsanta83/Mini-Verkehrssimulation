@@ -335,10 +335,12 @@ public abstract class IBaseViewTest extends IBaseTest
 
             IntStream
                 .range( 0, p_column )
-                .forEach( x -> {
+                .forEach( x ->
+                {
                     IntStream
                         .range( 0, p_row )
-                        .forEach( y -> {
+                        .forEach( y ->
+                        {
                             final TiledMapTileLayer.Cell l_cell = new TiledMapTileLayer.Cell();
                             l_layer.setCell( x, y, l_cell );
                             l_cell.setTile(

@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 
 import java.util.stream.Collectors;
 
@@ -43,16 +44,19 @@ public final class TestCTrafficLightVehicle extends IBaseTest
 
     /**
      * initialize vehicle light
+     *
+     * @throws Exception on any error
      */
     @Before
-    public final void initialize()
+    public final void initialize() throws Exception
     {
+        this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
         m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT, new DenseDoubleMatrix1D( new double[]{0, 0} ), 180 );
     }
 
 
     /**
-     * pedestrian test
+     * vehicle traffic light call test
      *
      * @throws Exception on execution error
      */

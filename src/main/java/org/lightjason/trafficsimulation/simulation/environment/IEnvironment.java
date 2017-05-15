@@ -36,7 +36,6 @@ import java.util.stream.Stream;
  */
 public interface IEnvironment extends IObject<IEnvironment>
 {
-
     /**
      * calculate route
      *
@@ -63,7 +62,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @param p_position new position
      * @return updated object or object which uses the cell
      */
-    IMoveable move( final IMoveable p_object, final DoubleMatrix1D p_position );
+    IMoveable<?> move( final IMoveable<?> p_object, final DoubleMatrix1D p_position );
 
     /**
      * returns an object from the given position
@@ -71,7 +70,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @param p_position position vector
      * @return object or null
      */
-    IObject get( final DoubleMatrix1D p_position );
+    IObject<?> get( final DoubleMatrix1D p_position );
 
     /**
      * removes an element from a position
@@ -79,7 +78,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @param p_object element
      * @return element
      */
-    IObject remove( final IObject p_object );
+    IObject<?> remove( final IObject<?> p_object );
 
     /**
      * checks if a position is empty

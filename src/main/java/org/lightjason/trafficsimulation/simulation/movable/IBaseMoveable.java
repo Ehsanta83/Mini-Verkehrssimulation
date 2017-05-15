@@ -24,9 +24,12 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.ObjectMatrix2D;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -58,6 +61,48 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     {
         super( p_configuration, p_environment, p_functor, p_name, p_position );
         m_size = p_size;
+    }
+
+    /**
+     * get a stream of cells from position
+     * @param p_position position
+     * @return cells
+     * @todo can it be optimized with refactoring inttuple with automatic cast?
+     * @todo should be static?
+     */
+    private Stream<Pair<Integer, Integer>> cells( final DoubleMatrix1D p_position )
+    {
+        return CCommon.inttupelstream(
+            (int) ( p_position.get( 0 ) - p_position.get( 2 ) / 2 ),
+            (int) ( p_position.get( 0 ) + p_position.get( 2 ) / 2 ),
+            (int) ( p_position.get( 1 ) - p_position.get( 3 ) / 2 ),
+            (int) ( p_position.get( 1 ) + p_position.get( 3 ) / 2 )
+        );
+    }
+
+    /**
+     * moveable
+     * @todo should be static ?
+     */
+    @Override
+    public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
+    {
+        return this.cells( p_newposition )
+            .noneMatch( i -> ( p_grid.getQuick( i.getLeft(), i.getRight() ) != null ) && ( p_grid.getQuick( i.getLeft(), i.getRight() ) != this )
+        );
+    }
+
+    /**
+     * move
+     * @todo should be static ?
+     */
+    @Override
+    public void move( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
+    {
+        this.cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
+        this.cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
+        this.position().setQuick( 0, p_newposition.getQuick( 0 ) );
+        this.position().setQuick( 1, p_newposition.getQuick( 1 ) );
     }
 
 
