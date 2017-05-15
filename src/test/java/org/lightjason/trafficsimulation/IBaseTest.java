@@ -1,3 +1,26 @@
+/*
+ * @cond LICENSE
+ * ######################################################################################
+ * # LGPL License                                                                       #
+ * #                                                                                    #
+ * # This file is part of the LightJason TrafficSimulation                              #
+ * # Copyright (c) 2016-17, LightJason (info@lightjason.org)                            #
+ * # This program is free software: you can redistribute it and/or modify               #
+ * # it under the terms of the GNU Lesser General Public License as                     #
+ * # published by the Free Software Foundation, either version 3 of the                 #
+ * # License, or (at your option) any later version.                                    #
+ * #                                                                                    #
+ * # This program is distributed in the hope that it will be useful,                    #
+ * # but WITHOUT ANY WARRANTY; without even the implied warranty of                     #
+ * # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                      #
+ * # GNU Lesser General Public License for more details.                                #
+ * #                                                                                    #
+ * # You should have received a copy of the GNU Lesser General Public License           #
+ * # along with this program. If not, see http://www.gnu.org/licenses/                  #
+ * ######################################################################################
+ * @endcond
+ */
+
 package org.lightjason.trafficsimulation;
 
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
@@ -15,7 +38,7 @@ import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.FileInputStream;
@@ -62,9 +85,10 @@ public abstract class IBaseTest
     /**
      * initialize environment
      *
+     * @note must be called on the before-test method
      * @throws Exception on any error
      */
-    public final void initializeenvironment() throws Exception
+    protected final void initializeenvironment( final int p_row, final int p_column, final double p_size, final IRouting p_routing ) throws Exception
     {
         try
         (
@@ -73,7 +97,7 @@ public abstract class IBaseTest
         {
             m_environment = EObjectFactory.ENVIRONMENT
                 .generate( l_stream, m_actions.stream(), IAggregation.EMPTY )
-                .generatesingle( 64, 64, 25, ERoutingFactory.JPSPLUS.get() )
+                .generatesingle( p_row, p_column, p_size, p_routing )
                 .raw();
         }
         catch ( final Exception l_exception )
@@ -86,6 +110,7 @@ public abstract class IBaseTest
     /**
      * load configuration from yaml file
      */
+    @Before
     public final void loadconfiguration()
     {
         CConfiguration.INSTANCE.loadfile( "src/main/resources/" + org.lightjason.trafficsimulation.CCommon.PACKAGEPATH + "configuration.yaml" );
