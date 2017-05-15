@@ -68,16 +68,7 @@ var Simulation = (function (px_modul) {
                                            ? (classof( i.raw, 'string' ) ? '"' + i.raw + '"' : i.raw)
                                            : px_modul.literal(i);
                                 }
-                       ).join(", ") + ")"
-
-               + "[" + jQuery.map(
-                                po_literal.annotation,
-                                function(i){
-                                    return i.raw
-                                           ? (classof( i.raw, 'string' ) ? '"' + i.raw + '"' : i.raw)
-                                           : px_modul.literal(i);
-                                }
-                            ).join(", ") + "]";
+                       ).join(", ") + ")";
     };
     // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 

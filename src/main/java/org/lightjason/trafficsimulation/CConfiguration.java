@@ -281,22 +281,23 @@ public final class CConfiguration
     {
         final String l_key = p_path[p_index].toLowerCase( Locale.ROOT );
         final Object l_data =  p_map.get( l_key );
-        return ( p_path.length == 1 )
+
+        return ( p_index < p_path.length - 1 )
 
                ? l_data instanceof Map<?, ?>
-                 ? ( (Map<String, Object>) l_data ).entrySet().stream()
-                 : Stream.of( new AbstractMap.SimpleImmutableEntry<>( l_key, l_data ) )
+                 ? recursivedescent( (Map<String, Object>) l_data, p_index + 1, p_path )
+                 : Stream.of()
 
                : l_data instanceof Map<?, ?>
-                 ? recursivedescent( (Map<String, Object>) l_data, p_index + 1, p_path )
-                 : Stream.of();
+                 ? ( (Map<String, Object>) l_data ).entrySet().stream()
+                 : Stream.of( new AbstractMap.SimpleImmutableEntry<>( l_key, l_data ) );
     }
 
     /**
      *
      * @param p_map map
      * @return stream of all items within the map
-     * @todo fix path name
+     * @todo fix path name with full path
      */
     @SuppressWarnings( "unchecked" )
     private static Stream<Map.Entry<String, Object>> mapstream( final Map<String, Object> p_map )

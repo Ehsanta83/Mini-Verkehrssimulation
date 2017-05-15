@@ -29,7 +29,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
+
+import java.util.stream.Collectors;
 
 
 /**
@@ -40,11 +43,6 @@ import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
 public final class TestCEnvironment extends IBaseTest
 {
     /**
-     * pedestrian
-     */
-    private CPedestrian m_pedestrian;
-
-    /**
      * initialize
      *
      * @throws Exception on any error
@@ -52,7 +50,7 @@ public final class TestCEnvironment extends IBaseTest
     @Before
     public final void initilize() throws Exception
     {
-        this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN );
+        this.initializeenvironment( 250, 250, 50, ERoutingFactory.JPSPLUS.get() );
     }
 
     /**
@@ -61,20 +59,11 @@ public final class TestCEnvironment extends IBaseTest
      * @throws Exception on execution error
      */
     @Test
-    @Ignore
     public final void testEnvironmentCall() throws Exception
     {
         m_environment.call();
-    }
 
-    /**
-     * test moving pedestrian
-     */
-    @Test
-    @Ignore
-    public final void testMovingPedestrian()
-    {
-        m_environment.move( m_pedestrian, new DenseDoubleMatrix1D( new double[]{1, 2, 1, 2} ) );
+        System.out.println( m_environment.beliefbase().stream().collect( Collectors.toSet() ) );
     }
 
     /**

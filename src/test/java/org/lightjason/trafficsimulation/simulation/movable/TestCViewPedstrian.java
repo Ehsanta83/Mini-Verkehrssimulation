@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * test of driving a vehicle
  */
-public final class TestCMoveableArea extends IBaseViewTest
+public final class TestCViewPedstrian extends IBaseViewTest
 {
     /**
      * screen reference
@@ -89,7 +89,7 @@ public final class TestCMoveableArea extends IBaseViewTest
     public static void main( final String[] p_args )
     {
         s_screen = screen( 1600, 1200 );
-        new TestCMoveableArea().invoketest();
+        new TestCViewPedstrian().invoketest();
     }
 
 
