@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
-import org.lightjason.trafficsimulation.IBaseTest;
-import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 
 import java.util.stream.Collectors;
 
