@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
  */
 public final class TestCPedestrian extends IBaseTest
 {
-
     /**
      * area generator
      */

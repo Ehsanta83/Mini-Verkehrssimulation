@@ -45,6 +45,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -63,9 +64,9 @@ public abstract class IBaseViewTest extends IBaseTest
      * @param p_windowheight window height
      * @return screen reference
      */
-    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight )
+    protected static CScreen screen( final Number p_windowwidth, final Number p_windowheight )
     {
-        return this.execute( 250, 250, 20, 5, 100 );
+        return screen( p_windowwidth, p_windowheight, 250, 250, 50, 250, 20 );
     }
 
 
@@ -79,10 +80,10 @@ public abstract class IBaseViewTest extends IBaseTest
      * @param p_cellsize cell size
      * @return screen reference
      */
-    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight,
-                               final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize )
+    protected static CScreen screen( final Number p_windowwidth, final Number p_windowheight,
+                                     final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize )
     {
-        return this.execute( p_windowwidth, p_windowheight, p_cellrows, p_cellcolumns, p_cellsize, 5, 100 );
+        return screen( p_windowwidth, p_windowheight, p_cellrows, p_cellcolumns, p_cellsize, 5, 100 );
     }
 
 
@@ -98,15 +99,15 @@ public abstract class IBaseViewTest extends IBaseTest
      * @param p_dragspeed drag speed
      * @return screen reference
      */
-    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight,
-                               final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize,
-                               final Number p_zoomspeed, final Number p_dragspeed )
+    protected static CScreen screen( final Number p_windowwidth, final Number p_windowheight,
+                                     final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize,
+                                     final Number p_zoomspeed, final Number p_dragspeed )
     {
         // force-exit must be disabled for avoid error exiting
         final LwjglApplicationConfiguration l_config = new LwjglApplicationConfiguration();
 
         l_config.forceExit = false;
-        l_config.width = p_windowheight.intValue();
+        l_config.width = p_windowwidth.intValue();
         l_config.height = p_windowheight.intValue();
 
         // open window
@@ -120,7 +121,7 @@ public abstract class IBaseViewTest extends IBaseTest
     /**
      * interface for visualization
      */
-    protected interface ISprite
+    protected interface ISprite<T>
     {
 
         /**
@@ -132,7 +133,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * @param p_unit unit scale
          * @return self reference
          */
-        ISprite spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit );
+        ISprite<T> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit );
 
         /**
          * returns sprite object
@@ -140,13 +141,60 @@ public abstract class IBaseViewTest extends IBaseTest
          * @return sprite
          */
         Sprite sprite();
+
+        /**
+         * returns the wrap data structure
+         *
+         * @return inner object
+         */
+        T raw();
+    }
+
+
+
+    /**
+     * sprite wrapper object
+     */
+    protected abstract static class IBaseSprite<T> implements ISprite<T>, Callable<ISprite<T>>
+    {
+        /**
+         * sprite object
+         */
+        protected Sprite m_sprite;
+        /**
+         * wrapping object
+         */
+        protected final T m_wrapping;
+
+        /**
+         * ctor
+         *
+         * @param p_wrapping wrapping object
+         */
+        protected IBaseSprite( final T p_wrapping )
+        {
+            m_wrapping = p_wrapping;
+        }
+
+
+        @Override
+        public final Sprite sprite()
+        {
+            return m_sprite;
+        }
+
+        @Override
+        public final T raw()
+        {
+            return m_wrapping;
+        }
     }
 
 
     /**
      * screen class
      */
-    private static final class CScreen extends ApplicationAdapter implements InputProcessor
+    protected static final class CScreen extends ApplicationAdapter implements InputProcessor
     {
         /**
          * drag speed
@@ -173,6 +221,14 @@ public abstract class IBaseViewTest extends IBaseTest
          */
         private final Vector3 m_lasttouch = new Vector3();
         /**
+         * set with sprites
+         */
+        private final Set<ISprite> m_sprites = new ConcurrentSkipListSet<>();
+        /**
+         * screen unit
+         */
+        private float m_unit;
+        /**
          * camera definition
          */
         private OrthographicCamera m_camera;
@@ -184,10 +240,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * renderer
          */
         private OrthogonalTiledMapRenderer m_render;
-        /**
-         * set with sprites
-         */
-        private final Set<ISprite> m_sprites = new ConcurrentSkipListSet<>();
+
 
         /**
          * ctor
@@ -304,21 +357,18 @@ public abstract class IBaseViewTest extends IBaseTest
         public final void create()
         {
             // create orthogonal camera perspective
-            final float l_unit = 1.0f / m_cellsize;
+            m_unit = 1.0f / m_cellsize;
 
             // create execution structure for painting
             m_spritebatch = new SpriteBatch();
 
             // create environment view and put all objects in it
-            m_render = new OrthogonalTiledMapRenderer( tilemap( m_cellrows, m_cellcolumns, m_cellsize ), l_unit, m_spritebatch );
+            m_render = new OrthogonalTiledMapRenderer( tilemap( m_cellrows, m_cellcolumns, m_cellsize ), m_unit, m_spritebatch );
 
             m_camera = new OrthographicCamera( m_cellcolumns, m_cellrows );
-            m_camera.setToOrtho( false, m_cellcolumns * l_unit, m_cellrows * l_unit );
+            m_camera.setToOrtho( false, m_cellcolumns * m_unit, m_cellrows * m_unit );
             m_camera.position.set( m_cellcolumns / 2f, m_cellrows / 2f, 0 );
             m_camera.zoom = m_cellsize;
-
-            // create sprites and particle systems
-            m_sprites.forEach( i -> i.spriteinitialize( m_cellrows, m_cellcolumns, m_cellsize, l_unit ) );
             m_render.setView( m_camera );
 
             // set input processor
