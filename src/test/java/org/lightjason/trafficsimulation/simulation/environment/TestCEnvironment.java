@@ -23,14 +23,10 @@
 
 package org.lightjason.trafficsimulation.simulation.environment;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
-import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
-import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
 
 import java.util.stream.Collectors;
 
