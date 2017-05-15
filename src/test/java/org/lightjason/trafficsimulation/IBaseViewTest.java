@@ -30,15 +30,21 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Stream;
 
 
 public abstract class IBaseViewTest extends IBaseTest
 {
 
-    protected void execute( final int p_weight, final int p_height )
+    protected CScreen execute( final int p_weight, final int p_height )
     {
         // force-exit must be disabled for avoid error exiting
         final LwjglApplicationConfiguration l_config = new LwjglApplicationConfiguration();
@@ -48,7 +54,35 @@ public abstract class IBaseViewTest extends IBaseTest
         l_config.height = p_height;
 
         // open window
-        new LwjglApplication( new CScreen(), l_config );
+        final CScreen l_screen = new CScreen();
+        new LwjglApplication( l_screen, l_config );
+        return l_screen;
+    }
+
+
+
+    /**
+     * interface for visualization
+     */
+    protected interface ISprite
+    {
+
+        /**
+         * initialize the sprite
+         *
+         * @param p_width world width
+         * @param p_height world height
+         * @param p_unit unit scaling
+         * @return self reference
+         */
+        ISprite spriteinitialize( final int p_width, final int p_height, float p_unit );
+
+        /**
+         * returns sprite object
+         *
+         * @return sprite
+         */
+        Sprite sprite();
     }
 
 
@@ -57,6 +91,14 @@ public abstract class IBaseViewTest extends IBaseTest
      */
     private static final class CScreen extends ApplicationAdapter implements InputProcessor
     {
+        /**
+         * drag speed
+         */
+        private final float m_dragspeed;
+        /**
+         * zoom speed
+         */
+        private final float m_zoomspeed;
         /**
          * last camera position
          */
@@ -73,6 +115,76 @@ public abstract class IBaseViewTest extends IBaseTest
          * renderer
          */
         private OrthogonalTiledMapRenderer m_render;
+        /**
+         * set with sprites
+         */
+        private final Set<ISprite> m_sprites = new ConcurrentSkipListSet<>();
+
+        /**
+         * ctor
+         */
+        CScreen()
+        {
+            this( 5, 100 );
+        }
+
+        /**
+         * ctor
+         *
+         * @param p_zoomspeed zoom speed
+         * @param p_dragspeed drag speed
+         */
+        CScreen( final Number p_zoomspeed, final Number p_dragspeed )
+        {
+            m_dragspeed = p_dragspeed.floatValue();
+            m_zoomspeed = p_zoomspeed.floatValue();
+        }
+
+        /**
+         * adds sprites
+         *
+         * @param p_sprites sprites
+         * @return self reference
+         */
+        public final CScreen spriteadd( final ISprite... p_sprites )
+        {
+            return this.spriteadd( Arrays.stream( p_sprites ) );
+        }
+
+        /**
+         * removes sprite
+         *
+         * @param p_sprites sprites
+         * @return self reference
+         */
+        public final CScreen spriteremove( final ISprite... p_sprites  )
+        {
+            return this.spriteremove( Arrays.stream( p_sprites ) );
+        }
+
+        /**
+         * add sprite stream
+         *
+         * @param p_sprites sprite stream
+         * @return self reference
+         */
+        public final CScreen spriteadd( final Stream<? extends ISprite> p_sprites )
+        {
+            p_sprites.forEach( m_sprites::add );
+            return this;
+        }
+
+        /**
+         * removes sprite
+         *
+         * @param p_sprites sprite stream
+         * @return self reference
+         */
+        public final CScreen spriteremove( final Stream<? extends ISprite> p_sprites )
+        {
+            p_sprites.forEach( m_sprites::remove );
+            return this;
+        }
 
 
         @Override
@@ -161,7 +273,7 @@ public abstract class IBaseViewTest extends IBaseTest
             m_camera.translate(
                 new Vector3().set( p_screenx, p_screeny, 0 )
                              .sub( m_lastTouch )
-                             .scl( -CConfiguration.INSTANCE.dragspeed(), CConfiguration.INSTANCE.dragspeed(), 0 )
+                             .scl( -m_dragspeed, m_dragspeed, 0 )
                              .scl( m_camera.zoom )
             );
             m_lastTouch.set( p_screenx, p_screeny, 0 );
@@ -178,8 +290,8 @@ public abstract class IBaseViewTest extends IBaseTest
         public final boolean scrolled( final int p_amount )
         {
             m_camera.zoom *= p_amount > 0
-                             ? 1 + CConfiguration.INSTANCE.zoomspeed()
-                             : 1 - CConfiguration.INSTANCE.zoomspeed();
+                             ? 1 + m_zoomspeed
+                             : 1 - m_zoomspeed
             return false;
         }
     }
