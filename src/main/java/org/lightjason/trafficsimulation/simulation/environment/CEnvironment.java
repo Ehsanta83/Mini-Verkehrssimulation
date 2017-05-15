@@ -35,6 +35,7 @@ import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
@@ -208,8 +209,8 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @todo create better action naming schema
      */
     @IAgentActionFilter
-    @IAgentActionName( name = "addarea" )
-    private void addArea( final String p_file, final Object... p_data )
+    @IAgentActionName( name = "env/area/add" )
+    private void addarea( final String p_file, final Object... p_data )
     {
         try
             (
@@ -220,14 +221,26 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                 l_stream,
                 org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
                 IAggregation.EMPTY )
-                .generatesingle( p_data )
-                .raw();
+                                                    .generatesingle( p_data )
+                                                    .raw();
             m_areas.put( l_area.name(), l_area );
         }
         catch ( final Exception l_exception )
         {
             l_exception.printStackTrace();
         }
+    }
+
+
+    /**
+     * removes an area
+     *
+     * @todo must be implemented
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "env/area/remove" )
+    private void removearea()
+    {
     }
 
     /**
@@ -244,18 +257,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         }
 
         @Override
+        @SuppressWarnings( "unchecked" )
         protected final IEnvironment generate( final IAgentConfiguration<IEnvironment> p_configuration, final int p_rows, final int p_columns,
                                                final double p_cellsize,
                                                final IRouting p_routing
         )
         {
-            return new CEnvironment(
-                                     p_configuration,
-                                     p_rows,
-                                     p_columns,
-                                     p_cellsize,
-                                     p_routing
-            );
+            final IEnvironment l_agent = new CEnvironment( p_configuration, p_rows, p_columns, p_cellsize, p_routing );
+            l_agent.beliefbase().add( CConfiguration.INSTANCE.view( l_agent.beliefbase() ) );
+            return l_agent;
         }
     }
 }
