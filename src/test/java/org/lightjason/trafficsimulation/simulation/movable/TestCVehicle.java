@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public final class TestCVehicle extends IBaseTest
     @Before
     public final void initialize() throws Exception
     {
-        this.initializeenvironment();
+        this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
         m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE, new DenseDoubleMatrix1D( new double[]{0, 0} ) );
     }
 
