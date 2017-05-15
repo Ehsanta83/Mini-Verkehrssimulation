@@ -28,33 +28,89 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
+/**
+ * test class with window
+ */
 public abstract class IBaseViewTest extends IBaseTest
 {
 
-    protected CScreen execute( final int p_weight, final int p_height )
+    /**
+     * executes the screen
+     *
+     * @param p_windowwidth window width
+     * @param p_windowheight window height
+     * @return screen reference
+     */
+    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight )
+    {
+        return this.execute( 250, 250, 20, 5, 100 );
+    }
+
+
+    /**
+     * executes the screen
+     *
+     * @param p_windowwidth window width
+     * @param p_windowheight window height
+     * @param p_cellrows number of cell rows
+     * @param p_cellcolumns number of cell columns
+     * @param p_cellsize cell size
+     * @return screen reference
+     */
+    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight,
+                               final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize )
+    {
+        return this.execute( p_windowwidth, p_windowheight, p_cellrows, p_cellcolumns, p_cellsize, 5, 100 );
+    }
+
+
+    /**
+     * executes the screen
+     *
+     * @param p_windowwidth window width
+     * @param p_windowheight window height
+     * @param p_cellrows number of cell rows
+     * @param p_cellcolumns number of cell columns
+     * @param p_cellsize cell size
+     * @param p_zoomspeed zoom speed
+     * @param p_dragspeed drag speed
+     * @return screen reference
+     */
+    protected CScreen execute( final Number p_windowwidth, final Number p_windowheight,
+                               final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize,
+                               final Number p_zoomspeed, final Number p_dragspeed )
     {
         // force-exit must be disabled for avoid error exiting
         final LwjglApplicationConfiguration l_config = new LwjglApplicationConfiguration();
 
         l_config.forceExit = false;
-        l_config.width = p_weight;
-        l_config.height = p_height;
+        l_config.width = p_windowheight.intValue();
+        l_config.height = p_windowheight.intValue();
 
         // open window
-        final CScreen l_screen = new CScreen();
+        final CScreen l_screen = new CScreen( p_cellrows, p_cellcolumns, p_cellsize, p_zoomspeed, p_dragspeed );
         new LwjglApplication( l_screen, l_config );
         return l_screen;
     }
@@ -70,12 +126,13 @@ public abstract class IBaseViewTest extends IBaseTest
         /**
          * initialize the sprite
          *
-         * @param p_width world width
-         * @param p_height world height
-         * @param p_unit unit scaling
+         * @param p_rows number of rows
+         * @param p_columns number of columns
+         * @param p_cellsize cellsize
+         * @param p_unit unit scale
          * @return self reference
          */
-        ISprite spriteinitialize( final int p_width, final int p_height, float p_unit );
+        ISprite spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit );
 
         /**
          * returns sprite object
@@ -100,9 +157,21 @@ public abstract class IBaseViewTest extends IBaseTest
          */
         private final float m_zoomspeed;
         /**
+         * cell rows
+         */
+        private final int m_cellrows;
+        /**
+         * cell columns
+         */
+        private final int m_cellcolumns;
+        /**
+         * cell size
+         */
+        private final int m_cellsize;
+        /**
          * last camera position
          */
-        private final Vector3 m_lastTouch = new Vector3();
+        private final Vector3 m_lasttouch = new Vector3();
         /**
          * camera definition
          */
@@ -122,22 +191,21 @@ public abstract class IBaseViewTest extends IBaseTest
 
         /**
          * ctor
-         */
-        CScreen()
-        {
-            this( 5, 100 );
-        }
-
-        /**
-         * ctor
          *
+         * @param p_cellrows number of rows
+         * @param p_cellcolumns number of columns
+         * @param p_cellsize cell size
          * @param p_zoomspeed zoom speed
          * @param p_dragspeed drag speed
          */
-        CScreen( final Number p_zoomspeed, final Number p_dragspeed )
+        CScreen( final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize, final Number p_zoomspeed, final Number p_dragspeed )
         {
             m_dragspeed = p_dragspeed.floatValue();
             m_zoomspeed = p_zoomspeed.floatValue();
+
+            m_cellrows = p_cellrows.intValue();
+            m_cellcolumns = p_cellcolumns.intValue();
+            m_cellsize = p_cellsize.intValue();
         }
 
         /**
@@ -186,26 +254,71 @@ public abstract class IBaseViewTest extends IBaseTest
             return this;
         }
 
+        /**
+         * creates a tilemap
+         *
+         * @param p_row number of rows
+         * @param p_column number of columns
+         * @param p_cellsize cell size
+         * @return tile map
+         */
+        private static TiledMap tilemap( final int p_row, final int p_column, final int p_cellsize )
+        {
+            // create background checkerboard with a tile map
+            final Pixmap l_pixmap = new Pixmap( 2 * p_cellsize, p_cellsize, Pixmap.Format.RGBA8888 );
+            l_pixmap.setColor( new Color( 0.8f, 0.1f, 0.1f, 0.5f ) );
+            l_pixmap.fillRectangle( 0, 0, p_cellsize, p_cellsize );
+            l_pixmap.setColor( new Color( 0.5f, 0.5f, 0.5f, 0.5f ) );
+            l_pixmap.fillRectangle( p_cellsize, 0, p_cellsize, p_cellsize );
+
+            final Texture l_texture = new Texture( l_pixmap );
+            final TiledMapTile l_region1 = new StaticTiledMapTile( new TextureRegion( l_texture, 0, 0, p_cellsize, p_cellsize ) );
+            final TiledMapTile l_region2 = new StaticTiledMapTile( new TextureRegion( l_texture, p_cellsize, 0, p_cellsize, p_cellsize ) );
+
+            // create tilemap
+            final TiledMap l_map = new TiledMap();
+            final TiledMapTileLayer l_layer = new TiledMapTileLayer( p_column, p_row, p_cellsize, p_cellsize );
+            l_map.getLayers().add( l_layer );
+
+            IntStream
+                .range( 0, p_column )
+                .forEach( x -> {
+                    IntStream
+                        .range( 0, p_row )
+                        .forEach( y -> {
+                            final TiledMapTileLayer.Cell l_cell = new TiledMapTileLayer.Cell();
+                            l_layer.setCell( x, y, l_cell );
+                            l_cell.setTile(
+                                y % 2 != 0
+                                ? x % 2 != 0 ? l_region1 : l_region2
+                                : x % 2 != 0 ? l_region2 : l_region1
+                            );
+                        } );
+                } );
+
+            return l_map;
+        }
+
 
         @Override
         public final void create()
         {
             // create orthogonal camera perspective
-            final float l_unit = 1.0f / m_environment.cellsize();
+            final float l_unit = 1.0f / m_cellsize;
 
             // create execution structure for painting
             m_spritebatch = new SpriteBatch();
 
             // create environment view and put all objects in it
-            m_render = new OrthogonalTiledMapRenderer( m_environment.map(), l_unit, m_spritebatch );
+            m_render = new OrthogonalTiledMapRenderer( tilemap( m_cellrows, m_cellcolumns, m_cellsize ), l_unit, m_spritebatch );
 
-            m_camera = new OrthographicCamera( m_environment.column(), m_environment.row() );
-            m_camera.setToOrtho( false, m_environment.column() * l_unit, m_environment.row() * l_unit );
-            m_camera.position.set( m_environment.column() / 2f, m_environment.row() / 2f, 0 );
-            m_camera.zoom = m_environment.cellsize();
+            m_camera = new OrthographicCamera( m_cellcolumns, m_cellrows );
+            m_camera.setToOrtho( false, m_cellcolumns * l_unit, m_cellrows * l_unit );
+            m_camera.position.set( m_cellcolumns / 2f, m_cellrows / 2f, 0 );
+            m_camera.zoom = m_cellsize;
 
             // create sprites and particle systems
-            m_sprites.forEach( i -> i.spriteinitialize( m_environment.row(), m_environment.column(), m_environment.cellsize(), l_unit ) );
+            m_sprites.forEach( i -> i.spriteinitialize( m_cellrows, m_cellcolumns, m_cellsize, l_unit ) );
             m_render.setView( m_camera );
 
             // set input processor
@@ -257,7 +370,7 @@ public abstract class IBaseViewTest extends IBaseTest
         @Override
         public final boolean touchDown( final int p_screenx, final int p_screeny, final int p_pointer, final int p_button )
         {
-            m_lastTouch.set( p_screenx, p_screeny, 0 );
+            m_lasttouch.set( p_screenx, p_screeny, 0 );
             return false;
         }
 
@@ -272,11 +385,11 @@ public abstract class IBaseViewTest extends IBaseTest
         {
             m_camera.translate(
                 new Vector3().set( p_screenx, p_screeny, 0 )
-                             .sub( m_lastTouch )
+                             .sub( m_lasttouch )
                              .scl( -m_dragspeed, m_dragspeed, 0 )
                              .scl( m_camera.zoom )
             );
-            m_lastTouch.set( p_screenx, p_screeny, 0 );
+            m_lasttouch.set( p_screenx, p_screeny, 0 );
             return false;
         }
 
@@ -291,7 +404,7 @@ public abstract class IBaseViewTest extends IBaseTest
         {
             m_camera.zoom *= p_amount > 0
                              ? 1 + m_zoomspeed
-                             : 1 - m_zoomspeed
+                             : 1 - m_zoomspeed;
             return false;
         }
     }

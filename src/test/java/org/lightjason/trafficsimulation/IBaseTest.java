@@ -38,7 +38,6 @@ import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
