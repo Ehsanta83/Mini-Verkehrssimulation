@@ -117,7 +117,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
         public final ISprite<CPedestrian> call() throws Exception
         {
             m_wrapping.call();
-            m_sprite.get().setCenter( (int) m_wrapping.position().get( 0 ), (int) m_wrapping.position().get( 1 ) );
+            m_sprite.get().setCenter( 25, 25 );
             return this;
         }
 
@@ -128,11 +128,17 @@ public final class TestCViewPedstrian extends IBaseViewTest
          */
         private static Texture texture( final int p_cellsize )
         {
+            // http://techqa.info/programming/question/21602987/using-filledcircle-and-pixmap-in-libgdx
+            // https://www.questarter.com/q/how-to-draw-a-filled-circle-in-libgdx-27_29720727.html
+            // http://javadocmd.com/blog/libgdx-dynamic-textures-with-pixmap/
+
             final Pixmap l_pixmap = new Pixmap( p_cellsize, p_cellsize, Pixmap.Format.RGBA8888 );
             l_pixmap.setColor( Color.RED );
-            l_pixmap.fillCircle( p_cellsize / 2, p_cellsize / 2, (int) ( 0.45 * p_cellsize ) );
+            l_pixmap.fillCircle( p_cellsize, p_cellsize, p_cellsize );
 
-            return new Texture( l_pixmap );
+            final Texture l_texture = new Texture( l_pixmap );
+            l_pixmap.dispose();
+            return l_texture;
         }
 
         @Override
@@ -144,6 +150,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
                 m_sprite.get().setSize( p_cellsize, p_cellsize );
                 m_sprite.get().setOrigin( 1.5f / p_cellsize, 1.5f / p_cellsize );
                 m_sprite.get().setScale( p_unit );
+                m_sprite.get().setPosition( 25, 25 );
             }
 
             return this;

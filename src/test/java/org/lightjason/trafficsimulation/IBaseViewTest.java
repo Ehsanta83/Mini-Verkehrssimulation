@@ -73,7 +73,7 @@ public abstract class IBaseViewTest extends IBaseTest
     protected static CScreen screen( final Number p_windowwidth, final Number p_windowheight,
                                      final Number p_cellrows, final Number p_cellcolumns, final Number p_cellsize )
     {
-        return screen( p_windowwidth, p_windowheight, p_cellrows, p_cellcolumns, p_cellsize, 5, 100 );
+        return screen( p_windowwidth, p_windowheight, p_cellrows, p_cellcolumns, p_cellsize, 0.05, 0.05 );
     }
 
 
