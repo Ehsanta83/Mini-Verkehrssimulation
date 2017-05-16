@@ -46,6 +46,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
@@ -385,7 +386,10 @@ public abstract class IBaseViewTest extends IBaseTest
             m_spritebatch.setProjectionMatrix( m_camera.combined );
             m_spritebatch.begin();
 
-            m_sprites.forEach( i -> i.spriteinitialize( m_cellrows, m_cellcolumns, m_cellsize, m_unit ) );
+            m_sprites.stream()
+                     .map( i -> i.spriteinitialize( m_cellrows, m_cellcolumns, m_cellsize, m_unit ) )
+                     .filter( Objects::nonNull )
+                     .forEach( i -> i.sprite().draw( m_spritebatch ) );
 
             m_spritebatch.end();
         }

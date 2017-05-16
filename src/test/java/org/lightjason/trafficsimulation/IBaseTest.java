@@ -88,7 +88,7 @@ public abstract class IBaseTest
      * @note must be called on the before-test method
      * @throws Exception on any error
      */
-    protected final void initializeenvironment( final int p_row, final int p_column, final double p_size, final IRouting p_routing ) throws Exception
+    protected final void initializeenvironment( final int p_column, final int p_row, final double p_size, final IRouting p_routing ) throws Exception
     {
         try
         (
@@ -97,7 +97,7 @@ public abstract class IBaseTest
         {
             m_environment = EObjectFactory.ENVIRONMENT
                 .generate( l_stream, m_actions.stream(), IAggregation.EMPTY )
-                .generatesingle( p_row, p_column, p_size, p_routing )
+                .generatesingle( p_column, p_row, p_size, p_routing )
                 .raw();
         }
         catch ( final Exception l_exception )

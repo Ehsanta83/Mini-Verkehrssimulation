@@ -60,7 +60,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     @Before
     public final void initialize() throws Exception
     {
-        this.initializeenvironment( 50, 50, 10, ERoutingFactory.JPSPLUS.get() );
+        this.initializeenvironment( 50, 10, 10, ERoutingFactory.JPSPLUS.get() );
         m_pedestrian = new CPedestrianSprite(
                           this.generate(
                               "src/test/resources/pedestrian.asl",
@@ -108,7 +108,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
          *
          * @param p_wrapping wrapping object
          */
-        CPedestrianSprite( final CPedestrian p_wrapping )
+        private CPedestrianSprite( final CPedestrian p_wrapping )
         {
             super( p_wrapping );
         }
@@ -116,8 +116,10 @@ public final class TestCViewPedstrian extends IBaseViewTest
         @Override
         public final ISprite<CPedestrian> call() throws Exception
         {
+            /*
             m_wrapping.call();
-            m_sprite.get().setCenter( 25, 25 );
+            m_sprite.get().setPosition( 25, 25 );
+            */
             return this;
         }
 
@@ -128,13 +130,10 @@ public final class TestCViewPedstrian extends IBaseViewTest
          */
         private static Texture texture( final int p_cellsize )
         {
-            // http://techqa.info/programming/question/21602987/using-filledcircle-and-pixmap-in-libgdx
-            // https://www.questarter.com/q/how-to-draw-a-filled-circle-in-libgdx-27_29720727.html
-            // http://javadocmd.com/blog/libgdx-dynamic-textures-with-pixmap/
-
             final Pixmap l_pixmap = new Pixmap( p_cellsize, p_cellsize, Pixmap.Format.RGBA8888 );
             l_pixmap.setColor( Color.RED );
-            l_pixmap.fillCircle( p_cellsize, p_cellsize, p_cellsize );
+            l_pixmap.fillCircle( p_cellsize / 2, p_cellsize / 2, (int)( 0.95 * p_cellsize / 2 ) );
+
 
             final Texture l_texture = new Texture( l_pixmap );
             l_pixmap.dispose();
@@ -142,16 +141,23 @@ public final class TestCViewPedstrian extends IBaseViewTest
         }
 
         @Override
-        public final ISprite<CPedestrian> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
+        public final synchronized ISprite<CPedestrian> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
         {
-            TEXTURE.compareAndSet( null, texture( p_cellsize ) );
-            if ( !m_sprite.compareAndSet( null, new Sprite( TEXTURE.get() ) ) )
-            {
-                m_sprite.get().setSize( p_cellsize, p_cellsize );
-                m_sprite.get().setOrigin( 1.5f / p_cellsize, 1.5f / p_cellsize );
-                m_sprite.get().setScale( p_unit );
-                m_sprite.get().setPosition( 25, 25 );
-            }
+            if ( ( !TEXTURE.compareAndSet( null, texture( p_cellsize ) ) )
+                 || ( !m_sprite.compareAndSet( null, new Sprite( TEXTURE.get() ) ) )
+                )
+                return this;
+
+            m_sprite.get().setSize( p_cellsize, p_cellsize );
+            m_sprite.get().setOrigin( 0, 0 );
+            m_sprite.get().setScale( p_unit );
+
+            m_sprite.get().setPosition(
+                25,
+                25
+                //(int) m_wrapping.position().getQuick( 0 ),
+                //(int) m_wrapping.position().getQuick( 1 )
+            );
 
             return this;
         }

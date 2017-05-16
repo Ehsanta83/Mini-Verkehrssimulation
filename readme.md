@@ -1,9 +1,11 @@
 # LightJSON - Traffic Simulation
 
-[![CircleCI](https://circleci.com/gh/Ehsanta83/Mini-Verkehrssimulation.svg?style=svg)](https://circleci.com/gh/Ehsanta83/Mini-Verkehrssimulation)
-[![Coverage Status](https://coveralls.io/repos/github/Ehsanta83/Mini-Verkehrssimulation/badge.svg)](https://coveralls.io/github/Ehsanta83/Mini-Verkehrssimulation)
+![CircleCI](https://circleci.com/gh/Ehsanta83/Mini-Verkehrssimulation.svg?style=shield)
+![Coverage Status](https://coveralls.io/repos/github/Ehsanta83/Mini-Verkehrssimulation/badge.svg)
 
-[Dokcmentation](https://ehsanta83.github.io/Mini-Verkehrssimulation/)
+* [CircleCI Statistic](https://circleci.com/gh/Ehsanta83/Mini-Verkehrssimulation)
+* [Coveralls.io Statistic](https://coveralls.io/github/Ehsanta83/Mini-Verkehrssimulation)
+* [Source code documentation](https://ehsanta83.github.io/Mini-Verkehrssimulation/)
 
 
 ## Working Links

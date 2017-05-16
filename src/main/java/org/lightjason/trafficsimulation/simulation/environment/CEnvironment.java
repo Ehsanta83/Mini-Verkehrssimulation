@@ -26,6 +26,7 @@ package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
@@ -64,13 +65,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      */
     private final IRouting m_routing;
     /**
-     * matrix with area positions
-     */
-    private final ObjectMatrix2D m_metainformation;
-    /**
      * matrix with agents positions
      */
-    private final ObjectMatrix2D m_physical;
+    private final ObjectMatrix2D m_objectgrid;
     /**
      * map of the areas
      */
@@ -80,14 +77,14 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * ctor
      *
      * @param p_configuration agent configuration
-     * @param p_row number of row cells
      * @param p_column number of column cells
+     * @param p_row number of row cells
      * @param p_size cell size
      * @bug fix cell size to floating-point
      */
     private CEnvironment(
         final IAgentConfiguration<IEnvironment> p_configuration,
-        final int p_row, final int p_column, final double p_size, final IRouting p_routing
+        final int p_column, final int p_row, final double p_size, final IRouting p_routing
     )
     {
         super( p_configuration );
@@ -96,15 +93,14 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
             throw new IllegalArgumentException( "environment size must be greater or equal than one" );
 
         m_routing = p_routing;
-        m_metainformation = new SparseObjectMatrix2D( p_row, p_column );
-        m_physical = new SparseObjectMatrix2D( p_row, p_column );
+        m_objectgrid = new SparseObjectMatrix2D( p_row, p_column );
         m_areas = new ConcurrentHashMap<>();
     }
 
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_physical, p_start, p_end );
+        return m_routing.route( m_objectgrid, p_start, p_end );
     }
 
     @Override
@@ -125,10 +121,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition )
     {
-        if ( !p_moveable.moveable( m_physical, p_newposition ) )
+        if ( !p_moveable.moveable( m_objectgrid, p_newposition ) )
             return p_moveable;
 
-        p_moveable.move( m_physical, p_newposition );
+        p_moveable.move( m_objectgrid, p_newposition );
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
         return p_moveable;
     }
@@ -136,7 +132,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IObject<?> get( final DoubleMatrix1D p_position )
     {
-        return (IObject) m_physical.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
+        return (IObject) m_objectgrid.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
     }
 
     /**
@@ -159,7 +155,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized boolean empty( final DoubleMatrix1D p_position )
     {
-        return m_physical.getQuick( (int) p_position.getQuick( 0 ), (int) p_position.getQuick( 1 ) ) == null;
+        return m_objectgrid.getQuick( (int) p_position.getQuick( 0 ), (int) p_position.getQuick( 1 ) ) == null;
     }
 
     @Override
@@ -181,21 +177,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     @Override
-    public DoubleMatrix1D position()
+    public final DoubleMatrix1D position()
     {
-        return null;
-    }
-
-    /**
-     * value clipping
-     *
-     * @param p_value value
-     * @param p_max maximum
-     * @return modifed value
-     */
-    private static double clip( final double p_value, final double p_max )
-    {
-        return Math.max( Math.min( p_value, p_max - 1 ), 0 );
+        return new DenseDoubleMatrix1D( new double[]{m_objectgrid.columns(), m_objectgrid.rows()} );
     }
 
     /**
@@ -263,7 +247,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                                                final IRouting p_routing
         )
         {
-            final IEnvironment l_agent = new CEnvironment( p_configuration, p_rows, p_columns, p_cellsize, p_routing );
+            final IEnvironment l_agent = new CEnvironment( p_configuration, p_columns, p_rows, p_cellsize, p_routing );
             l_agent.beliefbase().add( CConfiguration.INSTANCE.view( l_agent.beliefbase() ) );
             return l_agent;
         }
