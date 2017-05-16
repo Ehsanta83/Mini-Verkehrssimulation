@@ -60,7 +60,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     @Before
     public final void initialize() throws Exception
     {
-        this.initializeenvironment( 250, 250, 50, ERoutingFactory.JPSPLUS.get() );
+        this.initializeenvironment( 50, 50, 10, ERoutingFactory.JPSPLUS.get() );
         m_pedestrian = new CPedestrianSprite(
                           this.generate(
                               "src/test/resources/pedestrian.asl",
@@ -88,7 +88,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
      */
     public static void main( final String[] p_args )
     {
-        s_screen = screen( 1600, 1200 );
+        s_screen = screen( 1600, 1200, 50, 50, 10 );
         new TestCViewPedstrian().invoketest();
     }
 
@@ -117,29 +117,34 @@ public final class TestCViewPedstrian extends IBaseViewTest
         public final ISprite<CPedestrian> call() throws Exception
         {
             m_wrapping.call();
-            m_sprite.setCenter( (int) m_wrapping.position().get( 0 ), (int) m_wrapping.position().get( 1 ) );
+            m_sprite.get().setCenter( (int) m_wrapping.position().get( 0 ), (int) m_wrapping.position().get( 1 ) );
             return this;
         }
 
         /**
          * creates the texture
+         *
+         * @return texture initialize
          */
-        private static void texture( final int p_cellsize )
+        private static Texture texture( final int p_cellsize )
         {
             final Pixmap l_pixmap = new Pixmap( p_cellsize, p_cellsize, Pixmap.Format.RGBA8888 );
             l_pixmap.setColor( Color.RED );
             l_pixmap.fillCircle( p_cellsize / 2, p_cellsize / 2, (int) ( 0.45 * p_cellsize ) );
 
-            TEXTURE.compareAndSet( null, new Texture( l_pixmap ) );
+            return new Texture( l_pixmap );
         }
 
         @Override
-        public ISprite<CPedestrian> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
+        public final ISprite<CPedestrian> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
         {
-            m_sprite = new Sprite( TEXTURE.get() );
-            m_sprite.setSize( p_cellsize, p_cellsize );
-            m_sprite.setOrigin( 1.5f / p_cellsize, 1.5f / p_cellsize );
-            m_sprite.setScale( p_unit );
+            TEXTURE.compareAndSet( null, texture( p_cellsize ) );
+            if ( !m_sprite.compareAndSet( null, new Sprite( TEXTURE.get() ) ) )
+            {
+                m_sprite.get().setSize( p_cellsize, p_cellsize );
+                m_sprite.get().setOrigin( 1.5f / p_cellsize, 1.5f / p_cellsize );
+                m_sprite.get().setScale( p_unit );
+            }
 
             return this;
         }

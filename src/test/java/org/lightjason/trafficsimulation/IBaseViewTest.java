@@ -44,9 +44,12 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -56,19 +59,6 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseViewTest extends IBaseTest
 {
-
-    /**
-     * executes the screen
-     *
-     * @param p_windowwidth window width
-     * @param p_windowheight window height
-     * @return screen reference
-     */
-    protected static CScreen screen( final Number p_windowwidth, final Number p_windowheight )
-    {
-        return screen( p_windowwidth, p_windowheight, 250, 250, 50, 250, 20 );
-    }
-
 
     /**
      * executes the screen
@@ -160,7 +150,7 @@ public abstract class IBaseViewTest extends IBaseTest
         /**
          * sprite object
          */
-        protected Sprite m_sprite;
+        protected AtomicReference<Sprite> m_sprite = new AtomicReference<>();
         /**
          * wrapping object
          */
@@ -180,7 +170,7 @@ public abstract class IBaseViewTest extends IBaseTest
         @Override
         public final Sprite sprite()
         {
-            return m_sprite;
+            return m_sprite.get();
         }
 
         @Override
@@ -223,7 +213,7 @@ public abstract class IBaseViewTest extends IBaseTest
         /**
          * set with sprites
          */
-        private final Set<ISprite> m_sprites = new ConcurrentSkipListSet<>();
+        private final Set<ISprite> m_sprites = Collections.synchronizedSet( new HashSet<>() );
         /**
          * screen unit
          */
@@ -396,7 +386,7 @@ public abstract class IBaseViewTest extends IBaseTest
             m_spritebatch.setProjectionMatrix( m_camera.combined );
             m_spritebatch.begin();
 
-            m_sprites.forEach( i -> i.sprite().draw( m_spritebatch ) );
+            m_sprites.forEach( i -> i.spriteinitialize( m_cellrows, m_cellcolumns, m_cellsize, m_unit ) );
 
             m_spritebatch.end();
         }
