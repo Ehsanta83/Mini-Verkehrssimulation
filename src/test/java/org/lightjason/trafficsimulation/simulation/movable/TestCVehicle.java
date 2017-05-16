@@ -70,16 +70,6 @@ public final class TestCVehicle extends IBaseTest
         );
     }
 
-    /**
-     * test moving a vehicle
-     */
-    @Test
-    public final void testMoving()
-    {
-        System.out.println( m_vehicle.position() );
-        m_environment.move( m_vehicle, new DenseDoubleMatrix1D( new double[]{35, 2, 1, 2} ) );
-        System.out.println( m_vehicle.position() );
-    }
 
     /**
      * main method

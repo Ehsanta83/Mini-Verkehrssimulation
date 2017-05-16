@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
                           this.generate(
                               "src/test/resources/pedestrian.asl",
                               EObjectFactory.PEDESTRIAN,
-                              new DenseDoubleMatrix1D( new double[]{0, 0} )
+                              new DenseDoubleMatrix1D( new double[]{1, 1, 2} )
                           )
         );
     }
@@ -97,6 +98,15 @@ public final class TestCViewPedstrian extends IBaseViewTest
     @Test
     public final void showmoving()
     {
+        try
+        {
+            m_pedestrian.raw().call();
+        }
+        catch ( final Exception l_exception )
+        {
+            l_exception.printStackTrace();
+            Assert.assertTrue( false );
+        }
         Assume.assumeNotNull( s_screen );
         s_screen.spriteadd( m_pedestrian );
     }

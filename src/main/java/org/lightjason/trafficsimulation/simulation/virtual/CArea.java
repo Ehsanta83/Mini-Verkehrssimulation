@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 
 /**
  * area class
+ * @todo change EDirection
  */
 public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 {

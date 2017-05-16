@@ -45,6 +45,7 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -119,10 +120,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug check parameter and generics
      */
     @Override
-    public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition )
+    public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition, final EDirection p_direction )
     {
         if ( !p_moveable.moveable( m_objectgrid, p_newposition ) )
-            return p_moveable;
+            throw new RuntimeException( MessageFormat.format( "cannot move {0}", p_direction ) );
 
         p_moveable.move( m_objectgrid, p_newposition );
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );

@@ -21,3 +21,10 @@
  * @endcond
  */
 
+!main.
+
++!main
+    <-  generic/print("hello pedestrian");
+    move/forward( [5, 5, 2], 1)
+.
+

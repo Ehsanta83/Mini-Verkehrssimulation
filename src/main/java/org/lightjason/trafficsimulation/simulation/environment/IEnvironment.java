@@ -60,9 +60,10 @@ public interface IEnvironment extends IObject<IEnvironment>
      *
      * @param p_object object, which should be moved (must store the current position)
      * @param p_position new position
+     * @param p_direction direction
      * @return updated object or object which uses the cell
      */
-    IMoveable<?> move( final IMoveable<?> p_object, final DoubleMatrix1D p_position );
+    IMoveable<?> move( final IMoveable<?> p_object, final DoubleMatrix1D p_position, final EDirection p_direction );
 
     /**
      * returns an object from the given position
