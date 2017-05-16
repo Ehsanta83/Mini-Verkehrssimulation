@@ -23,6 +23,7 @@
 
 package org.lightjason.trafficsimulation.simulation.movable;
 
+import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -116,10 +117,8 @@ public final class TestCViewPedstrian extends IBaseViewTest
         @Override
         public final ISprite<CPedestrian> call() throws Exception
         {
-            /*
             m_wrapping.call();
-            m_sprite.get().setPosition( 25, 25 );
-            */
+            spriteposition( m_sprite.get(), m_wrapping.position() );
             return this;
         }
 
@@ -152,14 +151,21 @@ public final class TestCViewPedstrian extends IBaseViewTest
             m_sprite.get().setOrigin( 0, 0 );
             m_sprite.get().setScale( p_unit );
 
-            m_sprite.get().setPosition(
-                25,
-                25
-                //(int) m_wrapping.position().getQuick( 0 ),
-                //(int) m_wrapping.position().getQuick( 1 )
-            );
-
+            spriteposition( m_sprite.get(), m_wrapping.position() );
             return this;
+        }
+
+        /**
+         *  sets the position of the sprite
+         * @param p_sprite sprite
+         * @param p_position position
+         */
+        private static void spriteposition( final Sprite p_sprite, final DoubleMatrix1D p_position )
+        {
+            p_sprite.setPosition(
+                (int) p_position.getQuick( 0 ),
+                (int) p_position.getQuick( 1 )
+            );
         }
 
     }

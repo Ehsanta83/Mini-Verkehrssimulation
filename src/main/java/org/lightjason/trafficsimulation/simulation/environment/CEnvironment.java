@@ -129,12 +129,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return p_moveable;
     }
 
-    @Override
-    public final synchronized IObject<?> get( final DoubleMatrix1D p_position )
-    {
-        return (IObject) m_objectgrid.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
-    }
-
     /**
      * remove object
      *
@@ -157,6 +151,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     {
         return m_objectgrid.getQuick( (int) p_position.getQuick( 0 ), (int) p_position.getQuick( 1 ) ) == null;
     }
+
+
+    @Override
+    public final synchronized IObject<?> get( final DoubleMatrix1D p_position )
+    {
+        return (IObject) m_objectgrid.getQuick( (int) p_position.get( 0 ), (int) p_position.get( 1 ) );
+    }
+
+
 
     @Override
     public final Stream<ILiteral> literal( final IObject<?>... p_object )
