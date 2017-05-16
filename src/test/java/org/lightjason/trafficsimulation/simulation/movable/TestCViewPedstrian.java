@@ -45,6 +45,26 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class TestCViewPedstrian extends IBaseViewTest
 {
     /**
+     * window screen width
+     */
+    private static final int WINDOWWIDTH = 1600;
+    /**
+     * window screen height
+     */
+    private static final int WINDOWHEIGHT = 1200;
+    /**
+     * grid width (column)
+     */
+    private static final int ENVWIDTH = 50;
+    /**
+     * grid height (rows)
+     */
+    private static final int ENVHEIGHT = 50;
+    /**
+     * cell size
+     */
+    private static final int ENVCELL = 10;
+    /**
      * screen reference
      */
     private static CScreen s_screen;
@@ -61,7 +81,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     @Before
     public final void initialize() throws Exception
     {
-        this.initializeenvironment( 50, 10, 10, ERoutingFactory.JPSPLUS.get() );
+        this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
         m_pedestrian = new CPedestrianSprite(
                           this.generate(
                               "src/test/resources/pedestrian.asl",
@@ -89,7 +109,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
      */
     public static void main( final String[] p_args )
     {
-        s_screen = screen( 1600, 1200, 50, 50, 10 );
+        s_screen = screen( WINDOWWIDTH, WINDOWHEIGHT, ENVWIDTH, ENVHEIGHT, ENVCELL );
         new TestCViewPedstrian().invoketest();
     }
 
