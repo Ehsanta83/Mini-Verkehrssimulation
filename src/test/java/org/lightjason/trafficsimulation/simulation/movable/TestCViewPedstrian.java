@@ -87,13 +87,16 @@ public final class TestCViewPedstrian extends IBaseViewTest
                           this.generate(
                               "src/test/resources/pedestrian.asl",
                               EObjectFactory.PEDESTRIAN,
-                              new DenseDoubleMatrix1D( new double[]{1, 1, 2} )
+                              new DenseDoubleMatrix1D( new double[]{0, 0} ),
+                              //a pedestrian that is as big as one cell
+                              0.49
                           )
         );
     }
 
     /**
      * show moving
+     * @todo we need a routine to calling the agent multiple times
      */
     @Test
     public final void showmoving()
@@ -101,6 +104,20 @@ public final class TestCViewPedstrian extends IBaseViewTest
         try
         {
             m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+            m_pedestrian.raw().call();
+
         }
         catch ( final Exception l_exception )
         {
@@ -156,6 +173,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
          * creates the texture
          *
          * @return texture initialize
+         * @todo what if the agent has more than one cell? maybe using the radius of the agent?
          */
         private static Texture texture( final int p_cellsize )
         {

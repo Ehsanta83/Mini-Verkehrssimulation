@@ -40,7 +40,6 @@ import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -56,6 +55,10 @@ import java.util.stream.Stream;
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
     protected static final String GROUP = "moveable";
+    /**
+     * radius of the object for the circle bounding box
+     */
+    protected final double m_radius;
 
     /**
      * ctor
@@ -64,9 +67,10 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     protected IBaseMoveable( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                              final String p_functor, final String p_name, final DoubleMatrix1D p_position,
-                             final DoubleMatrix1D p_size )
+                             final double p_radius )
     {
         super( p_configuration, p_environment, p_functor, p_name, p_position );
+        m_radius = p_radius;
     }
 
     /**
@@ -74,14 +78,16 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      * @param p_position position
      * @return cells
      * @todo can it be optimized with refactoring inttuple with automatic cast?
+     * @todo should be static ?
      */
-    private static Stream<Pair<Integer, Integer>> cells( final DoubleMatrix1D p_position )
+    private Stream<Pair<Integer, Integer>> cells( final DoubleMatrix1D p_position )
     {
+        // the middle of the cell is calculated with +0.5
         return CCommon.inttupelstream(
-            (int) ( p_position.get( 0 ) - p_position.get( 2 ) ),
-            (int) ( p_position.get( 0 ) + p_position.get( 2 ) ),
-            (int) ( p_position.get( 1 ) - p_position.get( 2 ) ),
-            (int) ( p_position.get( 1 ) + p_position.get( 2 ) )
+            (int) ( p_position.get( 0 ) + 0.5 - this.m_radius ),
+            (int) ( p_position.get( 0 ) + 0.5 + this.m_radius ),
+            (int) ( p_position.get( 1 ) + 0.5 - this.m_radius ),
+            (int) ( p_position.get( 1 ) + 0.5 + this.m_radius )
         );
     }
 
@@ -92,7 +98,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     @Override
     public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {
-        return cells( p_newposition )
+        return this.cells( p_newposition )
             .noneMatch( i -> ( p_grid.getQuick( i.getLeft(), i.getRight() ) != null ) && ( p_grid.getQuick( i.getLeft(), i.getRight() ) != this )
         );
     }
@@ -100,27 +106,28 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     /**
      * move
      * @todo should be static ?
+     * @todo should the name be changed? like moveingrid (we have another move method as well)
      */
     @Override
     public void move( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
     {
-        cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
-        cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
+        this.cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
+        this.cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
         this.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         this.position().setQuick( 1, p_newposition.getQuick( 1 ) );
     }
 
     /**
      * move forward into new position
+     * @todo a better way to prevent casting?
      */
     @IAgentActionFilter
     @IAgentActionName( name = "move/forward" )
     protected final void moveforward( final Object... p_data )
     {
-        //final List<CRawTerm<?>> p_newposition, final int p_speed
-        System.out.println( "Hiiiiiiiiiiii" );
-        this.move( EDirection.FORWARD, new DenseDoubleMatrix1D( ( (List<CRawTerm<?>>) p_data[0] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), (int) p_data[1] );
-        System.out.println( "Hiiiiiiiiiiii" );
+        this.move( EDirection.FORWARD,
+            new DenseDoubleMatrix1D( ( (List<CRawTerm<?>>) p_data[0] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ),
+            (int) (long) p_data[1] );
     }
 
     /**
@@ -130,6 +137,8 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     private void move( final EDirection p_direction, final DoubleMatrix1D p_newposition, final int p_speed )
     {
+        if ( p_newposition.equals( m_position ) )
+            return;
         m_environment.move( this, p_direction.position( m_position, p_newposition, p_speed ), p_direction );
     }
 

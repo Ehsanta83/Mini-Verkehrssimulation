@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -58,14 +57,16 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
      * @param p_configuration agent configuration
      * @param p_environment environment
      * @param p_position position
+     * @param p_radius radius of the bounding box
      */
     private CVehicle(
         final IAgentConfiguration<CVehicle> p_configuration,
         final IEnvironment p_environment, final String p_name,
-        final DoubleMatrix1D p_position
+        final DoubleMatrix1D p_position,
+        final double p_radius
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, new DenseDoubleMatrix1D( 2 ) );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, p_radius );
 
     }
 
@@ -122,7 +123,8 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
                                                       m_configuration,
                                                       m_environment,
                                                       MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                                                      (DoubleMatrix1D) p_data[0]
+                                                      (DoubleMatrix1D) p_data[0],
+                                                      (double) p_data[1]
                                         ),
 
                                         Stream.of( FUNCTOR, GROUP )

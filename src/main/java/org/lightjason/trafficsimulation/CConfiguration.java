@@ -98,7 +98,8 @@ public final class CConfiguration
         )
         {
             return this.set( new Yaml().load( l_stream ) );
-        } catch ( final IOException l_exception )
+        }
+        catch ( final IOException l_exception )
         {
             throw new RuntimeException( l_exception );
         }
