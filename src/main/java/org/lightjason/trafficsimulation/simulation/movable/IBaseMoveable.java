@@ -179,7 +179,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     @IAgentActionFilter
     @IAgentActionName( name = "route/next" )
-    protected final void routenext()
+    private void routenext()
     {
         if ( !m_route.isEmpty() )
             m_route.remove( 0 );
@@ -192,7 +192,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     @IAgentActionFilter
     @IAgentActionName( name = "route/skip" )
-    protected final void routeskip( final Number p_value )
+    private void routeskip( final Number p_value )
     {
         if ( p_value.intValue() < 1 )
             throw new RuntimeException( "value must be greater than zero" );
@@ -208,7 +208,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     @IAgentActionFilter
     @IAgentActionName( name = "route/estimatedtime" )
-    protected final double routeestimatedtime()
+    private double routeestimatedtime()
     {
         return m_route.size() < 1
                ? 0
