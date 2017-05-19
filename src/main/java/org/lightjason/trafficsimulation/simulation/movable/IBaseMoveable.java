@@ -25,8 +25,11 @@ package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
+import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CCommon;
@@ -34,6 +37,10 @@ import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -46,7 +53,20 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObject<T> implements IMoveable<T>
 {
+    /**
+     * group ov all agents
+     */
     protected static final String GROUP = "moveable";
+    /**
+     * speed definition
+     *
+     * @bug must be set on initialize to zero, current set to one for testing
+     */
+    private AtomicInteger m_speed = new AtomicInteger( 1 );
+    /**
+     * list of landmarks (route)
+     */
+    private final List<DoubleMatrix1D> m_route = new ArrayList<>();
 
     /**
      * ctor
@@ -102,6 +122,101 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         this.position().setQuick( 1, p_newposition.getQuick( 1 ) );
     }
 
+
+    /**
+     * calculates a new route
+     * @param p_row target row position
+     * @param p_column target column position
+     * @return route list
+     */
+    private List<DoubleMatrix1D> route( final Number p_row, final Number p_column )
+    {
+        return m_environment.route( m_position, new DenseDoubleMatrix1D( new double[]{p_row.doubleValue(), p_column.doubleValue()} ) );
+    }
+
+    /**
+     * returns the goal-position
+     * @return position
+     */
+    private DoubleMatrix1D goal()
+    {
+        return m_route.isEmpty()
+               ? m_position
+               : m_route.get( 0 );
+    }
+
+
+    // --- agent actions ---------------------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * route calculation and add landmarks at the beginning
+     *
+     * @param p_row row position
+     * @param p_column column position
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "route/set/start" )
+    private void routeatstart( final Number p_row, final Number p_column )
+    {
+        m_route.addAll( 0, this.route( p_row, p_column ) );
+    }
+
+    /**
+     * route calculation and add landmarks at the end
+     *
+     * @param p_row row position
+     * @param p_column column position
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "route/set/end" )
+    private void routeatend( final Number p_row, final Number p_column )
+    {
+        m_route.addAll( this.route( p_row, p_column ) );
+    }
+
+    /**
+     * skips the current goal-position of the routing queue
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "route/next" )
+    protected final void routenext()
+    {
+        if ( !m_route.isEmpty() )
+            m_route.remove( 0 );
+    }
+
+    /**
+     * skips the current n-elements of the routing queue
+     *
+     * @param p_value number of elements
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "route/skip" )
+    protected final void routeskip( final Number p_value )
+    {
+        if ( p_value.intValue() < 1 )
+            throw new RuntimeException( "value must be greater than zero" );
+
+        IntStream.range( 0, p_value.intValue() ).filter( i -> !m_route.isEmpty() ).forEach( i -> m_route.remove( 0 ) );
+    }
+
+    /**
+     * calculates the estimated time by the
+     * current speed of the current route
+     *
+     * @return time
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "route/estimatedtime" )
+    protected final double routeestimatedtime()
+    {
+        return m_route.size() < 1
+               ? 0
+               : m_environment.routestimatedtime( Stream.concat( Stream.of( m_position ), m_route.stream() ), m_speed.get() );
+    }
+
+
+    // --- generator definition --------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * generator
