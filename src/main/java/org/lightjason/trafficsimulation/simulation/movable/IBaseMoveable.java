@@ -32,7 +32,6 @@ import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
@@ -40,7 +39,6 @@ import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -73,48 +71,27 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         m_radius = p_radius;
     }
 
+    @Override
+    public final double radius()
+    {
+        return m_radius;
+    }
+
     /**
      * get a stream of cells from position
      * @param p_position position
      * @return cells
      * @todo can it be optimized with refactoring inttuple with automatic cast?
-     * @todo should be static ?
      */
-    private Stream<Pair<Integer, Integer>> cells( final DoubleMatrix1D p_position )
+    public static Stream<Pair<Integer, Integer>> cells( final IMoveable<?> p_moveable, final DoubleMatrix1D p_position )
     {
         // the middle of the cell is calculated with +0.5
         return CCommon.inttupelstream(
-            (int) ( p_position.get( 0 ) + 0.5 - this.m_radius ),
-            (int) ( p_position.get( 0 ) + 0.5 + this.m_radius ),
-            (int) ( p_position.get( 1 ) + 0.5 - this.m_radius ),
-            (int) ( p_position.get( 1 ) + 0.5 + this.m_radius )
+            (int) ( p_position.get( 0 ) + 0.5 - p_moveable.radius() ),
+            (int) ( p_position.get( 0 ) + 0.5 + p_moveable.radius() ),
+            (int) ( p_position.get( 1 ) + 0.5 - p_moveable.radius() ),
+            (int) ( p_position.get( 1 ) + 0.5 + p_moveable.radius() )
         );
-    }
-
-    /**
-     * moveable
-     * @todo should be static ?
-     */
-    @Override
-    public boolean moveable( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
-    {
-        return this.cells( p_newposition )
-            .noneMatch( i -> ( p_grid.getQuick( i.getLeft(), i.getRight() ) != null ) && ( p_grid.getQuick( i.getLeft(), i.getRight() ) != this )
-        );
-    }
-
-    /**
-     * move
-     * @todo should be static ?
-     * @todo should the name be changed? like moveingrid (we have another move method as well)
-     */
-    @Override
-    public void move( final ObjectMatrix2D p_grid, final DoubleMatrix1D p_newposition )
-    {
-        this.cells( this.position() ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), null ) );
-        this.cells( p_newposition ).forEach( i -> p_grid.setQuick( i.getLeft(), i.getRight(), this ) );
-        this.position().setQuick( 0, p_newposition.getQuick( 0 ) );
-        this.position().setQuick( 1, p_newposition.getQuick( 1 ) );
     }
 
     /**
@@ -123,11 +100,11 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     @IAgentActionFilter
     @IAgentActionName( name = "move/forward" )
-    protected final void moveforward( final Object... p_data )
+    protected final void moveforward( final Number p_xposition, final Number p_yposition, final Number p_speed )
     {
         this.move( EDirection.FORWARD,
-            new DenseDoubleMatrix1D( ( (List<CRawTerm<?>>) p_data[0] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ),
-            (int) (long) p_data[1] );
+            new DenseDoubleMatrix1D( new double[]{p_xposition.doubleValue(), p_yposition.doubleValue()} ),
+            p_speed.intValue() );
     }
 
     /**

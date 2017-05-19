@@ -25,14 +25,14 @@
 
 +!main
     <-  generic/print("hello pedestrian");
-    !movement/forward( [10, 10], 1 )
+    !movement/forward( 10, 10, 1 )
 .
 
 // move straight forward into the direction of the goal-position
-+!movement/forward( G, S )
++!movement/forward( X, Y, S )
     <-
         generic/print( "move forward in cycle [", Cycle, "]" );
-        move/forward( G, S );
-        !movement/forward( G, S )
+        move/forward( X, Y, S );
+        !movement/forward( x, Y, S )
 .
 

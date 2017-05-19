@@ -38,6 +38,7 @@ import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 
 /**
@@ -72,7 +73,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     /**
      * area generator
      */
-    private ISprite<CPedestrian> m_pedestrian;
+    private CPedestrianSprite m_pedestrian;
 
     /**
      * initialize pedestrian
@@ -101,31 +102,27 @@ public final class TestCViewPedstrian extends IBaseViewTest
     @Test
     public final void showmoving()
     {
-        try
-        {
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-            m_pedestrian.raw().call();
-
-        }
-        catch ( final Exception l_exception )
-        {
-            l_exception.printStackTrace();
-            Assert.assertTrue( false );
-        }
         Assume.assumeNotNull( s_screen );
         s_screen.spriteadd( m_pedestrian );
+        IntStream.rangeClosed( 0, 100 ).forEach(  i ->
+        {
+            try
+            {
+
+                m_pedestrian.call();
+                System.out.println( m_pedestrian.raw().position() );
+                Thread.sleep( 500 );
+
+            }
+            catch ( final Exception l_exception )
+            {
+                l_exception.printStackTrace();
+                Assert.assertTrue( false );
+            }
+        }
+        );
+
+
     }
 
 
@@ -210,6 +207,8 @@ public final class TestCViewPedstrian extends IBaseViewTest
          */
         private static void spriteposition( final Sprite p_sprite, final DoubleMatrix1D p_position )
         {
+            if ( p_sprite == null )
+                return;
             p_sprite.setPosition(
                 (int) p_position.getQuick( 0 ),
                 (int) p_position.getQuick( 1 )
