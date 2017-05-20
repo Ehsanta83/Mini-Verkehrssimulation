@@ -25,16 +25,13 @@ package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
-import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
-import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -83,16 +80,65 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );
     }
 
+
     /**
-     * move forward into new position
+     * move forward into goal direction
      */
     @IAgentActionFilter
     @IAgentActionName( name = "move/forward" )
-    protected final void moveforward( final Number p_xposition, final Number p_yposition, final Number p_speed )
+    protected final void moveforward()
     {
-        this.move( EDirection.FORWARD,
-            new DenseDoubleMatrix1D( new double[]{p_xposition.doubleValue(), p_yposition.doubleValue()} ),
-            p_speed.intValue() );
+        this.move( EDirection.FORWARD );
+    }
+
+    /**
+     * move left forward into goal direction
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "move/forwardright" )
+    protected final void moveforwardright()
+    {
+        this.move( EDirection.FORWARDRIGHT );
+    }
+
+    /**
+     * move backward right from goal direction
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "move/backwardright" )
+    protected final void movebackwardright()
+    {
+        this.move( EDirection.BACKWARDRIGHT );
+    }
+
+    /**
+     * move backward from goal direction
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "move/backward" )
+    protected final void movebackward()
+    {
+        this.move( EDirection.BACKWARD );
+    }
+
+    /**
+     * move backward right from goal direction
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "move/backwardleft" )
+    protected final void movebackwardleft()
+    {
+        this.move( EDirection.BACKWARDLEFT );
+    }
+
+    /**
+     * move forward left into goal direction
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "move/forwardleft" )
+    protected final void moveforwardleft()
+    {
+        this.move( EDirection.FORWARDLEFT );
     }
 
     /**
@@ -100,11 +146,12 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      *
      * @param p_direction direction
      */
-    private void move( final EDirection p_direction, final DoubleMatrix1D p_newposition, final int p_speed )
+    protected void move( final EDirection p_direction )
     {
-        if ( p_newposition.equals( m_position ) )
+        final DoubleMatrix1D l_goalposition = this.goal();
+        if ( l_goalposition.equals( m_position ) )
             return;
-        m_environment.move( this, p_direction.position( m_position, p_newposition, p_speed ), p_direction );
+        m_environment.move( this, p_direction.position( m_position, l_goalposition, m_speed.intValue() ), p_direction );
     }
 
 

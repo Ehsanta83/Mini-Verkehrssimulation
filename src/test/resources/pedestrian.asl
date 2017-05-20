@@ -25,14 +25,56 @@
 
 +!main
     <-  generic/print("hello pedestrian");
-    !movement/forward( 10, 10, 1 )
+    route/set/start( 10, 10 );
+    !movement/forward
 .
 
 // move straight forward into the direction of the goal-position
-+!movement/forward( X, Y, S )
++!movement/forward
     <-
         generic/print( "move forward in cycle [", Cycle, "]" );
-        move/forward( X, Y, S );
-        !movement/forward( X, Y, S )
+        move/forward();
+        !movement/forward
+.
+
+// move straight forward fails than go left
+-!movement/forward
+    <-
+        generic/print( "move forward fails in cycle [", Cycle, "]" );
+        !movement/left
+.
+
+// move left - direction 90 degree to the goal position
++!movement/left
+    <-
+        generic/print( "move left in cycle [", Cycle, "]" );
+        move/left();
+        !movement/forward
+.
+
+// move left fails than go right
+-!movement/left
+    <-
+        generic/print( "move left fails in cycle [", Cycle, "]" );
+        !movement/right
+.
+
+// move right - direction 90 degree to the goal position
++!movement/right
+    <-
+        generic/print( "move right in cycle [", Cycle, "]" );
+        move/right();
+        !movement/forward
+.
+
+// move right fails than sleep and hope everything will be
+// fine later, wakeup plan will be trigger after sleeping
+-!movement/right
+    <-
+        T = math/statistic/randomsimple();
+        T = T * 10 + 1;
+        T = math/min( T, 5 );
+        generic/print( "move right fails in cycle [", Cycle, "] wait [", T,"] cycles" );
+        agent/sleep(T)
 .
 

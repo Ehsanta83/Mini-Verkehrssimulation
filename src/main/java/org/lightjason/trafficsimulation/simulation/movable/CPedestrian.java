@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * pedestrian class
  */
-public final class CPedestrian extends IBaseMoveable<CPedestrian>
+public final class CPedestrian extends IBasePedestrian<CPedestrian>
 {
     private static final String FUNCTOR = "pedestrian";
     private static final AtomicLong COUNTER = new AtomicLong();
