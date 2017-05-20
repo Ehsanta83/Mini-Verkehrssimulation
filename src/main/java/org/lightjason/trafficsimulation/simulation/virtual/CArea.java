@@ -89,9 +89,11 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_name          name of the object
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final List<CRawTerm<?>> p_position, final boolean p_passable, final String p_type, final List<CRawTerm<?>> p_directions )
+                   final List<CRawTerm<?>> p_position, final double p_radius,
+                   final boolean p_passable, final String p_type, final List<CRawTerm<?>> p_directions )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ) );
+        super( p_configuration, p_environment, FUNCTOR, p_name,
+            new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), p_radius );
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions.stream().map( i -> EDirection.from( i.toString() ) );
@@ -188,9 +190,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                 (List<CRawTerm<?>>) p_data[0],
-                (boolean) p_data[1],
-                (String) p_data[2],
-                (List<CRawTerm<?>>) p_data[3]
+                (double) (long) p_data[1],
+                (boolean) p_data[2],
+                (String) p_data[3],
+                (List<CRawTerm<?>>) p_data[4]
             );
 
             //m_environment.positioningAnArea( l_area );

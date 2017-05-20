@@ -59,10 +59,11 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
         final IAgentConfiguration<CTrafficLightVehicle> p_configuration,
         final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position,
-        final int p_rotation
+        final int p_rotation,
+        final double p_radius
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorVehicle.class, p_position, p_rotation );
+        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorVehicle.class, p_position, p_rotation, p_radius );
     }
 
 
@@ -92,7 +93,8 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
         }
 
         @Override
-        protected final Pair<CTrafficLightVehicle, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation )
+        protected final Pair<CTrafficLightVehicle, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
+                                                                             final int p_rotation, final double p_radius )
         {
             return new ImmutablePair<>(
                                         new CTrafficLightVehicle(
@@ -100,7 +102,8 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
                                                                   p_environment,
                                                                   MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                                                                   p_position,
-                                                                  p_rotation
+                                                                  p_rotation,
+                                                                  p_radius
                                         ),
 
                                         Stream.of( FUNCTOR, GROUP )

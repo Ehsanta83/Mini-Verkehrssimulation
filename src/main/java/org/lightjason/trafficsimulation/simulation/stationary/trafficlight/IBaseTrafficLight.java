@@ -68,10 +68,10 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                                  final String p_functor, final String p_name, final Class<L> p_light,
-                                 final DoubleMatrix1D p_position, final int p_rotation
+                                 final DoubleMatrix1D p_position, final int p_rotation, final double p_radius
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
     }
@@ -118,7 +118,8 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         @SuppressWarnings( "unchecked" )
         protected final Pair<T, Stream<String>> generate( final Object... p_data )
         {
-            return this.generate( m_environment, (DoubleMatrix1D) p_data[0], (int) p_data[1] );
+            return this.generate( m_environment, (DoubleMatrix1D) p_data[0],
+                (int) p_data[1], (double) p_data[2] );
         }
 
         /**
@@ -129,7 +130,8 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_rotation rotation
          * @return pair of IBaseTrafficLight and stream of strings,
          */
-        protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position, final int p_rotation );
+        protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
+                                                             final int p_rotation, final double p_radius );
 
     }
 }

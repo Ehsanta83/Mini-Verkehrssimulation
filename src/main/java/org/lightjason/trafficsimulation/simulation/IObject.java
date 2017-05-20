@@ -62,9 +62,19 @@ public interface IObject<T extends IAgent<?>> extends IAgent<T>
 
     /**
      * position of the object
+     *
      * @return position
+     * @todo: is it not better to move this to IBaseObject
      */
     DoubleMatrix1D position();
+
+    /**
+     * radius of the object for the circle bounding box
+     *
+     * @return radius
+     * @todo: is it not better to move this to IBaseObject
+     */
+    double radius();
 
     /**
      * generator interface

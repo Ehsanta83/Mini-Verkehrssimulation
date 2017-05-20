@@ -69,6 +69,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      */
     protected DoubleMatrix1D m_position;
     /**
+     * radius of the object for the circle bounding box
+     */
+    protected final double m_radius;
+    /**
      * environment reference
      */
     protected final IEnvironment m_environment;
@@ -95,13 +99,15 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      */
     @SuppressWarnings( "unchecked" )
     protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
-                           final String p_functor, final String p_name, final DoubleMatrix1D p_position )
+                           final String p_functor, final String p_name, final DoubleMatrix1D p_position,
+                           final double p_radius )
     {
         super( p_configuration );
         m_functor = p_functor;
         m_name = p_name;
         m_environment = p_environment;
         m_position = p_position;
+        m_radius = p_radius;
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );
@@ -162,6 +168,29 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     public final DoubleMatrix1D position()
     {
         return m_position;
+    }
+
+    @Override
+    public final double radius()
+    {
+        return m_radius;
+    }
+
+    /**
+     * get a stream of cells from position
+     * @param p_position position
+     * @return cells
+     * @todo can it be optimized with refactoring inttuple with automatic cast?
+     */
+    public static Stream<Pair<Integer, Integer>> cells( final IObject<?> p_object, final DoubleMatrix1D p_position )
+    {
+        // the middle of the cell is calculated with +0.5
+        return org.lightjason.trafficsimulation.CCommon.inttupelstream(
+            (int) ( p_position.get( 0 ) + 0.5 - p_object.radius() ),
+            (int) ( p_position.get( 0 ) + 0.5 + p_object.radius() ),
+            (int) ( p_position.get( 1 ) + 0.5 - p_object.radius() ),
+            (int) ( p_position.get( 1 ) + 0.5 + p_object.radius() )
+        );
     }
 
     /**

@@ -38,6 +38,7 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
 import org.lightjason.trafficsimulation.simulation.movable.IBaseMoveable;
@@ -123,15 +124,15 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition, final EDirection p_direction )
     {
-        if ( IBaseMoveable.cells( p_moveable, p_newposition )
+        if ( IBaseObject.cells( p_moveable, p_newposition )
             .anyMatch( i -> ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != null )
                 && ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != this ) )
            )
         {
             throw new RuntimeException( MessageFormat.format( "cannot move {0}", p_direction ) );
         }
-        IBaseMoveable.cells( p_moveable, p_moveable.position() ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), null ) );
-        IBaseMoveable.cells( p_moveable, p_newposition ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), this ) );
+        IBaseObject.cells( p_moveable, p_moveable.position() ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), null ) );
+        IBaseObject.cells( p_moveable, p_newposition ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), this ) );
         p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
 
@@ -193,6 +194,12 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public final DoubleMatrix1D position()
     {
         return new DenseDoubleMatrix1D( new double[]{m_objectgrid.columns(), m_objectgrid.rows()} );
+    }
+
+    @Override
+    public final double radius()
+    {
+        return 0;
     }
 
     /**

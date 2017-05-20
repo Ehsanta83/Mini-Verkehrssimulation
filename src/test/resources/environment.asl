@@ -25,5 +25,5 @@
 
 +!main <-
     generic/print( "hello environment" );
-    env/area/add( "src/test/resources/area.asl", [35, 14, 2, 28], true, "directlane", ["north"] )
+    env/area/add( "src/test/resources/area.asl", [35, 14, 2, 28], 0, true, "directlane", ["north"] )
 .

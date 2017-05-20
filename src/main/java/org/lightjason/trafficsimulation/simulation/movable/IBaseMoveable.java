@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -35,6 +34,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
+import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -61,10 +61,6 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     protected static final String GROUP = "moveable";
     /**
-     * radius of the object for the circle bounding box
-     */
-    protected final double m_radius;
-    /**
      * speed definition
      *
      * @bug must be set on initialize to zero, current set to one for testing
@@ -84,36 +80,11 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
                              final String p_functor, final String p_name, final DoubleMatrix1D p_position,
                              final double p_radius )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position );
-        m_radius = p_radius;
-    }
-
-    @Override
-    public final double radius()
-    {
-        return m_radius;
-    }
-
-    /**
-     * get a stream of cells from position
-     * @param p_position position
-     * @return cells
-     * @todo can it be optimized with refactoring inttuple with automatic cast?
-     */
-    public static Stream<Pair<Integer, Integer>> cells( final IMoveable<?> p_moveable, final DoubleMatrix1D p_position )
-    {
-        // the middle of the cell is calculated with +0.5
-        return CCommon.inttupelstream(
-            (int) ( p_position.get( 0 ) + 0.5 - p_moveable.radius() ),
-            (int) ( p_position.get( 0 ) + 0.5 + p_moveable.radius() ),
-            (int) ( p_position.get( 1 ) + 0.5 - p_moveable.radius() ),
-            (int) ( p_position.get( 1 ) + 0.5 + p_moveable.radius() )
-        );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );
     }
 
     /**
      * move forward into new position
-     * @todo a better way to prevent casting?
      */
     @IAgentActionFilter
     @IAgentActionName( name = "move/forward" )
