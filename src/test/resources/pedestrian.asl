@@ -33,6 +33,6 @@
     <-
         generic/print( "move forward in cycle [", Cycle, "]" );
         move/forward( X, Y, S );
-        !movement/forward( x, Y, S )
+        !movement/forward( X, Y, S )
 .
 
