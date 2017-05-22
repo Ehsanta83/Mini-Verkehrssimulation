@@ -47,7 +47,7 @@ public abstract class IBasePedestrian<T extends IBasePedestrian<?>> extends IBas
      * @param p_position position
      * @param p_radius radius
      */
-    protected IBasePedestrian( final IAgentConfiguration p_configuration, final IEnvironment p_environment, final String p_functor,
+    protected IBasePedestrian( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
                                final String p_name, final DoubleMatrix1D p_position, final double p_radius )
     {
         super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );

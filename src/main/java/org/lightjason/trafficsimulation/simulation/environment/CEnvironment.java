@@ -124,7 +124,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition, final EDirection p_direction )
     {
-        if( p_newposition.get( 0 ) < 0 || p_newposition.get( 0 ) > m_objectgrid.columns()
+        if ( p_newposition.get( 0 ) < 0 || p_newposition.get( 0 ) > m_objectgrid.columns()
             || p_newposition.get( 1 ) < 0 || p_newposition.get( 1 ) > m_objectgrid.rows() )
         {
             throw new RuntimeException( MessageFormat.format( "new goal position ([{0}, {1}]) is out of environment.", p_newposition.get( 0 ), p_newposition.get( 1 ) ) );
@@ -132,8 +132,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
 
         if ( IBaseObject.cells( p_moveable, p_newposition )
             .anyMatch( i -> ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != null )
-                && ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != this ) )
-           )
+                && ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != this ) ) )
         {
             throw new RuntimeException( MessageFormat.format( "cannot move {0}", p_direction ) );
         }

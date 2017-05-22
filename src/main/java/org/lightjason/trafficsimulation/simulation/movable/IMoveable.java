@@ -23,8 +23,6 @@
 
 package org.lightjason.trafficsimulation.simulation.movable;
 
-import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.ObjectMatrix2D;
 import org.lightjason.trafficsimulation.simulation.IObject;
 
 
