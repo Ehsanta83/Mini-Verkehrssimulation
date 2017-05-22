@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 
 import java.util.stream.Collectors;
 
@@ -55,7 +56,8 @@ public final class TestCPedestrian extends IBaseTest
     public final void initialize() throws Exception
     {
         this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
-        m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN, new DenseDoubleMatrix1D( new double[]{0, 0} ), 1.0 );
+        m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN,
+            new DenseDoubleMatrix1D( new double[]{0, 0} ), new CCircleBoundingBox() );
     }
 
     /**

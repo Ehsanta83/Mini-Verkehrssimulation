@@ -31,6 +31,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -53,16 +54,16 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
      * @param p_configuration agent configuration
      * @param p_environment environment
      * @param p_position position
-     * @param p_radius radius of bounding box
+     * @param p_boundingbox bounding box
      */
     private CPedestrian(
         final IAgentConfiguration<CPedestrian> p_configuration,
         final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position,
-        final double p_radius
+        final IBoundingBox p_boundingbox
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, p_radius );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, p_boundingbox );
     }
 
 
@@ -106,7 +107,7 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
                     m_environment,
                     MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                     (DoubleMatrix1D) p_data[0],
-                    (double) p_data[1]
+                    (IBoundingBox) p_data[1]
                 ),
 
                 Stream.of( FUNCTOR, GROUP )

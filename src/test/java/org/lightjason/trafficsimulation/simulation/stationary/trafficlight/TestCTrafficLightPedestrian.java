@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public final class TestCTrafficLightPedestrian extends IBaseTest
             EObjectFactory.PEDESTRIAN_TRAFFICLIGHT,
             new DenseDoubleMatrix1D( new double[]{0, 0} ),
             90,
-            1.0
+            new CCircleBoundingBox()
         );
     }
 

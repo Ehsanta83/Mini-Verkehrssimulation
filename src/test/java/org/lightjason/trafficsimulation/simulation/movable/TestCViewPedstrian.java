@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseViewTest;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
@@ -89,8 +90,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
                               "src/test/resources/pedestrian.asl",
                               EObjectFactory.PEDESTRIAN,
                               new DenseDoubleMatrix1D( new double[]{0, 0} ),
-                              //a pedestrian that is as big as one cell
-                              0.49
+                              new CCircleBoundingBox()
                           )
         );
     }

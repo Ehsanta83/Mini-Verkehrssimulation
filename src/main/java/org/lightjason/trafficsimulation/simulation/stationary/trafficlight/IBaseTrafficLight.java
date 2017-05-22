@@ -120,7 +120,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         protected final Pair<T, Stream<String>> generate( final Object... p_data )
         {
             return this.generate( m_environment, (DoubleMatrix1D) p_data[0],
-                (int) p_data[1], (double) p_data[2] );
+                (int) p_data[1], (IBoundingBox) p_data[2] );
         }
 
         /**
@@ -129,10 +129,11 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_environment environment
          * @param p_position position
          * @param p_rotation rotation
+         * @param p_boundingbox bounding box
          * @return pair of IBaseTrafficLight and stream of strings,
          */
         protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
-                                                             final int p_rotation, final double p_radius );
+                                                             final int p_rotation, final IBoundingBox p_boundingbox );
 
     }
 }
