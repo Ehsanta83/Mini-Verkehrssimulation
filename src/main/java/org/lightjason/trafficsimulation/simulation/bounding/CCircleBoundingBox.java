@@ -21,61 +21,16 @@
  * @endcond
  */
 
-package org.lightjason.trafficsimulation.simulation;
-
-import cern.colt.matrix.DoubleMatrix1D;
-import org.lightjason.agentspeak.agent.IAgent;
-import org.lightjason.agentspeak.generator.IAgentGenerator;
-import org.lightjason.agentspeak.language.ILiteral;
-
-import java.util.stream.Stream;
-
+package org.lightjason.trafficsimulation.simulation.bounding;
 
 /**
- * object interface
+ * circle bounding box
  */
-public interface IObject<T extends IAgent<?>> extends IAgent<T>
+public final class CCircleBoundingBox implements IBoundingBox
 {
-
-    /**
-     * get literal of the object
-     *
-     * @param p_object objects
-     * @return stream of literal
-     */
-    Stream<ILiteral> literal( final IObject<?>... p_object );
-
-    /**
-     * get literal of the object
-     *
-     * @param p_object objects
-     * @return stream of literal
-     */
-    Stream<ILiteral> literal( final Stream<IObject<?>> p_object );
-
-    /**
-     * name of the object
-     *
-     * @return string name
-     */
-    String name();
-
-    /**
-     * position of the object
-     *
-     * @return position
-     * @todo: is it not better to move this to IBaseObject
-     */
-    DoubleMatrix1D position();
-
-    /**
-     * generator interface
-     *
-     * @tparam T element generator
-     */
-    interface IGenerator<T extends IObject<?>> extends IAgentGenerator<T>
+    @Override
+    public boolean intersects( final IBoundingBox p_boundingbox )
     {
-
+        return false;
     }
-
 }

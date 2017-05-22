@@ -32,6 +32,7 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
+import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -75,9 +76,9 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     protected IBaseMoveable( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                              final String p_functor, final String p_name, final DoubleMatrix1D p_position,
-                             final double p_radius )
+                             final IBoundingBox p_boundingbox )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
     }
 
 

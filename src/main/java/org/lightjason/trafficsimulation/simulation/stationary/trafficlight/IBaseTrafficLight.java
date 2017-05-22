@@ -32,6 +32,7 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
+import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -68,10 +69,10 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      */
     protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                                  final String p_functor, final String p_name, final Class<L> p_light,
-                                 final DoubleMatrix1D p_position, final int p_rotation, final double p_radius
+                                 final DoubleMatrix1D p_position, final int p_rotation, final IBoundingBox p_boundingbox
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_radius );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
     }

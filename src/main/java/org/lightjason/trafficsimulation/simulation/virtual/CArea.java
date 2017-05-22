@@ -37,6 +37,7 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -89,11 +90,11 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_name          name of the object
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final List<CRawTerm<?>> p_position, final double p_radius,
+                   final List<CRawTerm<?>> p_position, final IBoundingBox p_boundingbox,
                    final boolean p_passable, final String p_type, final List<CRawTerm<?>> p_directions )
     {
         super( p_configuration, p_environment, FUNCTOR, p_name,
-            new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), p_radius );
+            new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), p_boundingbox );
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions.stream().map( i -> EDirection.from( i.toString() ) );
@@ -190,7 +191,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                 (List<CRawTerm<?>>) p_data[0],
-                (double) (long) p_data[1],
+                (IBoundingBox) p_data[1],
                 (boolean) p_data[2],
                 (String) p_data[3],
                 (List<CRawTerm<?>>) p_data[4]

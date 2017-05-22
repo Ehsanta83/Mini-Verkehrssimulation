@@ -21,56 +21,21 @@
  * @endcond
  */
 
-package org.lightjason.trafficsimulation.simulation.movable;
 
-import cern.colt.matrix.DoubleMatrix1D;
-import org.lightjason.agentspeak.action.binding.IAgentAction;
-import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
-import org.lightjason.agentspeak.action.binding.IAgentActionName;
-import org.lightjason.agentspeak.configuration.IAgentConfiguration;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
-import org.lightjason.trafficsimulation.simulation.environment.EDirection;
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
+package org.lightjason.trafficsimulation.simulation.bounding;
 
 /**
- * pedestrian abstract class
+ * interface for bounding box
+ *
+ * @todo how can we change the bounding box or its size in the runtime?
  */
-@IAgentAction
-public abstract class IBasePedestrian<T extends IBasePedestrian<?>> extends IBaseMoveable<T>
+public interface IBoundingBox
 {
     /**
-     * ctor
+     * if the bounding box intersect with another one
      *
-     * @param p_configuration agent configuration
-     * @param p_environment environment
-     * @param p_functor functor
-     * @param p_name name
-     * @param p_position position
      * @param p_boundingbox bounding box
+     * @return if intersects
      */
-    protected IBasePedestrian( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
-                               final String p_name, final DoubleMatrix1D p_position, final IBoundingBox p_boundingbox )
-    {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
-    }
-
-    /**
-     * move right to the goal direction
-     */
-    @IAgentActionFilter
-    @IAgentActionName( name = "move/right" )
-    protected final void moveright()
-    {
-        this.move( EDirection.RIGHT );
-    }
-
-    /**
-     * move left to the goal
-     */
-    @IAgentActionFilter
-    @IAgentActionName( name = "move/left" )
-    protected final void moveleft()
-    {
-        this.move( EDirection.LEFT );
-    }
+    boolean intersects( final IBoundingBox p_boundingbox );
 }

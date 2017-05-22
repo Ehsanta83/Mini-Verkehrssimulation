@@ -202,12 +202,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         return new DenseDoubleMatrix1D( new double[]{m_objectgrid.columns(), m_objectgrid.rows()} );
     }
 
-    @Override
-    public final double radius()
-    {
-        return 0;
-    }
-
     /**
      * add an area to the environment
      *

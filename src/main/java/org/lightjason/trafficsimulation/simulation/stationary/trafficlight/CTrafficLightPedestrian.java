@@ -31,6 +31,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -60,10 +61,10 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
         final IEnvironment p_environment, final String p_name,
         final DoubleMatrix1D p_position,
         final int p_rotation,
-        final double p_radius
+        final IBoundingBox p_boundingbox
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorPedestrian.class, p_position, p_rotation, p_radius );
+        super( p_configuration, p_environment, FUNCTOR, p_name, ELightColorPedestrian.class, p_position, p_rotation, p_boundingbox );
     }
 
 
@@ -91,7 +92,7 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
 
         @Override
         protected final Pair<CTrafficLightPedestrian, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
-                                                                                final int p_rotation, final double p_radius )
+                                                                                final int p_rotation, final IBoundingBox p_boundingbox )
         {
             return new ImmutablePair<>(
                                         new CTrafficLightPedestrian(
@@ -100,7 +101,7 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
                                                                      MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                                                                      p_position,
                                                                      p_rotation,
-                                                                     p_radius
+                                                                     p_boundingbox
                                         ),
 
                                         Stream.of( FUNCTOR, GROUP )
