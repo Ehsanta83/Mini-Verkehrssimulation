@@ -47,13 +47,14 @@ public final class TestCTrafficLightVehicle extends IBaseTest
      * initialize vehicle light
      *
      * @throws Exception on any error
+     * @bug fix bounding box
      */
     @Before
     public final void initialize() throws Exception
     {
         this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
-        m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT,
-            new DenseDoubleMatrix1D( new double[]{0, 0} ), 180, new CCircleBoundingBox() );
+        /*m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT,
+            new DenseDoubleMatrix1D( new double[]{0, 0} ), 180, new CCircleBoundingBox() );*/
     }
 
 

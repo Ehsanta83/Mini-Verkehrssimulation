@@ -49,13 +49,14 @@ public final class TestCVehicle extends IBaseTest
      * initialize vehicle
      *
      * @throws Exception on any error
+     * @bug fix bounding box
      */
     @Before
     public final void initialize() throws Exception
     {
         this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
-        m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE,
-            new DenseDoubleMatrix1D( new double[]{0, 0} ), new CCircleBoundingBox() );
+        /*m_vehicle = this.generate( "src/test/resources/vehicle.asl", EObjectFactory.VEHICLE,
+            new DenseDoubleMatrix1D( new double[]{0, 0} ), new CCircleBoundingBox() );*/
     }
 
 

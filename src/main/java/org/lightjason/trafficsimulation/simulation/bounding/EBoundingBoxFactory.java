@@ -23,36 +23,45 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
-import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+
+import java.text.MessageFormat;
+import java.util.Locale;
 
 /**
- * circle bounding box
+ * class for generating bounding box
  */
-public final class CCircleBoundingBox implements IBoundingBox
+public enum EBoundingBoxFactory
 {
-    /**
-     * position of the center of the bounding box
-     */
-    private DoubleMatrix1D m_centerposition;
-    /**
-     * radius of the bounding box
-     */
-    private double m_radius;
+    CIRCLE;
 
     /**
-     * ctor
-     * @param p_centerposition center
-     * @param p_radius radius
+     * generate a bounding box
+     *
+     * @return the bounding box
      */
-    public CCircleBoundingBox( final DoubleMatrix1D p_centerposition, final double p_radius )
+    public final IBoundingBox generate( final double... p_arguments )
     {
-        this.m_centerposition = p_centerposition;
-        this.m_radius = p_radius;
+        switch ( this )
+        {
+            case CIRCLE:
+                return new CCircleBoundingBox(
+                    new DenseDoubleMatrix1D( new double[]{p_arguments[0], p_arguments[1]} ),
+                    p_arguments[2] );
+
+            default:
+                throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );
+        }
     }
 
-    @Override
-    public boolean intersects( final IBoundingBox p_boundingbox )
+    /**
+     * get the factory from a name
+     *
+     * @param p_name name
+     * @return the factory
+     */
+    public static EBoundingBoxFactory from( final String p_name )
     {
-        return false;
+        return EBoundingBoxFactory.valueOf( p_name.toUpperCase( Locale.ROOT ) );
     }
 }

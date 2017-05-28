@@ -37,6 +37,7 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.bounding.EBoundingBoxFactory;
 import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -89,9 +90,14 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_environment   environment reference
      * @param p_name          name of the object
      */
-    private CArea( final IAgentConfiguration<CArea> p_configuration, final IEnvironment p_environment, final String p_name,
-                   final List<CRawTerm<?>> p_position, final IBoundingBox p_boundingbox,
-                   final boolean p_passable, final String p_type, final List<CRawTerm<?>> p_directions )
+    private CArea( final IAgentConfiguration<CArea> p_configuration,
+                   final IEnvironment p_environment,
+                   final String p_name,
+                   final List<CRawTerm<?>> p_position,
+                   final boolean p_passable,
+                   final String p_type,
+                   final List<CRawTerm<?>> p_directions,
+                   final IBoundingBox p_boundingbox )
     {
         super( p_configuration, p_environment, FUNCTOR, p_name,
             new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), p_boundingbox );
@@ -191,10 +197,10 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                 (List<CRawTerm<?>>) p_data[0],
-                (IBoundingBox) p_data[1],
-                (boolean) p_data[2],
-                (String) p_data[3],
-                (List<CRawTerm<?>>) p_data[4]
+                (boolean) p_data[1],
+                (String) p_data[2],
+                (List<CRawTerm<?>>) p_data[3],
+                EBoundingBoxFactory.from( (String) p_data[4] ).generate( ( (List<?>) p_data[5] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() )
             );
 
             //m_environment.positioningAnArea( l_area );

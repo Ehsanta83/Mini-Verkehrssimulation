@@ -51,13 +51,14 @@ public final class TestCPedestrian extends IBaseTest
      * initialize pedestrian
      *
      * @throws Exception on initialize environment error
+     * @bug fix bounding box
      */
     @Before
     public final void initialize() throws Exception
     {
         this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
-        m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN,
-            new DenseDoubleMatrix1D( new double[]{0, 0} ), new CCircleBoundingBox() );
+        //m_pedestrian = this.generate( "src/test/resources/pedestrian.asl", EObjectFactory.PEDESTRIAN,
+        //    new DenseDoubleMatrix1D( new double[]{0, 0} ), new CCircleBoundingBox() );
     }
 
     /**

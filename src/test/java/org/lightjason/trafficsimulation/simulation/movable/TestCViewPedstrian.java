@@ -80,19 +80,20 @@ public final class TestCViewPedstrian extends IBaseViewTest
      * initialize pedestrian
      *
      * @throws Exception on initialize environment error
+     * @bug fix bounding box
      */
     @Before
     public final void initialize() throws Exception
     {
         this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
-        m_pedestrian = new CPedestrianSprite(
+        /*m_pedestrian = new CPedestrianSprite(
                           this.generate(
                               "src/test/resources/pedestrian.asl",
                               EObjectFactory.PEDESTRIAN,
                               new DenseDoubleMatrix1D( new double[]{0, 0} ),
                               new CCircleBoundingBox()
                           )
-        );
+        );*/
     }
 
     /**
