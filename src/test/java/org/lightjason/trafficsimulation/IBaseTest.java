@@ -171,7 +171,7 @@ public abstract class IBaseTest
 
             return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment )
                 .generatemultiple( p_number, p_arguments )
-                .map( IAgent::<T>raw )
+                .map( i -> i.<T>raw() )
                 .collect( Collectors.toList() );
 
         }

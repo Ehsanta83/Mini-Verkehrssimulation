@@ -213,7 +213,7 @@ public abstract class IBaseViewTest extends IBaseTest
         /**
          * set with sprites
          */
-        private final Set<ISprite> m_sprites = Collections.synchronizedSet( new HashSet<>() );
+        private final Set<ISprite<?>> m_sprites = Collections.synchronizedSet( new HashSet<>() );
         /**
          * screen unit
          */
@@ -257,7 +257,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * @param p_sprites sprites
          * @return self reference
          */
-        public final CScreen spriteadd( final ISprite... p_sprites )
+        public final CScreen spriteadd( final ISprite<?>... p_sprites )
         {
             return this.spriteadd( Arrays.stream( p_sprites ) );
         }
@@ -268,7 +268,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * @param p_sprites sprites
          * @return self reference
          */
-        public final CScreen spriteremove( final ISprite... p_sprites  )
+        public final CScreen spriteremove( final ISprite<?>... p_sprites  )
         {
             return this.spriteremove( Arrays.stream( p_sprites ) );
         }
@@ -279,7 +279,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * @param p_sprites sprite stream
          * @return self reference
          */
-        public final CScreen spriteadd( final Stream<? extends ISprite> p_sprites )
+        public final CScreen spriteadd( final Stream<? extends ISprite<?>> p_sprites )
         {
             p_sprites.forEach( m_sprites::add );
             return this;
@@ -291,7 +291,7 @@ public abstract class IBaseViewTest extends IBaseTest
          * @param p_sprites sprite stream
          * @return self reference
          */
-        public final CScreen spriteremove( final Stream<? extends ISprite> p_sprites )
+        public final CScreen spriteremove( final Stream<? extends ISprite<?>> p_sprites )
         {
             p_sprites.forEach( m_sprites::remove );
             return this;

@@ -40,7 +40,6 @@ import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.IShallowCopy;
 import org.lightjason.agentspeak.language.execution.IVariableBuilder;
 import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
@@ -130,7 +129,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
                         Stream.of(
                             CLiteral.from( "name", CRawTerm.from( m_name ) )
                         ),
-                        m_external.stream().map( IShallowCopy::shallowcopysuffix ).sorted().sequential()
+                        m_external.stream().map( i -> i.shallowcopysuffix() ).sorted().sequential()
                     ),
                     this.individualliteral( p_object ).sorted().sequential()
                 )
