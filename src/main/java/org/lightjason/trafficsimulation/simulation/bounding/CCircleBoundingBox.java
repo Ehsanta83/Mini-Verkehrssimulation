@@ -23,6 +23,7 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
+
 import cern.colt.matrix.DoubleMatrix1D;
 
 /**
@@ -31,22 +32,16 @@ import cern.colt.matrix.DoubleMatrix1D;
 public final class CCircleBoundingBox implements IBoundingBox
 {
     /**
-     * position of the center of the bounding box
-     */
-    private DoubleMatrix1D m_centerposition;
-    /**
      * radius of the bounding box
      */
     private double m_radius;
 
     /**
      * ctor
-     * @param p_centerposition center
      * @param p_radius radius
      */
-    public CCircleBoundingBox( final DoubleMatrix1D p_centerposition, final double p_radius )
+    public CCircleBoundingBox( final double p_radius )
     {
-        this.m_centerposition = p_centerposition;
         this.m_radius = p_radius;
     }
 
@@ -54,5 +49,18 @@ public final class CCircleBoundingBox implements IBoundingBox
     public boolean intersects( final IBoundingBox p_boundingbox )
     {
         return false;
+    }
+
+    @Override
+    public void resize( final DoubleMatrix1D p_objectsize, final int p_percent )
+    {
+        if( m_radius * p_percent / 100 < p_objectsize.get( 0 ) )
+        {
+            throw new RuntimeException( "The bounding box can not be smaller than the object." );
+        }
+        else
+        {
+            m_radius = m_radius * p_percent / 100;
+        }
     }
 }

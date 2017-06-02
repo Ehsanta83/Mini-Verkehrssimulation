@@ -23,45 +23,32 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-
-import java.text.MessageFormat;
-import java.util.Locale;
+import cern.colt.matrix.DoubleMatrix1D;
 
 /**
- * class for generating bounding box
+ * rectangular bounding box
  */
-public enum EBoundingBoxFactory
+public class CRectangleBoundingBox implements IBoundingBox
 {
-    CIRCLE;
-
     /**
-     * generate a bounding box
-     *
-     * @return the bounding box
+     * relative position of the leftdown and upperright vertices to the mid point
      */
-    public final IBoundingBox generate( final double... p_arguments )
-    {
-        switch ( this )
-        {
-            case CIRCLE:
-                return new CCircleBoundingBox(
-                    new DenseDoubleMatrix1D( new double[]{p_arguments[0], p_arguments[1]} ),
-                    p_arguments[2] );
+    private DoubleMatrix1D m_vertices;
 
-            default:
-                throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );
-        }
+    public CRectangleBoundingBox( final DoubleMatrix1D p_vertices )
+    {
+        this.m_vertices = p_vertices;
     }
 
-    /**
-     * get the factory from a name
-     *
-     * @param p_name name
-     * @return the factory
-     */
-    public static EBoundingBoxFactory from( final String p_name )
+    @Override
+    public boolean intersects( final IBoundingBox p_boundingbox )
     {
-        return EBoundingBoxFactory.valueOf( p_name.toUpperCase( Locale.ROOT ) );
+        return false;
+    }
+
+    @Override
+    public void resize( final DoubleMatrix1D p_objectsize, final int p_percent )
+    {
+
     }
 }

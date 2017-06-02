@@ -24,6 +24,7 @@
 package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
@@ -32,6 +33,7 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
+import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -55,6 +57,10 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * rotation of the traffic light
      */
     private final int m_rotation;
+    /**
+     * radius of the object
+     */
+    private final double m_radius;
 
 
     /**
@@ -66,17 +72,24 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
      * @param p_light light class
      * @param p_position position
      * @param p_rotation rotation
+     * @param p_radius radius
      */
     protected IBaseTrafficLight( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                                  final String p_functor, final String p_name, final Class<L> p_light,
-                                 final DoubleMatrix1D p_position, final int p_rotation, final IBoundingBox p_boundingbox
+                                 final DoubleMatrix1D p_position, final int p_rotation, final double p_radius
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, new CCircleBoundingBox( p_radius ) );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
+        m_radius = p_radius;
     }
 
+    @Override
+    protected DoubleMatrix1D size()
+    {
+        return new DenseDoubleMatrix1D( new double[] {m_radius} );
+    }
 
 
     /**
@@ -120,7 +133,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         protected final Pair<T, Stream<String>> generate( final Object... p_data )
         {
             return this.generate( m_environment, (DoubleMatrix1D) p_data[0],
-                (int) p_data[1], (IBoundingBox) p_data[2] );
+                (int) p_data[1], (double) p_data[2] );
         }
 
         /**
@@ -129,11 +142,11 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
          * @param p_environment environment
          * @param p_position position
          * @param p_rotation rotation
-         * @param p_boundingbox bounding box
+         * @param p_radius radius
          * @return pair of IBaseTrafficLight and stream of strings,
          */
         protected abstract Pair<T, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
-                                                             final int p_rotation, final IBoundingBox p_boundingbox );
+                                                             final int p_rotation, final double p_radius );
 
     }
 }

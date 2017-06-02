@@ -26,6 +26,9 @@ package org.lightjason.trafficsimulation.simulation;
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
+import org.lightjason.agentspeak.action.binding.IAgentAction;
+import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
+import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
@@ -63,6 +66,7 @@ import java.util.stream.Stream;
  *
  * @param <T> IObject
  */
+@IAgentAction
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
 {
     /**
@@ -70,13 +74,13 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      */
     protected DoubleMatrix1D m_position;
     /**
-     * the bounding box of the object
-     */
-    protected IBoundingBox m_boundingbox;
-    /**
      * environment reference
      */
     protected final IEnvironment m_environment;
+    /**
+     * the bounding box of the object
+     */
+    private final IBoundingBox m_boundingbox;
     /**
      * functor definition
      */
@@ -194,6 +198,19 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
             (int) ( p_position.get( 1 ) + 0.5 + p_object.radius() )
         );*/
     }
+
+
+    @IAgentActionFilter
+    @IAgentActionName( name = "boundingbox/resize" )
+    private void resizeboundingbox( final int p_percent )
+    {
+        m_boundingbox.resize( this.size(), Math.abs( p_percent ) );
+    }
+
+    /**
+     * get the size of the object
+     */
+    protected abstract DoubleMatrix1D size();
 
     /**
      * environment beliefbase

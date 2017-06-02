@@ -24,6 +24,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -31,6 +32,7 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -45,25 +47,38 @@ import java.util.stream.Stream;
  */
 public final class CPedestrian extends IBasePedestrian<CPedestrian>
 {
+    /**
+     * functor
+     */
     private static final String FUNCTOR = "pedestrian";
+    /**
+     * counter
+     */
     private static final AtomicLong COUNTER = new AtomicLong();
+    /**
+     * radius
+     */
+    private final double m_radius;
 
     /**
      * ctor
      *
      * @param p_configuration agent configuration
      * @param p_environment environment
+     * @param p_name name
      * @param p_position position
-     * @param p_boundingbox bounding box
+     * @param p_radius radius
      */
     private CPedestrian(
         final IAgentConfiguration<CPedestrian> p_configuration,
-        final IEnvironment p_environment, final String p_name,
+        final IEnvironment p_environment,
+        final String p_name,
         final DoubleMatrix1D p_position,
-        final IBoundingBox p_boundingbox
+        final double p_radius
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, p_boundingbox );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, new CCircleBoundingBox( p_radius ) );
+        m_radius = p_radius;
     }
 
 
@@ -71,6 +86,12 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
     protected final Stream<ILiteral> individualliteral( final Stream<IObject<?>> p_object )
     {
         return Stream.of();
+    }
+
+    @Override
+    protected DoubleMatrix1D size()
+    {
+        return new DenseDoubleMatrix1D( new double[] {m_radius} );
     }
 
 
@@ -107,7 +128,7 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
                     m_environment,
                     MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                     (DoubleMatrix1D) p_data[0],
-                    (IBoundingBox) p_data[1]
+                    (double) p_data[1]
                 ),
 
                 Stream.of( FUNCTOR, GROUP )

@@ -37,7 +37,7 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.bounding.EBoundingBoxFactory;
+import org.lightjason.trafficsimulation.simulation.bounding.CRectangleBoundingBox;
 import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -63,9 +63,17 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     private static final String FUNCTOR = "area";
     /**
-     *
+     * counter
      */
     private static final AtomicLong COUNTER = new AtomicLong();
+    /**
+     * length of the area
+     */
+    private final int m_length;
+    /**
+     * width of the area
+     */
+    private final int m_width;
     /**
      * if the area is passable
      */
@@ -89,18 +97,38 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_configuration agent configuration
      * @param p_environment   environment reference
      * @param p_name          name of the object
+     * @param p_position mid point of the area
+     * @param p_length length of the area
+     * @param p_width width of the area
+     * @param p_passable passable
+     * @param p_type type
+     * @param p_directions directions
+     * @todo did I calculate the bounding box right?
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration,
                    final IEnvironment p_environment,
                    final String p_name,
-                   final List<CRawTerm<?>> p_position,
+                   final DoubleMatrix1D p_position,
+                   final int p_length,
+                   final int p_width,
                    final boolean p_passable,
                    final String p_type,
-                   final List<CRawTerm<?>> p_directions,
-                   final IBoundingBox p_boundingbox )
+                   final List<CRawTerm<?>> p_directions )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name,
-            new DenseDoubleMatrix1D( p_position.stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ), p_boundingbox );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position,
+            new CRectangleBoundingBox(
+                new DenseDoubleMatrix1D(
+                    new double[]{
+                        -( p_length / 2 ),
+                        -( p_width / 2 ),
+                        p_length / 2,
+                        p_width / 2,
+                    }
+                )
+            )
+        );
+        m_length = p_length;
+        m_width = p_width;
         m_passable = p_passable;
         m_type = p_type;
         m_directions = p_directions.stream().map( i -> EDirection.from( i.toString() ) );
@@ -114,6 +142,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
             CLiteral.from( "type", CRawTerm.from( m_type.toString().toLowerCase() ) ),
             CLiteral.from( "directions",  m_directions.map( i -> CRawTerm.from( i.toString().toLowerCase() ) ) )
         );
+    }
+
+    @Override
+    public DoubleMatrix1D size()
+    {
+        return new DenseDoubleMatrix1D( new double[] {m_length, m_width} );
     }
 
     /**
@@ -196,11 +230,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_configuration,
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                (List<CRawTerm<?>>) p_data[0],
-                (boolean) p_data[1],
-                (String) p_data[2],
-                (List<CRawTerm<?>>) p_data[3],
-                EBoundingBoxFactory.from( (String) p_data[4] ).generate( ( (List<?>) p_data[5] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() )
+                new DenseDoubleMatrix1D( ( (List<CRawTerm<?>>) p_data[0] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ),
+                (int) p_data[1],
+                (int) p_data[2],
+                (boolean) p_data[3],
+                (String) p_data[4],
+                (List<CRawTerm<?>>) p_data[5]
             );
 
             //m_environment.positioningAnArea( l_area );

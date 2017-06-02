@@ -24,6 +24,8 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
+import cern.colt.matrix.DoubleMatrix1D;
+
 /**
  * interface for bounding box
  *
@@ -38,4 +40,12 @@ public interface IBoundingBox
      * @return if intersects
      */
     boolean intersects( final IBoundingBox p_boundingbox );
+
+    /**
+     * resize the bounding box
+     *
+     * @param p_objectsize the size of the object
+     * @param p_percent percent of the resize
+     */
+    void resize( final DoubleMatrix1D p_objectsize, final int p_percent );
 }
