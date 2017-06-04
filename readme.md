@@ -18,3 +18,12 @@
 * https://github.com/englercj/phaser-tiled
 * http://phasereditor.boniatillo.com/
 * https://phaser.io/sandbox
+
+## Collision Frameworks
+
+* http://box2d.org/
+* http://www.dyn4j.org/
+* http://jbullet.advel.cz/
+* http://www.jbox2d.org/
+* https://github.com/MakersF/CollisionCore
+* https://github.com/DavidArayan/EzyCollision
