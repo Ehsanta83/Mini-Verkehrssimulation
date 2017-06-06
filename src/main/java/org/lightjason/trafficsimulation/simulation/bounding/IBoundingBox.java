@@ -24,12 +24,15 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
+import org.dyn4j.collision.Collidable;
+import org.dyn4j.dynamics.BodyFixture;
+
 /**
  * interface for bounding box
  *
  * @todo how can we change the bounding box or its size in the runtime?
  */
-public interface IBoundingBox
+public interface IBoundingBox extends Collidable<BodyFixture>
 {
     /**
      * if the bounding box intersect with another one

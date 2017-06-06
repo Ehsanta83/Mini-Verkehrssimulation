@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,9 +33,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseViewTest;
-import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
-import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
