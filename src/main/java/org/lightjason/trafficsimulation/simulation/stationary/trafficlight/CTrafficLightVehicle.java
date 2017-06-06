@@ -31,7 +31,6 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -98,7 +97,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
 
         @Override
         protected final Pair<CTrafficLightVehicle, Stream<String>> generate( final IEnvironment p_environment, final DoubleMatrix1D p_position,
-                                                                             final int p_rotation, final double p_p_radius )
+                                                                             final int p_rotation, final double p_radius )
         {
             return new ImmutablePair<>(
                                         new CTrafficLightVehicle(
@@ -107,7 +106,7 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
                                                                   MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                                                                   p_position,
                                                                   p_rotation,
-                                                                  p_p_radius
+                                                                  p_radius
                                         ),
 
                                         Stream.of( FUNCTOR, GROUP )

@@ -47,7 +47,7 @@ public class CRectangleBoundingBox implements IBoundingBox
     }
 
     @Override
-    public void resize( final DoubleMatrix1D p_objectsize, final int p_percent )
+    public void resize( final int p_percent )
     {
 
     }

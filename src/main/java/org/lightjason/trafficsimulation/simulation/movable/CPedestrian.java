@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
@@ -33,7 +32,6 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -87,13 +85,6 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
     {
         return Stream.of();
     }
-
-    @Override
-    protected DoubleMatrix1D size()
-    {
-        return new DenseDoubleMatrix1D( new double[] {m_radius} );
-    }
-
 
     /**
      * generator class

@@ -102,13 +102,6 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         return Stream.of();
     }
 
-    @Override
-    protected DoubleMatrix1D size()
-    {
-        return new DenseDoubleMatrix1D( new double[] {m_length, 1} );
-    }
-
-
     @IAgentActionFilter
     @IAgentActionName( name = "accelerate" )
     private void accelerate( final Number p_value )

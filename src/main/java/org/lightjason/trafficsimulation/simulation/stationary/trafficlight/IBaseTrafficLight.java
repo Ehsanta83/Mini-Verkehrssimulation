@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
@@ -34,7 +33,6 @@ import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.bounding.CCircleBoundingBox;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
 import java.io.InputStream;
@@ -84,13 +82,6 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
         m_radius = p_radius;
     }
-
-    @Override
-    protected DoubleMatrix1D size()
-    {
-        return new DenseDoubleMatrix1D( new double[] {m_radius} );
-    }
-
 
     /**
      * changes the color of the light

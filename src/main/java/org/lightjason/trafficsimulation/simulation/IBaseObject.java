@@ -204,13 +204,8 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     @IAgentActionName( name = "boundingbox/resize" )
     private void resizeboundingbox( final int p_percent )
     {
-        m_boundingbox.resize( this.size(), Math.abs( p_percent ) );
+        m_boundingbox.resize( Math.abs( p_percent ) );
     }
-
-    /**
-     * get the size of the object
-     */
-    protected abstract DoubleMatrix1D size();
 
     /**
      * environment beliefbase

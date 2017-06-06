@@ -24,8 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.bounding;
 
 
-import cern.colt.matrix.DoubleMatrix1D;
-
 /**
  * circle bounding box
  */
@@ -52,15 +50,7 @@ public final class CCircleBoundingBox implements IBoundingBox
     }
 
     @Override
-    public void resize( final DoubleMatrix1D p_objectsize, final int p_percent )
+    public void resize( final int p_percent )
     {
-        if( m_radius * p_percent / 100 < p_objectsize.get( 0 ) )
-        {
-            throw new RuntimeException( "The bounding box can not be smaller than the object." );
-        }
-        else
-        {
-            m_radius = m_radius * p_percent / 100;
-        }
     }
 }

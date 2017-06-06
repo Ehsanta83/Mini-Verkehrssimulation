@@ -38,7 +38,6 @@ import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.bounding.CRectangleBoundingBox;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
@@ -142,12 +141,6 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
             CLiteral.from( "type", CRawTerm.from( m_type.toString().toLowerCase() ) ),
             CLiteral.from( "directions",  m_directions.map( i -> CRawTerm.from( i.toString().toLowerCase() ) ) )
         );
-    }
-
-    @Override
-    public DoubleMatrix1D size()
-    {
-        return new DenseDoubleMatrix1D( new double[] {m_length, m_width} );
     }
 
     /**
