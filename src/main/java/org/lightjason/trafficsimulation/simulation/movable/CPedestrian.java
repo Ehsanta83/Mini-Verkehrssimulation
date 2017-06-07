@@ -30,7 +30,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -83,16 +82,12 @@ public final class CPedestrian extends IBaseMoveable<CPedestrian>
          *
          * @param p_stream stream
          * @param p_actions actions
-         * @param p_aggregation aggregation
          * @param p_environment environment
          * @throws Exception on any error
          */
-        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                              final IAggregation p_aggregation,
-                              final IEnvironment p_environment
-        ) throws Exception
+        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions, final IEnvironment p_environment ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, CPedestrian.class, p_environment );
+            super( p_stream, p_actions, CPedestrian.class, p_environment );
         }
 
         @Override

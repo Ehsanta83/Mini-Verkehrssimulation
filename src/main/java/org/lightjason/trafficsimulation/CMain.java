@@ -30,7 +30,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IAgent;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
@@ -134,12 +133,9 @@ public final class CMain
 
             l_actions.stream(),
 
-            IAggregation.EMPTY,
-
             EObjectFactory.ENVIRONMENT.generate(
                 CMain.class.getResourceAsStream( "asl/environment.asl" ),
-                l_actions.stream(),
-                IAggregation.EMPTY
+                l_actions.stream()
             ).generatesingle( 25, 25, 2.5, new CJPSPlus() ).<IEnvironment>raw()
 
         ).generatemultiple( 3, new DenseDoubleMatrix1D( 2 ) ).forEach( i ->
