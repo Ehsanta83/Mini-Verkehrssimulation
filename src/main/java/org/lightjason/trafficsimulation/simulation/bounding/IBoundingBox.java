@@ -24,16 +24,22 @@
 
 package org.lightjason.trafficsimulation.simulation.bounding;
 
-import org.dyn4j.collision.Collidable;
-import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.geometry.Convex;
 
 /**
  * interface for bounding box
  *
  * @todo how can we change the bounding box or its size in the runtime?
  */
-public interface IBoundingBox extends Collidable<BodyFixture>
+public interface IBoundingBox
 {
+    /**
+     * get the convex of the object
+     *
+     * @return convex
+     */
+    Convex convex();
+
     /**
      * if the bounding box intersect with another one
      *
@@ -46,6 +52,6 @@ public interface IBoundingBox extends Collidable<BodyFixture>
      * resize the bounding box
      *
      * @param p_percent percent of the resize
-     */
-    void resize( final int p_percent );
+
+    void resize( final int p_percent );*/
 }

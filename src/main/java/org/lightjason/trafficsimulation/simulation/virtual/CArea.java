@@ -27,6 +27,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dyn4j.geometry.Geometry;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.CLiteral;
@@ -87,7 +88,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * a set of the physical agents in the area
      */
-    private final Set<IMoveable<?>> m_physical = new HashSet<>();
+    private final Set<IBaseObject<?>> m_physical = new HashSet<>();
 
     /**
      * ctor
@@ -113,18 +114,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                    final String p_type,
                    final List<CRawTerm<?>> p_directions )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position,
-            new CRectangleBoundingBox(
-                new DenseDoubleMatrix1D(
-                    new double[]{
-                        -( p_length / 2 ),
-                        -( p_width / 2 ),
-                        p_length / 2,
-                        p_width / 2,
-                    }
-                )
-            )
-        );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createRectangle( p_length, p_width ) );
         m_length = p_length;
         m_width = p_width;
         m_passable = p_passable;
@@ -159,7 +149,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      *
      * @param p_physical physical agent
      */
-    public void addPhysical( final IMoveable<?> p_physical )
+    public void addPhysical( final IBaseObject<?> p_physical )
     {
         if ( this.isInside( p_physical.position() ) )
         {

@@ -25,6 +25,7 @@ package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import org.dyn4j.geometry.Convex;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -76,9 +77,9 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     protected IBaseMoveable( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                              final String p_functor, final String p_name, final DoubleMatrix1D p_position,
-                             final IBoundingBox p_boundingbox )
+                             final Convex p_convex )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_convex );
     }
 
 

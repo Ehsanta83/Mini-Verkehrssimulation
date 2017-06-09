@@ -41,7 +41,6 @@ import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.IRouting;
-import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.io.FileInputStream;
@@ -74,6 +73,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * map of the areas
      */
     private final Map<String, CArea> m_areas;
+    /**
+     *
+     */
+    private final Map<String, IBaseObject<?>> m_objects;
 
     /**
      * ctor
@@ -97,6 +100,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         m_routing = p_routing;
         m_objectgrid = new SparseObjectMatrix2D( p_row, p_column );
         m_areas = new ConcurrentHashMap<>();
+        m_objects = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -114,7 +118,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     /**
      * move a moveable
      *
-     * @param p_moveable object, which should be moved (must store the current position)
+     * @param p_object object, which should be moved (must store the current position)
      * @param p_newposition new position
      * @return object reference
      *
@@ -122,7 +126,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @bug change moving out implementation
      */
     @Override
-    public final synchronized IMoveable<?> move( final IMoveable<?> p_moveable, final DoubleMatrix1D p_newposition, final EDirection p_direction )
+    public final synchronized IBaseObject<?> move( final IBaseObject<?> p_object, final DoubleMatrix1D p_newposition, final EDirection p_direction )
     {
         if ( p_newposition.get( 0 ) < 0 || p_newposition.get( 0 ) > m_objectgrid.columns()
             || p_newposition.get( 1 ) < 0 || p_newposition.get( 1 ) > m_objectgrid.rows() )
@@ -130,20 +134,24 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
             throw new RuntimeException( MessageFormat.format( "new goal position ([{0}, {1}]) is out of environment.", p_newposition.get( 0 ), p_newposition.get( 1 ) ) );
         }
 
-        if ( IBaseObject.cells( p_moveable, p_newposition )
-            .anyMatch( i -> ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != null )
-                && ( m_objectgrid.getQuick( i.getLeft(), i.getRight() ) != this ) ) )
+        final DoubleMatrix1D l_oldposition = p_object.position();
+        p_object.position().setQuick( 0, p_newposition.getQuick( 0 ) );
+        p_object.position().setQuick( 1, p_newposition.getQuick( 1 ) );
+        p_object.convex().translate( p_newposition.getQuick( 0 ), p_newposition.getQuick( 1 ) );
+        m_objects.forEach( ( i, j ) ->
         {
-            throw new RuntimeException( MessageFormat.format( "cannot move {0}", p_direction ) );
+            if ( p_object.intersects( j ) )
+            {
+                p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
+                p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
+                p_object.convex().translate( l_oldposition.getQuick( 0 ), l_oldposition.getQuick( 1 ) );
+                return;
+            }
         }
+        );
 
-        IBaseObject.cells( p_moveable, p_moveable.position() ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), null ) );
-        IBaseObject.cells( p_moveable, p_newposition ).forEach( i -> m_objectgrid.setQuick( i.getLeft(), i.getRight(), this ) );
-        p_moveable.position().setQuick( 0, p_newposition.getQuick( 0 ) );
-        p_moveable.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-
-        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_moveable ) );
-        return p_moveable;
+        m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_object ) );
+        return p_object;
     }
 
     /**
@@ -245,6 +253,12 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @IAgentActionName( name = "env/area/remove" )
     private void removearea()
     {
+    }
+
+    @Override
+    public void addobject( final IBaseObject<?> p_object )
+    {
+        m_objects.put( p_object.name(), p_object );
     }
 
     /**

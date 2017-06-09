@@ -27,6 +27,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dyn4j.geometry.Geometry;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -80,19 +81,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         final int p_length
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position,
-            new CRectangleBoundingBox(
-                new DenseDoubleMatrix1D(
-                    new double[]{
-                        -( p_length / 2 ),
-                        -1,
-                        p_length / 2,
-                        1,
-                    }
-                )
-            )
-        );
-
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createRectangle( p_length, 1 ) );
     }
 
     @Override

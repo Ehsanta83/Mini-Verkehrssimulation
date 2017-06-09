@@ -26,6 +26,7 @@ package org.lightjason.trafficsimulation.simulation.movable;
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dyn4j.geometry.Geometry;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
@@ -74,7 +75,7 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
         final double p_radius
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, new CCircleBoundingBox( p_radius ) );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createCircle( p_radius ) );
         m_radius = p_radius;
     }
 
@@ -112,15 +113,16 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CPedestrian, Stream<String>> generate( final Object... p_data )
         {
+            final CPedestrian l_pedestrian = new CPedestrian(
+                m_configuration,
+                m_environment,
+                MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
+                (DoubleMatrix1D) p_data[0],
+                (double) p_data[1]
+            );
+            m_environment.addobject( l_pedestrian );
             return new ImmutablePair<>(
-                new CPedestrian(
-                    m_configuration,
-                    m_environment,
-                    MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                    (DoubleMatrix1D) p_data[0],
-                    (double) p_data[1]
-                ),
-
+                l_pedestrian,
                 Stream.of( FUNCTOR, GROUP )
             );
         }

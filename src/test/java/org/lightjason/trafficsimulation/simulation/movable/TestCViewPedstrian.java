@@ -24,6 +24,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,8 +34,11 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseViewTest;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
@@ -69,9 +73,9 @@ public final class TestCViewPedstrian extends IBaseViewTest
      */
     private static CScreen s_screen;
     /**
-     * area generator
+     * pedestrians
      */
-    private CPedestrianSprite m_pedestrian;
+    private List<CPedestrianSprite> m_pedestrians;
 
     /**
      * initialize pedestrian
@@ -83,14 +87,27 @@ public final class TestCViewPedstrian extends IBaseViewTest
     public final void initialize() throws Exception
     {
         this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
-        /*m_pedestrian = new CPedestrianSprite(
-                          this.generate(
-                              "src/test/resources/pedestrian.asl",
-                              EObjectFactory.PEDESTRIAN,
-                              new DenseDoubleMatrix1D( new double[]{0, 0} ),
-                              new CCircleBoundingBox()
-                          )
-        );*/
+        m_pedestrians = new ArrayList<>();
+        m_pedestrians.add(
+            new CPedestrianSprite(
+                this.generate(
+                    "src/test/resources/pedestrian.asl",
+                    EObjectFactory.PEDESTRIAN,
+                    new DenseDoubleMatrix1D( new double[]{10, 1} ),
+                    1.0
+                )
+            )
+        );
+        m_pedestrians.add(
+            new CPedestrianSprite(
+                this.generate(
+                    "src/test/resources/pedestrian.asl",
+                    EObjectFactory.PEDESTRIAN,
+                    new DenseDoubleMatrix1D( new double[]{10, 20} ),
+                    1.0
+                )
+            )
+        );
     }
 
     /**
@@ -101,21 +118,33 @@ public final class TestCViewPedstrian extends IBaseViewTest
     public final void showmoving()
     {
         Assume.assumeNotNull( s_screen );
-        s_screen.spriteadd( m_pedestrian );
+        m_pedestrians.forEach( s_screen::spriteadd );
         IntStream.rangeClosed( 0, 100 ).forEach(  i ->
         {
+            m_pedestrians.forEach( j ->
+            {
+                try
+                {
+
+                    j.call();
+                    System.out.println( j.raw().position() );
+
+
+                }
+                catch ( final Exception l_exception )
+                {
+                    l_exception.printStackTrace();
+                    Assert.assertTrue( false );
+                }
+            }
+            );
             try
             {
-
-                m_pedestrian.call();
-                System.out.println( m_pedestrian.raw().position() );
                 Thread.sleep( 500 );
-
             }
-            catch ( final Exception l_exception )
+            catch ( final InterruptedException e )
             {
-                l_exception.printStackTrace();
-                Assert.assertTrue( false );
+                e.printStackTrace();
             }
         }
         );

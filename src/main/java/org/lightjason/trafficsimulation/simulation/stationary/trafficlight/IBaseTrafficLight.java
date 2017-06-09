@@ -25,6 +25,7 @@ package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dyn4j.geometry.Geometry;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -76,7 +77,7 @@ public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L ext
                                  final DoubleMatrix1D p_position, final int p_rotation, final double p_radius
     )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, new CCircleBoundingBox( p_radius ) );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, Geometry.createCircle( p_radius ) );
         m_rotation = p_rotation;
         m_color = new AtomicReference<L>( p_light.getEnumConstants()[0] );
         m_radius = p_radius;

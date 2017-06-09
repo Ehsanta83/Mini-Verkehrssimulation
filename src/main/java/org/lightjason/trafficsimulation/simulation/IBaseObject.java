@@ -25,6 +25,12 @@ package org.lightjason.trafficsimulation.simulation;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dyn4j.collision.narrowphase.CircleDetector;
+import org.dyn4j.collision.narrowphase.Penetration;
+import org.dyn4j.geometry.Circle;
+import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Shape;
+import org.dyn4j.geometry.Transform;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -54,6 +60,7 @@ import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -67,7 +74,7 @@ import java.util.stream.Stream;
  * @param <T> IObject
  */
 @IAgentAction
-public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
+public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>, IBoundingBox
 {
     /**
      * current position of the agent
@@ -77,10 +84,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * environment reference
      */
     protected final IEnvironment m_environment;
-    /**
-     * the bounding box of the object
-     */
-    private final IBoundingBox m_boundingbox;
     /**
      * functor definition
      */
@@ -93,6 +96,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * reference to external beliefbase
      */
     private final IView<T> m_external;
+    /**
+     * the convex of the object
+     */
+    private final Convex m_convex;
 
     /**
      * ctor
@@ -105,14 +112,15 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     @SuppressWarnings( "unchecked" )
     protected IBaseObject( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment,
                            final String p_functor, final String p_name, final DoubleMatrix1D p_position,
-                           final IBoundingBox p_boundingbox )
+                           final Convex p_convex )
     {
         super( p_configuration );
         m_functor = p_functor;
         m_name = p_name;
         m_environment = p_environment;
         m_position = p_position;
-        m_boundingbox = p_boundingbox;
+        m_convex = p_convex;
+        m_convex.translate( p_position.get( 0 ), p_position.get( 1 ) );
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );
@@ -175,9 +183,22 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         return m_position;
     }
 
-    protected boolean intersect( final IBoundingBox p_boundingbox )
+    @Override
+    public final Convex convex()
     {
-        return m_boundingbox.intersects( p_boundingbox );
+        return m_convex;
+    }
+
+    @Override
+    public boolean intersects( final IBoundingBox p_boundingbox )
+    {
+        final Penetration l_penetration = new Penetration();
+        if ( m_convex instanceof Circle && p_boundingbox.convex() instanceof Circle)
+        {
+            System.out.println( MessageFormat.format( "circle 1 center: {0}, circle2 center: {1}.", m_convex.getCenter(), p_boundingbox.convex().getCenter() ) );
+            //return CircleDetector.detect( (Circle) m_convex, m_transform, (Circle) p_boundingbox.convex(), p_boundingbox.transform(), l_penetration );
+        }
+        return false;
     }
 
     /**
@@ -199,13 +220,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         );*/
     }
 
-
+    /*
     @IAgentActionFilter
     @IAgentActionName( name = "boundingbox/resize" )
     private void resizeboundingbox( final int p_percent )
     {
         m_boundingbox.resize( Math.abs( p_percent ) );
     }
+    */
 
     /**
      * environment beliefbase

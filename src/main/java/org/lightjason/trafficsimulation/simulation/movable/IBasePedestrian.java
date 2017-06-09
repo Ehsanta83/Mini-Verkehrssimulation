@@ -24,6 +24,7 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import org.dyn4j.geometry.Convex;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
@@ -46,12 +47,12 @@ public abstract class IBasePedestrian<T extends IBasePedestrian<?>> extends IBas
      * @param p_functor functor
      * @param p_name name
      * @param p_position position
-     * @param p_boundingbox bounding box
+     * @param p_convex convex
      */
     protected IBasePedestrian( final IAgentConfiguration<T> p_configuration, final IEnvironment p_environment, final String p_functor,
-                               final String p_name, final DoubleMatrix1D p_position, final IBoundingBox p_boundingbox )
+                               final String p_name, final DoubleMatrix1D p_position, final Convex p_convex )
     {
-        super( p_configuration, p_environment, p_functor, p_name, p_position, p_boundingbox );
+        super( p_configuration, p_environment, p_functor, p_name, p_position, p_convex );
     }
 
     /**

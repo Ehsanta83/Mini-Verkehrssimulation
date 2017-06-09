@@ -24,6 +24,7 @@
 package org.lightjason.trafficsimulation.simulation.environment;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 
@@ -63,7 +64,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @param p_direction direction
      * @return updated object or object which uses the cell
      */
-    IMoveable<?> move( final IMoveable<?> p_object, final DoubleMatrix1D p_position, final EDirection p_direction );
+    IBaseObject<?> move( final IBaseObject<?> p_object, final DoubleMatrix1D p_position, final EDirection p_direction );
 
     /**
      * returns an object from the given position
@@ -88,5 +89,7 @@ public interface IEnvironment extends IObject<IEnvironment>
      * @return boolean result
      */
     boolean empty( final DoubleMatrix1D p_position );
+
+    void addobject( final IBaseObject<?> p_object );
 
 }
