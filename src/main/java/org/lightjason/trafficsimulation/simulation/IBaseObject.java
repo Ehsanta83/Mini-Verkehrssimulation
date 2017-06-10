@@ -43,7 +43,6 @@ import org.lightjason.agentspeak.generator.IBaseAgentGenerator;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.IShallowCopy;
 import org.lightjason.agentspeak.language.execution.IVariableBuilder;
 import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
@@ -142,7 +141,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
                         Stream.of(
                             CLiteral.from( "name", CRawTerm.from( m_name ) )
                         ),
-                        m_external.stream().map( IShallowCopy::shallowcopysuffix ).sorted().sequential()
+                        m_external.stream().map( i -> i.shallowcopysuffix() ).sorted().sequential()
                     ),
                     this.individualliteral( p_object ).sorted().sequential()
                 )
@@ -253,15 +252,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         /**
          * @param p_stream stream
          * @param p_actions action
-         * @param p_aggregation aggregation
          * @param p_environment environment
          * @throws Exception on any error
          */
         protected IBaseGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                                  final IAggregation p_aggregation, final Class<? extends T> p_agentclass, final IEnvironment p_environment
+                                  final Class<? extends T> p_agentclass, final IEnvironment p_environment
         ) throws Exception
         {
-            super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_agentclass ) ).collect( Collectors.toSet() ), p_aggregation );
+            super( p_stream, Stream.concat( p_actions, CCommon.actionsFromAgentClass( p_agentclass ) ).collect( Collectors.toSet() ) );
             m_environment = p_environment;
         }
 
@@ -283,11 +281,11 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         @Override
         protected IAgentConfiguration<T> configuration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans,
                                                         final Set<IRule> p_rules,
-                                                        final ILiteral p_initialgoal, final IUnifier p_unifier, final IAggregation p_aggregation,
+                                                        final ILiteral p_initialgoal, final IUnifier p_unifier,
                                                         final IVariableBuilder p_variablebuilder
         )
         {
-            return new CConfiguration( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_aggregation, p_variablebuilder );
+            return new CConfiguration( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_variablebuilder );
         }
 
         /**
@@ -297,10 +295,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         {
             public CConfiguration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans, final Set<IRule> p_rules,
                                    final ILiteral p_initialgoal,
-                                   final IUnifier p_unifier, final IAggregation p_aggregation, final IVariableBuilder p_variablebuilder
+                                   final IUnifier p_unifier, final IVariableBuilder p_variablebuilder
             )
             {
-                super( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_aggregation, p_variablebuilder );
+                super( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_variablebuilder );
             }
 
             @Override

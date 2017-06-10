@@ -32,6 +32,7 @@ import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.score.IAggregation;
+import org.lightjason.trafficsimulation.CCommon;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -262,16 +263,14 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         /**
          * @param p_stream stream
          * @param p_actions action
-         * @param p_aggregation aggregation
          * @param p_environment environment
          * @throws Exception on any error
          */
         protected IGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                              final IAggregation p_aggregation, final Class<T> p_agentclass,
-                              final IEnvironment p_environment
+                              final Class<T> p_agentclass, final IEnvironment p_environment
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, p_agentclass, p_environment );
+            super( p_stream, p_actions, p_agentclass, p_environment );
         }
 
     }

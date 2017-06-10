@@ -25,7 +25,6 @@ package org.lightjason.trafficsimulation.simulation;
 
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.generator.IAgentGenerator;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.environment.CEnvironment;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.simulation.movable.CPedestrian;
@@ -63,35 +62,33 @@ public enum EObjectFactory
      *
      * @param p_stream asl input stream
      * @param p_actions action list
-     * @param p_aggregation aggregation
      * @param p_environment environment reference
      * @return agent generator
      *
      * @throws Exception on any error
      */
-    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
-                                                                 final IAggregation p_aggregation, final IEnvironment p_environment
+    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions, final IEnvironment p_environment
     ) throws Exception
     {
         switch ( this )
         {
             case ENVIRONMENT:
-                return new CEnvironment.CGenerator( p_stream, p_actions, p_aggregation );
+                return new CEnvironment.CGenerator( p_stream, p_actions );
 
             case AREA:
-                return new CArea.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CArea.CGenerator( p_stream, p_actions, p_environment );
 
             case PEDESTRIAN:
-                return new CPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CPedestrian.CGenerator( p_stream, p_actions, p_environment );
 
             case PEDESTRIAN_TRAFFICLIGHT:
-                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CTrafficLightPedestrian.CGenerator( p_stream, p_actions, p_environment );
 
             case VEHICLE:
-                return new CVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CVehicle.CGenerator( p_stream, p_actions, p_environment );
 
             case VEHICLE_TRAFFICLIGHT:
-                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_aggregation, p_environment );
+                return new CTrafficLightVehicle.CGenerator( p_stream, p_actions, p_environment );
 
             default:
                 throw new RuntimeException( MessageFormat.format( "no generator [{0}] found", this ) );
@@ -103,14 +100,12 @@ public enum EObjectFactory
      *
      * @param p_stream steam
      * @param p_actions actions
-     * @param p_aggregation aggregation
      * @return agent generator
      * @throws Exception on any error
      */
-    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions,
-                                                                 final IAggregation p_aggregation ) throws Exception
+    public final IAgentGenerator<? extends IObject<?>> generate( final InputStream p_stream, final Stream<IAction> p_actions ) throws Exception
     {
-        return this.generate( p_stream, p_actions, p_aggregation, null );
+        return this.generate( p_stream, p_actions, null );
     }
 
 

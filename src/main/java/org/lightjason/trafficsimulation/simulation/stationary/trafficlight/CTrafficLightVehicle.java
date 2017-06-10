@@ -29,7 +29,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -87,12 +86,10 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
     {
 
         public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                           final IAggregation p_aggregation,
-                           final IEnvironment p_environment,
-                           final Object... p_arguments
+                           final IEnvironment p_environment, final Object... p_arguments
         ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, CTrafficLightVehicle.class, p_environment );
+            super( p_stream, p_actions, CTrafficLightVehicle.class, p_environment );
         }
 
         @Override

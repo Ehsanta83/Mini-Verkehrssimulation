@@ -35,7 +35,6 @@ import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
 import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.CConfiguration;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
@@ -236,8 +235,8 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         {
             final CArea l_area = EObjectFactory.AREA.generate(
                 l_stream,
-                org.lightjason.agentspeak.common.CCommon.actionsFromPackage(),
-                IAggregation.EMPTY )
+                org.lightjason.agentspeak.common.CCommon.actionsFromPackage()
+            )
                                                     .generatesingle( p_data )
                                                     .raw();
             m_areas.put( l_area.name(), l_area );
@@ -272,11 +271,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public static final class CGenerator extends IBaseEnvironmentGenerator
     {
 
-        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions,
-                           final IAggregation p_aggregation
-        ) throws Exception
+        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, CEnvironment.class );
+            super( p_stream, p_actions, CEnvironment.class );
         }
 
         @Override

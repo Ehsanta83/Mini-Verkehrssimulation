@@ -35,7 +35,6 @@ import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
@@ -126,7 +125,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     {
         return Stream.of(
             CLiteral.from( "passable", CRawTerm.from( m_passable ) ),
-            CLiteral.from( "type", CRawTerm.from( m_type.toString().toLowerCase() ) ),
+            CLiteral.from( "type", CRawTerm.from( m_type.toLowerCase() ) ),
             CLiteral.from( "directions",  m_directions.map( i -> CRawTerm.from( i.toString().toLowerCase() ) ) )
         );
     }
@@ -190,17 +189,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
          *
          * @param p_stream stream
          * @param p_actions actions
-         * @param p_aggregation aggregation
          * @param p_environment environment
          * @throws Exception on any error
          */
-        public CGenerator( final InputStream p_stream,
-                           final Stream<IAction> p_actions,
-                           final IAggregation p_aggregation,
-                           final IEnvironment p_environment
-        ) throws Exception
+        public CGenerator( final InputStream p_stream, final Stream<IAction> p_actions, final IEnvironment p_environment ) throws Exception
         {
-            super( p_stream, p_actions, p_aggregation, CArea.class, p_environment );
+            super( p_stream, p_actions, CArea.class, p_environment );
         }
 
         @Override

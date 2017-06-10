@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.common.CCommon;
-import org.lightjason.agentspeak.language.score.IAggregation;
 import org.lightjason.trafficsimulation.actions.CBroadcast;
 import org.lightjason.trafficsimulation.actions.CSend;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
@@ -96,7 +95,7 @@ public abstract class IBaseTest
         )
         {
             m_environment = EObjectFactory.ENVIRONMENT
-                .generate( l_stream, m_actions.stream(), IAggregation.EMPTY )
+                .generate( l_stream, m_actions.stream() )
                 .generatesingle( p_column, p_row, p_size, p_routing )
                 .raw();
         }
@@ -136,7 +135,7 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment ).generatesingle( p_arguments ).raw();
+            return p_factory.generate( l_stream, m_actions.stream(), m_environment ).generatesingle( p_arguments ).raw();
 
         }
         catch ( final Exception l_exception )
@@ -169,9 +168,9 @@ public abstract class IBaseTest
         )
         {
 
-            return p_factory.generate( l_stream, m_actions.stream(), IAggregation.EMPTY, m_environment )
+            return p_factory.generate( l_stream, m_actions.stream(), m_environment )
                 .generatemultiple( p_number, p_arguments )
-                .map( IAgent::<T>raw )
+                .map( i -> i.<T>raw() )
                 .collect( Collectors.toList() );
 
         }
