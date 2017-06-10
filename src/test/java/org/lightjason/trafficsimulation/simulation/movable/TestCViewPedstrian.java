@@ -94,7 +94,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
                     "src/test/resources/pedestrian.asl",
                     EObjectFactory.PEDESTRIAN,
                     new DenseDoubleMatrix1D( new double[]{10, 1} ),
-                    1.0
+                    0.5
                 )
             )
         );
@@ -104,7 +104,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
                     "src/test/resources/pedestrian.asl",
                     EObjectFactory.PEDESTRIAN,
                     new DenseDoubleMatrix1D( new double[]{10, 20} ),
-                    1.0
+                    0.5
                 )
             )
         );
@@ -112,7 +112,6 @@ public final class TestCViewPedstrian extends IBaseViewTest
 
     /**
      * show moving
-     * @todo we need a routine to calling the agent multiple times
      */
     @Test
     public final void showmoving()
@@ -142,9 +141,9 @@ public final class TestCViewPedstrian extends IBaseViewTest
             {
                 Thread.sleep( 500 );
             }
-            catch ( final InterruptedException e )
+            catch ( final InterruptedException l_exception )
             {
-                e.printStackTrace();
+                l_exception.printStackTrace();
             }
         }
         );
@@ -168,12 +167,12 @@ public final class TestCViewPedstrian extends IBaseViewTest
     /**
      * pedestrian sprite
      */
-    private static final class CPedestrianSprite extends IBaseSprite<CPedestrian>
+    private final class CPedestrianSprite extends IBaseSprite<CPedestrian>
     {
         /**
          *
          */
-        private static final AtomicReference<Texture> TEXTURE = new AtomicReference<>();
+        private final AtomicReference<Texture> m_texture = new AtomicReference<>();
 
         /**
          * ctor
@@ -189,7 +188,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
         public final ISprite<CPedestrian> call() throws Exception
         {
             m_wrapping.call();
-            spriteposition( m_sprite.get(), m_wrapping.position() );
+            this.spriteposition( m_sprite.get(), m_wrapping.position() );
             return this;
         }
 
@@ -199,7 +198,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
          * @return texture initialize
          * @todo what if the agent has more than one cell? maybe using the radius of the agent?
          */
-        private static Texture texture( final int p_cellsize )
+        private Texture texture( final int p_cellsize )
         {
             final Pixmap l_pixmap = new Pixmap( p_cellsize, p_cellsize, Pixmap.Format.RGBA8888 );
             l_pixmap.setColor( Color.RED );
@@ -214,8 +213,8 @@ public final class TestCViewPedstrian extends IBaseViewTest
         @Override
         public final synchronized ISprite<CPedestrian> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
         {
-            if ( ( !TEXTURE.compareAndSet( null, texture( p_cellsize ) ) )
-                 || ( !m_sprite.compareAndSet( null, new Sprite( TEXTURE.get() ) ) )
+            if ( ( !m_texture.compareAndSet( null, this.texture( p_cellsize ) ) )
+                 || ( !m_sprite.compareAndSet( null, new Sprite( m_texture.get() ) ) )
                 )
                 return this;
 
@@ -223,7 +222,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
             m_sprite.get().setOrigin( 0, 0 );
             m_sprite.get().setScale( p_unit );
 
-            spriteposition( m_sprite.get(), m_wrapping.position() );
+            this.spriteposition( m_sprite.get(), m_wrapping.position() );
             return this;
         }
 
@@ -232,7 +231,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
          * @param p_sprite sprite
          * @param p_position position
          */
-        private static void spriteposition( final Sprite p_sprite, final DoubleMatrix1D p_position )
+        private void spriteposition( final Sprite p_sprite, final DoubleMatrix1D p_position )
         {
             if ( p_sprite == null )
                 return;

@@ -145,7 +145,7 @@ public abstract class IBaseViewTest extends IBaseTest
     /**
      * sprite wrapper object
      */
-    protected abstract static class IBaseSprite<T> implements ISprite<T>, Callable<ISprite<T>>
+    protected abstract class IBaseSprite<T> implements ISprite<T>, Callable<ISprite<T>>
     {
         /**
          * sprite object

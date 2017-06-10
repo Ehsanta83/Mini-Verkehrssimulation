@@ -26,7 +26,6 @@ package org.lightjason.trafficsimulation.simulation.environment;
 import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
-import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 
 import java.util.List;
 import java.util.stream.Stream;

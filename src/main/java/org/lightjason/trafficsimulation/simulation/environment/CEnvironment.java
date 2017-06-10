@@ -50,6 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -134,20 +135,24 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
             throw new RuntimeException( MessageFormat.format( "new goal position ([{0}, {1}]) is out of environment.", p_newposition.get( 0 ), p_newposition.get( 1 ) ) );
         }
 
-        final DoubleMatrix1D l_oldposition = p_object.position();
+        final DoubleMatrix1D l_oldposition = p_object.position().copy();
+        final double l_xtranslate = p_newposition.getQuick( 0 ) - l_oldposition.getQuick( 0 );
+        final double l_ytranslate = p_newposition.getQuick( 1 ) - l_oldposition.getQuick( 1 );
         p_object.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_object.position().setQuick( 1, p_newposition.getQuick( 1 ) );
-        p_object.convex().translate( p_newposition.getQuick( 0 ), p_newposition.getQuick( 1 ) );
-        m_objects.forEach( ( i, j ) ->
-        {
-            if ( p_object.intersects( j ) )
+        p_object.convex().translate( l_xtranslate, l_ytranslate );
+        m_objects.entrySet().stream()
+            .filter( i -> !p_object.equals( i.getValue() ) )
+            .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ) )
+            .forEach( ( i, j ) ->
             {
-                p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
-                p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
-                p_object.convex().translate( l_oldposition.getQuick( 0 ), l_oldposition.getQuick( 1 ) );
-                return;
+                if ( p_object.intersects( j ) )
+                {
+                    p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
+                    p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
+                    p_object.convex().translate( -l_xtranslate, -l_ytranslate );
+                }
             }
-        }
         );
 
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_object ) );

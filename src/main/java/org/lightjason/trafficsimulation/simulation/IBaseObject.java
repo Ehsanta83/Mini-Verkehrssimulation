@@ -25,16 +25,10 @@ package org.lightjason.trafficsimulation.simulation;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
-import org.dyn4j.collision.narrowphase.CircleDetector;
-import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
-import org.dyn4j.geometry.Shape;
-import org.dyn4j.geometry.Transform;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
-import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
-import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
@@ -60,7 +54,6 @@ import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -192,11 +185,11 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     @Override
     public boolean intersects( final IBoundingBox p_boundingbox )
     {
-        final Penetration l_penetration = new Penetration();
-        if ( m_convex instanceof Circle && p_boundingbox.convex() instanceof Circle)
+        if ( m_convex instanceof Circle && p_boundingbox.convex() instanceof Circle
+            && m_convex.getCenter().difference( p_boundingbox.convex().getCenter() ).getMagnitude() < m_convex.getRadius() + p_boundingbox.convex().getRadius() )
         {
-            System.out.println( MessageFormat.format( "circle 1 center: {0}, circle2 center: {1}.", m_convex.getCenter(), p_boundingbox.convex().getCenter() ) );
-            //return CircleDetector.detect( (Circle) m_convex, m_transform, (Circle) p_boundingbox.convex(), p_boundingbox.transform(), l_penetration );
+            System.out.println( "Collision detected!" );
+            return true;
         }
         return false;
     }

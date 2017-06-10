@@ -40,7 +40,6 @@ import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
-import org.lightjason.trafficsimulation.simulation.movable.IMoveable;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
