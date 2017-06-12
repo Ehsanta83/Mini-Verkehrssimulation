@@ -75,6 +75,12 @@ public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLig
         return Stream.of();
     }
 
+    @Override
+    public void resizeconvex( int p_percent )
+    {
+
+    }
+
 
     /**
      * generator of pedestrian traffic lights

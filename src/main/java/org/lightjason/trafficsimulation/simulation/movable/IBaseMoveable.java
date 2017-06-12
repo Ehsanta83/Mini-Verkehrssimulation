@@ -150,7 +150,9 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     {
         final DoubleMatrix1D l_goalposition = this.goal();
         if ( l_goalposition.equals( m_position ) )
+        {
             return;
+        }
         m_environment.move( this, p_direction.position( m_position, l_goalposition, m_speed.intValue() ), p_direction );
     }
 

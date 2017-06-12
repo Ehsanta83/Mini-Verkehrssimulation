@@ -29,6 +29,8 @@ import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
+import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
+import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.agent.IBaseAgent;
 import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
@@ -47,7 +49,7 @@ import org.lightjason.agentspeak.language.execution.IVariableBuilder;
 import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
-import org.lightjason.trafficsimulation.simulation.bounding.IBoundingBox;
+import org.lightjason.trafficsimulation.simulation.collision.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
@@ -68,9 +70,13 @@ import java.util.stream.Stream;
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>, IBoundingBox
 {
     /**
+     * the convex of the object
+     */
+    protected Convex m_convex;
+    /**
      * current position of the agent
      */
-    protected DoubleMatrix1D m_position;
+    protected final DoubleMatrix1D m_position;
     /**
      * environment reference
      */
@@ -87,10 +93,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * reference to external beliefbase
      */
     private final IView<T> m_external;
-    /**
-     * the convex of the object
-     */
-    private final Convex m_convex;
 
     /**
      * ctor
@@ -186,7 +188,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         if ( m_convex instanceof Circle && p_boundingbox.convex() instanceof Circle
             && m_convex.getCenter().difference( p_boundingbox.convex().getCenter() ).getMagnitude() < m_convex.getRadius() + p_boundingbox.convex().getRadius() )
         {
-            System.out.println( "Collision detected!" );
             return true;
         }
         return false;
@@ -211,14 +212,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         );*/
     }
 
-    /*
+
     @IAgentActionFilter
     @IAgentActionName( name = "boundingbox/resize" )
     private void resizeboundingbox( final int p_percent )
     {
-        m_boundingbox.resize( Math.abs( p_percent ) );
+        this.resizeconvex( Math.abs( p_percent ) );
     }
-    */
+
 
     /**
      * environment beliefbase

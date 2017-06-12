@@ -89,6 +89,10 @@ public interface IEnvironment extends IObject<IEnvironment>
      */
     boolean empty( final DoubleMatrix1D p_position );
 
+    /**
+     * add an object to the environment
+     * @param p_object object
+     */
     void addobject( final IBaseObject<?> p_object );
 
 }

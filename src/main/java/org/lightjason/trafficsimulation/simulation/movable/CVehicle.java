@@ -69,7 +69,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
      * @param p_name name
      * @param p_position position
      * @param p_length length
-     * @todo did I calculate the bounding box right?
+     * @todo did I calculate the collision box right?
      */
     private CVehicle(
         final IAgentConfiguration<CVehicle> p_configuration,
@@ -98,6 +98,12 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
     @IAgentActionFilter
     @IAgentActionName( name = "deccelerate" )
     private void deccelerate( final Number p_value )
+    {
+
+    }
+
+    @Override
+    public void resizeconvex( int p_percent )
     {
 
     }

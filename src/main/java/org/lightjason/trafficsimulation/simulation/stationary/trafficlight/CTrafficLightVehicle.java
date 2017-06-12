@@ -76,6 +76,12 @@ public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightV
         return Stream.of();
     }
 
+    @Override
+    public void resizeconvex( int p_percent )
+    {
+
+    }
+
 
     /**
      * generator for vehicle traffic light agents

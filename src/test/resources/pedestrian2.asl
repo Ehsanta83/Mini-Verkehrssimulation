@@ -21,37 +21,60 @@
  * @endcond
  */
 
+!main.
 
-package org.lightjason.trafficsimulation.simulation.bounding;
++!main
+    <-  generic/print("hello pedestrian");
+    route/set/start( 25, 25 );
+    !movement/forward
+.
 
-import org.dyn4j.geometry.Convex;
+// move straight forward into the direction of the goal-position
++!movement/forward
+    <-
+        generic/print( "move forward in cycle [", Cycle, "]" );
+        move/forward();
+        !movement/forward
+.
 
-/**
- * interface for bounding box
- *
- * @todo how can we change the bounding box or its size in the runtime?
- */
-public interface IBoundingBox
-{
-    /**
-     * get the convex of the object
-     *
-     * @return convex
-     */
-    Convex convex();
+// move straight forward fails than go left
+-!movement/forward
+    <-
+        generic/print( "move forward fails in cycle [", Cycle, "]" );
+        !movement/left
+.
 
-    /**
-     * if the bounding box intersect with another one
-     *
-     * @param p_boundingbox bounding box
-     * @return if intersects
-     */
-    boolean intersects( final IBoundingBox p_boundingbox );
+// move left - direction 90 degree to the goal position
++!movement/left
+    <-
+        generic/print( "move left in cycle [", Cycle, "]" );
+        move/left();
+        !movement/forward
+.
 
-    /**
-     * resize the bounding box
-     *
-     * @param p_percent percent of the resize
+// move left fails than go right
+-!movement/left
+    <-
+        generic/print( "move left fails in cycle [", Cycle, "]" );
+        !movement/right
+.
 
-    void resize( final int p_percent );*/
-}
+// move right - direction 90 degree to the goal position
++!movement/right
+    <-
+        generic/print( "move right in cycle [", Cycle, "]" );
+        move/right();
+        !movement/forward
+.
+
+// move right fails than sleep and hope everything will be
+// fine later, wakeup plan will be trigger after sleeping
+-!movement/right
+    <-
+        T = math/statistic/randomsimple();
+        T = T * 10 + 1;
+        T = math/min( T, 5 );
+        generic/print( "move right fails in cycle [", Cycle, "] wait [", T,"] cycles" );
+        agent/sleep(T)
+.
+

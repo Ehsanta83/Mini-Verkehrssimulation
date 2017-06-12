@@ -21,65 +21,37 @@
  * @endcond
  */
 
-package org.lightjason.trafficsimulation.simulation.stationary.trafficlight;
 
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
-import org.lightjason.trafficsimulation.IBaseTest;
-import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+package org.lightjason.trafficsimulation.simulation.collision;
 
-import java.util.stream.Collectors;
-
+import org.dyn4j.geometry.Convex;
 
 /**
- * test vehicles traffic light
+ * interface for collision box
+ *
+ * @todo how can we change the collision box or its size in the runtime?
  */
-public final class TestCTrafficLightVehicle extends IBaseTest
+public interface IBoundingBox
 {
-
-    private CTrafficLightVehicle m_vehiclelight;
+    /**
+     * get the convex of the object
+     *
+     * @return convex
+     */
+    Convex convex();
 
     /**
-     * initialize vehicle light
+     * if the collision box intersect with another one
      *
-     * @throws Exception on any error
-     * @bug fix collision box
+     * @param p_boundingbox collision box
+     * @return if intersects
      */
-    @Before
-    public final void initialize() throws Exception
-    {
-        this.initializeenvironment( 150, 150, 50, ERoutingFactory.JPSPLUS.get() );
-        /*m_vehiclelight = this.generate( "src/test/resources/vehiclelight.asl", EObjectFactory.VEHICLE_TRAFFICLIGHT,
-            new DenseDoubleMatrix1D( new double[]{0, 0} ), 180, new CCircleBoundingBox() );*/
-    }
-
+    boolean intersects( final IBoundingBox p_boundingbox );
 
     /**
-     * vehicle traffic light call test
+     * resize the bounding box
      *
-     * @throws Exception on execution error
-     */
-    @Test
-    public final void test() throws Exception
-    {
-        Assume.assumeNotNull( m_vehiclelight );
-
-        System.out.println( m_vehiclelight.literal().collect( Collectors.toSet() ) );
-        m_vehiclelight.call();
-        System.out.println( m_vehiclelight.literal().collect( Collectors.toSet() ) );
-    }
-
-    /**
-     * main method
-     * @param p_args args
-     *
-     * @throws Exception on any error
-     */
-    public static void main( final String[] p_args ) throws Exception
-    {
-        new TestCTrafficLightVehicle().invoketest();
-    }
-
-
+     * @param p_percent percent of the resize
+    */
+    void resizeconvex( final int p_percent );
 }

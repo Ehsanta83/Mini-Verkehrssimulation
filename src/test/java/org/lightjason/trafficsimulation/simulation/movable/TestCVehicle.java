@@ -46,7 +46,7 @@ public final class TestCVehicle extends IBaseTest
      * initialize vehicle
      *
      * @throws Exception on any error
-     * @bug fix bounding box
+     * @bug fix collision box
      */
     @Before
     public final void initialize() throws Exception

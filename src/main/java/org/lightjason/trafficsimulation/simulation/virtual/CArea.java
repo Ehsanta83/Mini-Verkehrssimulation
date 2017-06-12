@@ -100,7 +100,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      * @param p_passable passable
      * @param p_type type
      * @param p_directions directions
-     * @todo did I calculate the bounding box right?
+     * @todo did I calculate the collision box right?
      */
     private CArea( final IAgentConfiguration<CArea> p_configuration,
                    final IEnvironment p_environment,
@@ -175,6 +175,12 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     public String type()
     {
         return m_type;
+    }
+
+    @Override
+    public void resizeconvex( int p_percent )
+    {
+
     }
 
     /**

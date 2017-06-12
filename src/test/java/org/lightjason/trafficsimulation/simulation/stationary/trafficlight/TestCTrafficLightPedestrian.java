@@ -44,7 +44,7 @@ public final class TestCTrafficLightPedestrian extends IBaseTest
      * initialize traffic light
      *
      * @throws Exception is thrown on any error
-     * @bug fix bounding box
+     * @bug fix collision box
      */
     @Before
     public final void initialize() throws Exception

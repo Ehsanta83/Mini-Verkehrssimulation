@@ -48,7 +48,7 @@ public final class TestCPedestrian extends IBaseTest
      * initialize pedestrian
      *
      * @throws Exception on initialize environment error
-     * @bug fix bounding box
+     * @bug fix collision box
      */
     @Before
     public final void initialize() throws Exception

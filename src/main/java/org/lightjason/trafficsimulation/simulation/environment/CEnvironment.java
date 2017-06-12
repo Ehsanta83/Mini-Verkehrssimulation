@@ -45,6 +45,7 @@ import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +73,11 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     /**
      * map of the areas
      */
-    private final Map<String, CArea> m_areas;
+    private final Map<String, CArea> m_areas = new ConcurrentHashMap<>();
     /**
-     *
+     * map of the objects
      */
-    private final Map<String, IBaseObject<?>> m_objects;
+    private final Map<String, IBaseObject<?>> m_objects = new ConcurrentHashMap<>();
 
     /**
      * ctor
@@ -99,14 +100,25 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
 
         m_routing = p_routing;
         m_objectgrid = new SparseObjectMatrix2D( p_row, p_column );
-        m_areas = new ConcurrentHashMap<>();
-        m_objects = new ConcurrentHashMap<>();
     }
 
+    /**
+     *
+     * @param p_start start position
+     * @param p_end target position
+     * @return
+     * @bug just for test before implementing routing algorithm
+     */
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return m_routing.route( m_objectgrid, p_start, p_end );
+        return new ArrayList<DoubleMatrix1D>()
+            {
+                {
+                    add( p_end );
+                }
+            };
+        //return m_routing.route( m_objectgrid, p_start, p_end );
     }
 
     @Override
@@ -122,6 +134,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * @param p_newposition new position
      * @return object reference
      *
+     * @todo implement moving in objectgrid
      * @bug check parameter and generics
      * @bug change moving out implementation
      */
@@ -150,10 +163,13 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                     p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
                     p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
                     p_object.convex().translate( -l_xtranslate, -l_ytranslate );
+                    throw new RuntimeException( "Collision detected!" );
                 }
             }
         );
 
+        m_objectgrid.setQuick( (int) l_oldposition.getQuick( 0 ), (int) l_oldposition.getQuick( 1 ), null );
+        m_objectgrid.setQuick( (int) p_newposition.getQuick( 0 ), (int) p_newposition.getQuick( 1 ), p_object );
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_object ) );
         return p_object;
     }
@@ -259,10 +275,17 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     {
     }
 
+    /**
+     * add an object to the environment
+     * @param p_object object
+     * @todo implementing if another object is in this position and if the object is more than one cell
+     */
     @Override
     public void addobject( final IBaseObject<?> p_object )
     {
+        m_objectgrid.setQuick( (int) p_object.position().getQuick( 0 ), (int) p_object.position().getQuick( 1 ), p_object );
         m_objects.put( p_object.name(), p_object );
+
     }
 
     /**

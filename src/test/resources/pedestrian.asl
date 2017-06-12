@@ -25,7 +25,7 @@
 
 +!main
     <-  generic/print("hello pedestrian");
-    route/set/start( 10, 10 );
+    route/set/start( 25, 25 );
     !movement/forward
 .
 
