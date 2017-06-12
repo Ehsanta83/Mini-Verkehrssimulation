@@ -25,6 +25,7 @@
 package org.lightjason.trafficsimulation.simulation.collision;
 
 import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Transform;
 
 /**
  * interface for collision box
@@ -39,6 +40,12 @@ public interface IBoundingBox
      * @return convex
      */
     Convex convex();
+
+    /**
+     * get the transformation matrix of the object
+     * @return
+     */
+    Transform transform();
 
     /**
      * if the collision box intersect with another one

@@ -25,8 +25,8 @@ package org.lightjason.trafficsimulation.simulation;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
-import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Transform;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -50,6 +50,7 @@ import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
 import org.lightjason.trafficsimulation.simulation.collision.IBoundingBox;
+import org.lightjason.trafficsimulation.simulation.environment.CEnvironment;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
@@ -74,6 +75,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * the convex of the object
      */
     protected AtomicReference<Convex> m_convex = new AtomicReference<>();
+    /**
+     * the transformation matrix of the object
+     */
+    protected Transform m_transform = new Transform();
     /**
      * current position of the agent
      */
@@ -115,6 +120,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         m_position = p_position;
         m_convex.set( p_convex );
         m_convex.get().translate( p_position.get( 0 ), p_position.get( 1 ) );
+        m_transform.translate( p_position.get( 0 ), p_position.get( 1 ) );
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );
@@ -184,14 +190,15 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     }
 
     @Override
+    public Transform transform()
+    {
+        return m_transform;
+    }
+
+    @Override
     public boolean intersects( final IBoundingBox p_boundingbox )
     {
-        if ( m_convex.get() instanceof Circle && p_boundingbox.convex() instanceof Circle
-            && m_convex.get().getCenter().difference( p_boundingbox.convex().getCenter() ).getMagnitude() < m_convex.get().getRadius() + p_boundingbox.convex().getRadius() )
-        {
-            return true;
-        }
-        return false;
+        return CEnvironment.COLLISIONDETECTOR.detect( m_convex.get(), m_transform, p_boundingbox.convex(), p_boundingbox.transform() );
     }
 
     /**

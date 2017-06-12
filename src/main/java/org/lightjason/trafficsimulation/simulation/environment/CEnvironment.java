@@ -28,6 +28,8 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.ObjectMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
+import org.dyn4j.collision.narrowphase.Gjk;
+import org.dyn4j.collision.narrowphase.NarrowphaseDetector;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -60,8 +62,14 @@ import java.util.stream.Stream;
 @IAgentAction
 public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
+    /**
+     * collision detector
+     */
+    public static final NarrowphaseDetector COLLISIONDETECTOR = new Gjk();
+    /**
+     * functor
+     */
     private static final String FUNCTOR = "environment";
-
     /**
      * routing algorithm
      */
@@ -153,6 +161,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         p_object.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_object.position().setQuick( 1, p_newposition.getQuick( 1 ) );
         p_object.convex().translate( l_xtranslate, l_ytranslate );
+        p_object.transform().translate( l_xtranslate, l_ytranslate );
         m_objects.entrySet().stream()
             .filter( i -> !p_object.equals( i.getValue() ) )
             .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ) )
@@ -163,6 +172,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                     p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
                     p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
                     p_object.convex().translate( -l_xtranslate, -l_ytranslate );
+                    p_object.transform().translate( -l_xtranslate, -l_ytranslate );
                     throw new RuntimeException( "Collision detected!" );
                 }
             }
