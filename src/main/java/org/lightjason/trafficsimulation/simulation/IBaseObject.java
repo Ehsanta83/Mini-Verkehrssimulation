@@ -27,7 +27,6 @@ import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
-import org.lightjason.agentspeak.agent.fuzzy.IFuzzy;
 import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
 import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
@@ -41,12 +40,15 @@ import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.execution.IVariableBuilder;
-import org.lightjason.agentspeak.language.execution.action.unify.IUnifier;
+import org.lightjason.agentspeak.language.fuzzy.operator.IFuzzyBundle;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
+import org.lightjason.agentspeak.language.unify.IUnifier;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,6 +64,10 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = -5112452275211959224L;
     /**
      * current position of the agent
      */
@@ -82,6 +88,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      * reference to external beliefbase
      */
     private final IView<T> m_external;
+
 
     /**
      * ctor
@@ -170,6 +177,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     private final class CEnvironmentBeliefbase extends IBeliefbaseOnDemand<T>
     {
 
+        @Nonnull
         @Override
         public final Stream<ILiteral> streamLiteral()
         {
@@ -220,10 +228,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
 
 
         @Override
-        protected IAgentConfiguration<T> configuration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans,
-                                                        final Set<IRule> p_rules,
-                                                        final ILiteral p_initialgoal, final IUnifier p_unifier,
-                                                        final IVariableBuilder p_variablebuilder
+        protected IAgentConfiguration<T> configuration( @Nonnull final IFuzzyBundle<Boolean> p_fuzzy, @Nonnull final Collection<ILiteral> p_initalbeliefs,
+                                                        @Nonnull final Set<IPlan> p_plans, @Nonnull final Set<IRule> p_rules,
+                                                        @Nullable final ILiteral p_initialgoal,
+                                                        @Nonnull final IUnifier p_unifier, @Nonnull final IVariableBuilder p_variablebuilder
         )
         {
             return new CConfiguration( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_variablebuilder );
@@ -234,7 +242,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
          */
         private final class CConfiguration extends CDefaultAgentConfiguration<T>
         {
-            public CConfiguration( final IFuzzy<Boolean, T> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans, final Set<IRule> p_rules,
+            public CConfiguration( final IFuzzyBundle<Boolean> p_fuzzy, final Collection<ILiteral> p_initalbeliefs, final Set<IPlan> p_plans, final Set<IRule> p_rules,
                                    final ILiteral p_initialgoal,
                                    final IUnifier p_unifier, final IVariableBuilder p_variablebuilder
             )
@@ -242,6 +250,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
                 super( p_fuzzy, p_initalbeliefs, p_plans, p_rules, p_initialgoal, p_unifier, p_variablebuilder );
             }
 
+            @Nonnull
             @Override
             @SuppressWarnings( "unchecked" )
             public final IView<T> beliefbase()

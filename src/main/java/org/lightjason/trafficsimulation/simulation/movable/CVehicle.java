@@ -48,8 +48,19 @@ import java.util.stream.Stream;
 @IAgentAction
 public final class CVehicle extends IBaseMoveable<CVehicle>
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = 1256507850032527860L;
+    /**
+     * literal functor
+     */
     private static final String FUNCTOR = "vehicle";
+    /**
+     * generator counter
+     */
     private static final AtomicLong COUNTER = new AtomicLong();
+
 
     /**
      * ctor

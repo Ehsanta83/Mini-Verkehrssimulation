@@ -44,7 +44,14 @@ import java.util.stream.Stream;
 @IAgentAction
 public abstract class IBaseTrafficLight<T extends IBaseTrafficLight<?, ?>, L extends Enum<?> & ITrafficLightColor<L>> extends IBaseObject<T> implements ITrafficLight<T>
 {
+    /**
+     * literal name
+     */
     protected static final String GROUP = "trafficlight";
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = 6565715304371645198L;
     /**
      * color of traffic light
      */

@@ -57,8 +57,14 @@ import java.util.stream.Stream;
 @IAgentAction
 public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnvironment
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = -993173756668246918L;
+    /**
+     * literal name
+     */
     private static final String FUNCTOR = "environment";
-
     /**
      * routing algorithm
      */
@@ -71,6 +77,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * map of the areas
      */
     private final Map<String, CArea> m_areas;
+
 
     /**
      * ctor

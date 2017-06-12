@@ -57,6 +57,10 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      */
     protected static final String GROUP = "moveable";
     /**
+     * serial id
+     */
+    private static final long serialVersionUID = -807753696520276249L;
+    /**
      * speed definition
      *
      * @bug must be set on initialize to zero, current set to one for testing
@@ -66,6 +70,7 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
      * list of landmarks (route)
      */
     private final List<DoubleMatrix1D> m_route = new ArrayList<>();
+
 
     /**
      * ctor

@@ -38,6 +38,8 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.IObject;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +49,10 @@ import java.util.stream.Collectors;
  */
 public final class CSend extends IBaseAction
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = -8952996253249117364L;
     /**
      * map with agent names and agent objects
      */
@@ -62,20 +68,24 @@ public final class CSend extends IBaseAction
         m_agents = p_agents;
     }
 
+    @Nonnull
     @Override
     public final IPath name()
     {
         return CPath.from( "message/send" );
     }
 
+    @Nonnegative
     @Override
     public final int minimalArgumentNumber()
     {
         return 1;
     }
 
+    @Nonnull
     @Override
-    public final IFuzzyValue<Boolean> execute( final IContext p_context, final boolean p_parallel, final List<ITerm> p_argument, final List<ITerm> p_return )
+    public final IFuzzyValue<Boolean> execute( final boolean p_parallel, @Nonnull final IContext p_context,
+                                               @Nonnull final List<ITerm> p_argument, @Nonnull final List<ITerm> p_return )
     {
         final List<ITerm> l_arguments = CCommon.flatcollection( p_argument ).collect( Collectors.toList() );
         if ( l_arguments.size() < 2 )

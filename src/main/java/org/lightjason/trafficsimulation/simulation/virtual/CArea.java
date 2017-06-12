@@ -55,7 +55,11 @@ import java.util.stream.Stream;
 public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
 {
     /**
-     * functor
+     * serial id
+     */
+    private static final long serialVersionUID = -3024951595684069650L;
+    /**
+     * literal functor
      */
     private static final String FUNCTOR = "area";
     /**

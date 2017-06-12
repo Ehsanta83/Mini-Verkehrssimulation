@@ -44,7 +44,17 @@ import java.util.stream.Stream;
  */
 public final class CPedestrian extends IBaseMoveable<CPedestrian>
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = 6328468258424626083L;
+    /**
+     * literal functor
+     */
     private static final String FUNCTOR = "pedestrian";
+    /**
+     * generator counter
+     */
     private static final AtomicLong COUNTER = new AtomicLong();
 
     /**

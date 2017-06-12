@@ -43,8 +43,19 @@ import java.util.stream.Stream;
  */
 public final class CTrafficLightVehicle extends IBaseTrafficLight<CTrafficLightVehicle, ELightColorVehicle>
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = 2620420341975424527L;
+    /**
+     * literal name
+     */
     private static final String FUNCTOR = "vehiclelight";
+    /**
+     * generator counter
+     */
     private static final AtomicLong COUNTER = new AtomicLong();
+
 
     /**
      * ctor
