@@ -57,6 +57,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,7 +73,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     /**
      * the convex of the object
      */
-    protected Convex m_convex;
+    protected AtomicReference<Convex> m_convex = new AtomicReference<>();
     /**
      * current position of the agent
      */
@@ -112,8 +113,8 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         m_name = p_name;
         m_environment = p_environment;
         m_position = p_position;
-        m_convex = p_convex;
-        m_convex.translate( p_position.get( 0 ), p_position.get( 1 ) );
+        m_convex.set( p_convex );
+        m_convex.get().translate( p_position.get( 0 ), p_position.get( 1 ) );
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );
@@ -179,14 +180,14 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     @Override
     public final Convex convex()
     {
-        return m_convex;
+        return m_convex.get();
     }
 
     @Override
     public boolean intersects( final IBoundingBox p_boundingbox )
     {
-        if ( m_convex instanceof Circle && p_boundingbox.convex() instanceof Circle
-            && m_convex.getCenter().difference( p_boundingbox.convex().getCenter() ).getMagnitude() < m_convex.getRadius() + p_boundingbox.convex().getRadius() )
+        if ( m_convex.get() instanceof Circle && p_boundingbox.convex() instanceof Circle
+            && m_convex.get().getCenter().difference( p_boundingbox.convex().getCenter() ).getMagnitude() < m_convex.get().getRadius() + p_boundingbox.convex().getRadius() )
         {
             return true;
         }

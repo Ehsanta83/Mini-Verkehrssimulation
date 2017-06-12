@@ -89,9 +89,9 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
     @Override
     public void resizeconvex( int p_percent )
     {
-        if ( m_convex.getRadius() * p_percent / 100 < m_radius )
+        if ( m_convex.get().getRadius() * p_percent / 100 < m_radius )
             throw new RuntimeException( "The bounding box cannot be smaller than the object." );
-        m_convex = new Circle( m_convex.getRadius() * p_percent / 100 );
+        m_convex.set( new Circle( m_convex.get().getRadius() * p_percent / 100 ) );
     }
 
     /**

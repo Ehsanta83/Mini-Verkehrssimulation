@@ -104,7 +104,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
         m_pedestrians.add(
             new CPedestrianSprite(
                 this.generate(
-                    "src/test/resources/pedestrian2.asl",
+                    "src/test/resources/pedestrian.asl",
                     EObjectFactory.PEDESTRIAN,
                     new DenseDoubleMatrix1D( new double[]{50, 50} ),
                     0.5
