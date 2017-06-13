@@ -27,6 +27,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Rectangle;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
@@ -102,10 +103,18 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
 
     }
 
+    /**
+     * resize convex
+     *
+     * @param p_percent percent of the resize
+     * @todo how to prevent casting?
+     */
     @Override
     public void resizeconvex( int p_percent )
     {
-
+        if ( ( (Rectangle) m_convex.get() ).getWidth() * p_percent / 100 > m_length )
+            throw new RuntimeException( "The bounding box cannot be smaller than the object." );
+        m_convex.set( Geometry.createRectangle( ( (Rectangle) m_convex.get() ).getWidth() * p_percent / 100, 1 ) );
     }
 
 
@@ -132,16 +141,14 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         @SuppressWarnings( "unchecked" )
         protected final Pair<CVehicle, Stream<String>> generate( final Object... p_data )
         {
-            return new ImmutablePair<>(
-                                        new CVehicle(
-                                                      m_configuration,
-                                                      m_environment,
-                                                      MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
-                                                      (DoubleMatrix1D) p_data[0], (int) p_data[1]
-                                        ),
-
-                                        Stream.of( FUNCTOR, GROUP )
+            final CVehicle l_vehicle = new CVehicle(
+                m_configuration,
+                m_environment,
+                MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
+                (DoubleMatrix1D) p_data[0], (int) p_data[1]
             );
+            m_environment.addobject( l_vehicle );
+            return new ImmutablePair<>( l_vehicle, Stream.of( FUNCTOR, GROUP ) );
         }
 
         /**

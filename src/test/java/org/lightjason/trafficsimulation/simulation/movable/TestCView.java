@@ -41,12 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 /**
  * test of driving a vehicle
  */
-public final class TestCViewPedstrian extends IBaseViewTest
+public final class TestCView extends IBaseViewTest
 {
     /**
      * window screen width
@@ -75,7 +76,12 @@ public final class TestCViewPedstrian extends IBaseViewTest
     /**
      * pedestrians
      */
-    private List<CPedestrianSprite> m_pedestrians;
+    private List<CPedestrianSprite> m_pedestrians = new ArrayList<>();
+
+    /**
+     * vehicles
+     */
+    private List<CVehicleSprite> m_vehicles = new ArrayList<>();
 
     /**
      * initialize pedestrian
@@ -87,8 +93,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     public final void initialize() throws Exception
     {
         this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
-        m_pedestrians = new ArrayList<>();
-        IntStream.range( 0, 50 ).forEach( i ->
+        /*IntStream.range( 0, 25 ).forEach( i ->
             m_pedestrians.add(
                 new CPedestrianSprite(
                     this.generate(
@@ -99,18 +104,20 @@ public final class TestCViewPedstrian extends IBaseViewTest
                     )
                 )
             )
-        );
-        /*
-        m_pedestrians.add(
-            new CPedestrianSprite(
-                this.generate(
-                    "src/test/resources/pedestrian.asl",
-                    EObjectFactory.PEDESTRIAN,
-                    new DenseDoubleMatrix1D( new double[]{50, 50} ),
-                    0.5
+        );*/
+        IntStream.range( 0, 50 ).forEach( i ->
+            m_vehicles.add(
+                new CVehicleSprite(
+                    this.generate(
+                        "src/test/resources/vehicle.asl",
+                        EObjectFactory.VEHICLE,
+                        new DenseDoubleMatrix1D( new double[]{Math.round( Math.random() * 50 ), Math.round( Math.random() * 50 )} ),
+                        3
+                    )
                 )
             )
-        );*/
+        );
+
     }
 
     /**
@@ -120,10 +127,10 @@ public final class TestCViewPedstrian extends IBaseViewTest
     public final void showmoving()
     {
         Assume.assumeNotNull( s_screen );
-        m_pedestrians.forEach( s_screen::spriteadd );
+        Stream.concat( m_pedestrians.stream(), m_vehicles.stream() ).forEach( s_screen::spriteadd );
         IntStream.rangeClosed( 0, 100 ).forEach(  i ->
         {
-            m_pedestrians.forEach( j ->
+            Stream.concat( m_pedestrians.stream(), m_vehicles.stream() ).forEach( j ->
             {
                 try
                 {
@@ -163,7 +170,7 @@ public final class TestCViewPedstrian extends IBaseViewTest
     public static void main( final String[] p_args )
     {
         s_screen = screen( WINDOWWIDTH, WINDOWHEIGHT, ENVWIDTH, ENVHEIGHT, ENVCELL );
-        new TestCViewPedstrian().invoketest();
+        new TestCView().invoketest();
     }
 
 
@@ -218,6 +225,85 @@ public final class TestCViewPedstrian extends IBaseViewTest
         {
             if ( ( !m_texture.compareAndSet( null, this.texture( p_cellsize ) ) )
                  || ( !m_sprite.compareAndSet( null, new Sprite( m_texture.get() ) ) )
+                )
+                return this;
+
+            m_sprite.get().setSize( p_cellsize, p_cellsize );
+            m_sprite.get().setOrigin( 0, 0 );
+            m_sprite.get().setScale( p_unit );
+
+            this.spriteposition( m_sprite.get(), m_wrapping.position() );
+            return this;
+        }
+
+        /**
+         *  sets the position of the sprite
+         * @param p_sprite sprite
+         * @param p_position position
+         */
+        private void spriteposition( final Sprite p_sprite, final DoubleMatrix1D p_position )
+        {
+            if ( p_sprite == null )
+                return;
+            p_sprite.setPosition(
+                (int) p_position.getQuick( 0 ),
+                (int) p_position.getQuick( 1 )
+            );
+        }
+
+    }
+
+
+    /**
+     * vehicle sprite
+     */
+    private final class CVehicleSprite extends IBaseSprite<CVehicle>
+    {
+        /**
+         * texture
+         */
+        private final AtomicReference<Texture> m_texture = new AtomicReference<>();
+
+        /**
+         * ctor
+         *
+         * @param p_wrapping wrapping object
+         */
+        private CVehicleSprite( final CVehicle p_wrapping )
+        {
+            super( p_wrapping );
+        }
+
+        @Override
+        public final ISprite<CVehicle> call() throws Exception
+        {
+            m_wrapping.call();
+            this.spriteposition( m_sprite.get(), m_wrapping.position() );
+            return this;
+        }
+
+        /**
+         * creates the texture
+         *
+         * @return texture initialize
+         * @todo what if the agent has more than one cell? maybe using the radius of the agent?
+         */
+        private Texture texture( final int p_cellsize )
+        {
+            final Pixmap l_pixmap = new Pixmap( p_cellsize * 2, p_cellsize, Pixmap.Format.RGBA8888 );
+            l_pixmap.setColor( Color.GREEN );
+            l_pixmap.fillRectangle( 0, 0, p_cellsize * 2, p_cellsize );
+
+            final Texture l_texture = new Texture( l_pixmap );
+            l_pixmap.dispose();
+            return l_texture;
+        }
+
+        @Override
+        public final synchronized ISprite<CVehicle> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
+        {
+            if ( ( !m_texture.compareAndSet( null, this.texture( p_cellsize ) ) )
+                || ( !m_sprite.compareAndSet( null, new Sprite( m_texture.get() ) ) )
                 )
                 return this;
 

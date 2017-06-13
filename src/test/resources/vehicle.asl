@@ -23,8 +23,59 @@
 
 !main.
 
-+!main <-
-    generic/print("hello vehicle")
++!main
+    <-  generic/print("hello vehicle");
+    route/set/start( 25, 25 );
+    !movement/forward
+.
+
+// move straight forward into the direction of the goal-position
++!movement/forward
+    <-
+        generic/print( "move forward in cycle [", Cycle, "]" );
+        move/forward();
+        !movement/forward
+.
+
+// move straight forward fails than go forward left
+-!movement/forward
+    <-
+        generic/print( "move forward fails in cycle [", Cycle, "]" );
+        !movement/forwardleft
+.
+
+// move forward left - direction 45 degree to the goal position
++!movement/forwardleft
+    <-
+        generic/print( "move forward left in cycle [", Cycle, "]" );
+        move/forwardleft();
+        !movement/forward
+.
+
+// move forward left fails than go right
+-!movement/forwardleft
+    <-
+        generic/print( "move forward left fails in cycle [", Cycle, "]" );
+        !movement/forwardright
+.
+
+// move forward right - direction 45 degree to the goal position
++!movement/forwardright
+    <-
+        generic/print( "move forward right in cycle [", Cycle, "]" );
+        move/forwardright();
+        !movement/forward
+.
+
+// move forward right fails than sleep and hope everything will be
+// fine later, wakeup plan will be trigger after sleeping
+-!movement/forwardright
+    <-
+        T = math/statistic/randomsimple();
+        T = T * 10 + 1;
+        T = math/min( T, 5 );
+        generic/print( "move right fails in cycle [", Cycle, "] wait [", T,"] cycles" );
+        agent/sleep(T)
 .
 
 +!vehicle( speed(S), type(T), visibility(V), vehiclestrafficlightcolor(Vtl), pedestrianstrafficlightcolor(Ptl) )

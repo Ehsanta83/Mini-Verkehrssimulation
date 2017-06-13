@@ -26,7 +26,6 @@ package org.lightjason.trafficsimulation.simulation.movable;
 import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Geometry;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
@@ -91,7 +90,7 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
     {
         if ( m_convex.get().getRadius() * p_percent / 100 < m_radius )
             throw new RuntimeException( "The bounding box cannot be smaller than the object." );
-        m_convex.set( new Circle( m_convex.get().getRadius() * p_percent / 100 ) );
+        m_convex.set( Geometry.createCircle( m_convex.get().getRadius() * p_percent / 100 ) );
     }
 
     /**
