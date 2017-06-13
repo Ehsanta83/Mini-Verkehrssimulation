@@ -73,13 +73,13 @@ import java.util.stream.Stream;
 public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> implements IObject<T>, IBoundingBox
 {
     /**
-     * the convex of the object
-     */
-    protected AtomicReference<Convex> m_convex = new AtomicReference<>();
-    /**
      * serial id
      */
     private static final long serialVersionUID = -5112452275211959224L;
+    /**
+     * the convex of the object
+     */
+    protected AtomicReference<Convex> m_convex = new AtomicReference<>();
     /**
      * current position of the agent
      */
