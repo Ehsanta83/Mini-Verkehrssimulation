@@ -67,7 +67,11 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      */
     public static final NarrowphaseDetector COLLISIONDETECTOR = new Gjk();
     /**
-     * functor
+     * serial id
+     */
+    private static final long serialVersionUID = -993173756668246918L;
+    /**
+     * literal name
      */
     private static final String FUNCTOR = "environment";
     /**
@@ -86,6 +90,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
      * map of the objects
      */
     private final Map<String, IBaseObject<?>> m_objects = new ConcurrentHashMap<>();
+
 
     /**
      * ctor
