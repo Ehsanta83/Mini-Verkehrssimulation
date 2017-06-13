@@ -23,7 +23,7 @@
 
 package org.lightjason.trafficsimulation;
 
-import org.lightjason.agentspeak.beliefbase.CEmptyBeliefbase;
+import org.lightjason.agentspeak.agent.IAgent;
 import org.lightjason.agentspeak.beliefbase.IBeliefbase;
 import org.lightjason.agentspeak.beliefbase.view.IView;
 import org.lightjason.agentspeak.beliefbase.view.IViewGenerator;
@@ -37,6 +37,8 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -347,19 +349,29 @@ public final class CConfiguration
             return ( p_object != null ) && ( p_object instanceof IView<?> ) && ( p_object.hashCode() == this.hashCode() );
         }
 
+        @Nonnull
+        @Override
+        @SuppressWarnings( "unchecked" )
+        public final <N extends IAgent<?>> IView<N> raw()
+        {
+            return (IView<N>) this;
+        }
+
         @Override
         @SafeVarargs
-        public final Stream<IView<IEnvironment>> walk( final IPath p_path, final IViewGenerator<IEnvironment>... p_generator )
+        public final Stream<IView<IEnvironment>> walk( @Nonnull final IPath p_path, @Nullable final IViewGenerator<IEnvironment>... p_generator )
         {
             return Stream.of( this );
         }
 
+        @Nonnull
         @Override
-        public final IView<IEnvironment> generate( final IViewGenerator<IEnvironment> p_generator, final IPath... p_paths )
+        public final IView<IEnvironment> generate( @Nonnull final IViewGenerator<IEnvironment> p_generator, @Nonnull final IPath... p_paths )
         {
             return this;
         }
 
+        @Nonnull
         @Override
         public final Stream<IView<IEnvironment>> root()
         {
@@ -369,12 +381,15 @@ public final class CConfiguration
             );
         }
 
+        @Nonnull
         @Override
+        @SuppressWarnings( "unchecked" )
         public final IBeliefbase<IEnvironment> beliefbase()
         {
-            return CEmptyBeliefbase.instance();
+            return IBeliefbase.EMPY.raw();
         }
 
+        @Nonnull
         @Override
         public final IPath path()
         {
@@ -383,12 +398,14 @@ public final class CConfiguration
             return l_path;
         }
 
+        @Nonnull
         @Override
         public final String name()
         {
             return NAME;
         }
 
+        @Nullable
         @Override
         public final IView<IEnvironment> parent()
         {
@@ -401,12 +418,14 @@ public final class CConfiguration
             return m_parent != null;
         }
 
+        @Nonnull
         @Override
         public final Stream<ITrigger> trigger()
         {
             return Stream.of();
         }
 
+        @Nonnull
         @Override
         public final Stream<ILiteral> stream( final IPath... p_path )
         {
@@ -433,72 +452,80 @@ public final class CConfiguration
         }
 
 
+        @Nonnull
         @Override
         public final Stream<ILiteral> stream( final boolean p_negated, final IPath... p_path )
         {
             return Stream.of();
         }
 
+        @Nonnull
         @Override
-        public final IView<IEnvironment> clear( final IPath... p_path )
+        public final IView<IEnvironment> clear( @Nullable final IPath... p_path )
         {
             return this;
         }
 
+        @Nonnull
         @Override
-        public final IView<IEnvironment> add( final Stream<ILiteral> p_literal )
+        public final IView<IEnvironment> add( @Nonnull final Stream<ILiteral> p_literal )
         {
             return this;
         }
 
+        @Nonnull
         @Override
-        public final IView<IEnvironment> add( final ILiteral... p_literal )
+        public final IView<IEnvironment> add( @Nullable final ILiteral... p_literal )
         {
             return this;
         }
 
+        @Nonnull
         @Override
         @SafeVarargs
-        public final IView<IEnvironment> add( final IView<IEnvironment>... p_view )
+        public final IView<IEnvironment> add( @Nonnull final IView<IEnvironment>... p_view )
         {
             return this;
         }
 
+        @Nonnull
         @Override
         @SafeVarargs
-        public final IView<IEnvironment> add( final IPath p_path, final IView<IEnvironment>... p_view )
+        public final IView<IEnvironment> add( @Nonnull final IPath p_path, @Nonnull final IView<IEnvironment>... p_view )
+        {
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public final IView<IEnvironment> remove( @Nonnull final Stream<ILiteral> p_literal )
+        {
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public final IView<IEnvironment> remove( @Nonnull final ILiteral... p_literal )
+        {
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public final IView<IEnvironment> remove( @Nonnull final IView<IEnvironment> p_view )
         {
             return this;
         }
 
         @Override
-        public final IView<IEnvironment> remove( final Stream<ILiteral> p_literal )
-        {
-            return this;
-        }
-
-        @Override
-        public final IView<IEnvironment> remove( final ILiteral... p_literal )
-        {
-            return this;
-        }
-
-        @Override
-        public final IView<IEnvironment> remove( final IView<IEnvironment> p_view
-        )
-        {
-            return this;
-        }
-
-        @Override
-        public final boolean containsLiteral( final IPath p_path )
+        public final boolean containsLiteral( @Nonnull final IPath p_path )
         {
             final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
             return ( l_value != null ) && ( !( l_value instanceof Map<?, ?> ) );
         }
 
         @Override
-        public final boolean containsView( final IPath p_path )
+        public final boolean containsView( @Nonnull final IPath p_path )
         {
             final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
             return ( l_value != null ) && ( l_value instanceof Map<?, ?> );
@@ -517,7 +544,7 @@ public final class CConfiguration
         }
 
 
-
+        @Nonnull
         @Override
         public final IEnvironment update( final IEnvironment p_agent )
         {

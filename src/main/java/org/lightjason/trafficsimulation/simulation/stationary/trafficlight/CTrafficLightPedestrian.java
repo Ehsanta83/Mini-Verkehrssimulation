@@ -43,7 +43,17 @@ import java.util.stream.Stream;
  */
 public final class CTrafficLightPedestrian extends IBaseTrafficLight<CTrafficLightPedestrian, ELightColorPedestrian>
 {
+    /**
+     * serial id
+     */
+    private static final long serialVersionUID = -4038768077784438210L;
+    /**
+     * literal name
+     */
     private static final String FUNCTOR = "pedestrianlight";
+    /**
+     * generator counter
+     */
     private static final AtomicLong COUNTER = new AtomicLong();
 
     /**

@@ -49,17 +49,22 @@ import java.util.stream.Stream;
 public final class CVehicle extends IBaseMoveable<CVehicle>
 {
     /**
-     * functor
+     * serial id
+     */
+    private static final long serialVersionUID = 1256507850032527860L;
+    /**
+     * literal functor
      */
     private static final String FUNCTOR = "vehicle";
     /**
-     * counter
+     * generator counter
      */
     private static final AtomicLong COUNTER = new AtomicLong();
     /**
      * length
      */
     private int m_length;
+
 
     /**
      * ctor
