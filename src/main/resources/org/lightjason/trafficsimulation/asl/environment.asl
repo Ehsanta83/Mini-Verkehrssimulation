@@ -24,5 +24,10 @@
 !main.
 
 +!main <-
-    generic/print( "run environment" )
+    generic/print( "run environment" );
+
+    >>config/window/height(X);
+    generic/print("--->", X)
 .
+
+-!main <- generic/print("error").

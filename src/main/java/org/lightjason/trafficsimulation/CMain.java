@@ -127,16 +127,22 @@ public final class CMain
         ).collect( Collectors.toSet() );
 
 
+        final IEnvironment l_env = EObjectFactory.ENVIRONMENT.generate(
+            CMain.class.getResourceAsStream( "asl/environment.asl" ),
+            l_actions.stream()
+        ).generatesingle( 25, 25, 2.5, new CJPSPlus() ).<IEnvironment>raw();
+
+        l_env.beliefbase().stream().forEach( System.out::println );
+        l_env.call().call();
+
+
         EObjectFactory.PEDESTRIAN.generate(
 
             CMain.class.getResourceAsStream( "asl/pedestrian.asl" ),
 
             l_actions.stream(),
 
-            EObjectFactory.ENVIRONMENT.generate(
-                CMain.class.getResourceAsStream( "asl/environment.asl" ),
-                l_actions.stream()
-            ).generatesingle( 25, 25, 2.5, new CJPSPlus() ).<IEnvironment>raw()
+            l_env
 
         ).generatemultiple( 3, new DenseDoubleMatrix1D( 2 ) ).forEach( i ->
         {

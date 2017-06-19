@@ -288,7 +288,7 @@ public final class CConfiguration
 
                ? l_data instanceof Map<?, ?>
                  ? recursivedescent( (Map<String, Object>) l_data, p_index + 1, p_path )
-                 : Stream.of()
+                 : Stream.empty()
 
                : l_data instanceof Map<?, ?>
                  ? ( (Map<String, Object>) l_data ).entrySet().stream()
@@ -302,11 +302,14 @@ public final class CConfiguration
      * @todo fix path name with full path
      */
     @SuppressWarnings( "unchecked" )
-    private static Stream<Map.Entry<String, Object>> mapstream( final Map<String, Object> p_map )
+    private static Stream<Map.Entry<String, Object>> mapstream( final Map<String, Object> p_map, final String p_prefix )
     {
         return p_map.entrySet()
                     .stream()
-                    .flatMap( i -> i.getValue() instanceof Map<?, ?> ? mapstream( (Map<String, Object>) i.getValue() ) : Stream.of( i ) );
+                    .flatMap( i -> i.getValue() instanceof Map<?, ?>
+                                   ? mapstream( (Map<String, Object>) i.getValue(), p_prefix +  IPath.DEFAULTSEPERATOR + i.getKey() )
+                                   : Stream.of( new AbstractMap.SimpleImmutableEntry<>( p_prefix +  IPath.DEFAULTSEPERATOR + i.getKey(), i.getValue() ) )
+                    );
     }
 
 
@@ -421,7 +424,7 @@ public final class CConfiguration
         @Override
         public final Stream<ITrigger> trigger()
         {
-            return Stream.of();
+            return Stream.empty();
         }
 
         @Nonnull
@@ -429,7 +432,7 @@ public final class CConfiguration
         public final Stream<ILiteral> stream( final IPath... p_path )
         {
             return ( p_path == null ) || ( p_path.length == 0 )
-                   ? mapstream( m_configuration ).map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) )
+                   ? mapstream( m_configuration, this.name() ).map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) )
                    : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, 0, i.stream().toArray( String[]::new ) ) )
                                             .map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) );
         }
@@ -455,7 +458,7 @@ public final class CConfiguration
         @Override
         public final Stream<ILiteral> stream( final boolean p_negated, final IPath... p_path )
         {
-            return Stream.of();
+            return Stream.empty();
         }
 
         @Nonnull
@@ -545,7 +548,7 @@ public final class CConfiguration
 
         @Nonnull
         @Override
-        public final IEnvironment update( final IEnvironment p_agent )
+        public final IEnvironment update( @Nonnull final IEnvironment p_agent )
         {
             return p_agent;
         }
