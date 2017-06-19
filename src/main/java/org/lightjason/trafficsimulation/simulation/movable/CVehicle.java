@@ -85,7 +85,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         final int p_length
     )
     {
-        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createRectangle( p_length, 1 ) );
+        super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createRectangle( p_length + 2, 3 ) );
     }
 
     @Override

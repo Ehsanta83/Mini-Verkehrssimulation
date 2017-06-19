@@ -105,7 +105,7 @@ public final class TestCView extends IBaseViewTest
                 )
             )
         );
-        IntStream.range( 0, 50 ).forEach( i ->
+        IntStream.range( 0, 10 ).forEach( i ->
             m_vehicles.add(
                 new CVehicleSprite(
                     this.generate(
