@@ -93,7 +93,7 @@ public final class TestCView extends IBaseViewTest
     public final void initialize() throws Exception
     {
         this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
-        /*IntStream.range( 0, 25 ).forEach( i ->
+        IntStream.range( 0, 25 ).forEach( i ->
             m_pedestrians.add(
                 new CPedestrianSprite(
                     this.generate(
@@ -104,7 +104,7 @@ public final class TestCView extends IBaseViewTest
                     )
                 )
             )
-        );*/
+        );
         IntStream.range( 0, 50 ).forEach( i ->
             m_vehicles.add(
                 new CVehicleSprite(
@@ -112,7 +112,7 @@ public final class TestCView extends IBaseViewTest
                         "src/test/resources/vehicle.asl",
                         EObjectFactory.VEHICLE,
                         new DenseDoubleMatrix1D( new double[]{Math.round( Math.random() * 50 ), Math.round( Math.random() * 50 )} ),
-                        3
+                        2
                     )
                 )
             )

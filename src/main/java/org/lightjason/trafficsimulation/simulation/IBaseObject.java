@@ -127,7 +127,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
         m_position = p_position;
         m_convex.set( p_convex );
         m_convex.get().translate( p_position.get( 0 ), p_position.get( 1 ) );
-        m_transform.translate( p_position.get( 0 ), p_position.get( 1 ) );
 
         m_beliefbase.add( new CEnvironmentBeliefbase().create( "env", m_beliefbase ) );
         m_external = m_beliefbase.beliefbase().view( "extern" );

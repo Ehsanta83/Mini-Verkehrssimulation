@@ -166,7 +166,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
         p_object.position().setQuick( 0, p_newposition.getQuick( 0 ) );
         p_object.position().setQuick( 1, p_newposition.getQuick( 1 ) );
         p_object.convex().translate( l_xtranslate, l_ytranslate );
-        p_object.transform().translate( l_xtranslate, l_ytranslate );
         m_objects.entrySet().stream()
             .filter( i -> !p_object.equals( i.getValue() ) )
             .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ) )
@@ -177,7 +176,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
                     p_object.position().setQuick( 0, l_oldposition.getQuick( 0 ) );
                     p_object.position().setQuick( 1, l_oldposition.getQuick( 1 ) );
                     p_object.convex().translate( -l_xtranslate, -l_ytranslate );
-                    p_object.transform().translate( -l_xtranslate, -l_ytranslate );
                     throw new RuntimeException( "Collision detected!" );
                 }
             }
