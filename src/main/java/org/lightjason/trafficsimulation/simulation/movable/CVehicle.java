@@ -52,7 +52,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
     /**
      * serial id
      */
-    private static final long serialVersionUID = 1256507850032527860L;
+    private static final long serialVersionUID = 5898561526315589144L;
     /**
      * literal functor
      */

@@ -39,6 +39,11 @@ import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 public abstract class IBasePedestrian<T extends IBasePedestrian<?>> extends IBaseMoveable<T>
 {
     /**
+     * serial id
+     */
+    private static final long serialVersionUID = 4525118579981240115L;
+
+    /**
      * ctor
      *
      * @param p_configuration agent configuration

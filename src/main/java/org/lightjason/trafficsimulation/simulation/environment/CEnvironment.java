@@ -69,7 +69,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     /**
      * serial id
      */
-    private static final long serialVersionUID = -993173756668246918L;
+    private static final long serialVersionUID = -2422681046299478212L;
     /**
      * literal name
      */
@@ -116,10 +116,10 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     /**
-     *
+     * route
      * @param p_start start position
      * @param p_end target position
-     * @return
+     * @return route list
      * @bug just for test before implementing routing algorithm
      */
     @Override
@@ -183,6 +183,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
 
         m_objectgrid.setQuick( (int) l_oldposition.getQuick( 0 ), (int) l_oldposition.getQuick( 1 ), null );
         m_objectgrid.setQuick( (int) p_newposition.getQuick( 0 ), (int) p_newposition.getQuick( 1 ), p_object );
+
         m_areas.entrySet().parallelStream().forEach( entry -> entry.getValue().addPhysical( p_object ) );
         return p_object;
     }

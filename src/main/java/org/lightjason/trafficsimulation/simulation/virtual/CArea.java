@@ -37,6 +37,7 @@ import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
 import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.environment.CEnvironment;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 
@@ -58,7 +59,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * serial id
      */
-    private static final long serialVersionUID = -3024951595684069650L;
+    private static final long serialVersionUID = -1871268089408658280L;
     /**
      * literal functor
      */
@@ -90,7 +91,7 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     /**
      * a set of the physical agents in the area
      */
-    private final Set<IBaseObject<?>> m_physical = new HashSet<>();
+    private final Set<IBaseObject<?>> m_physicals = new HashSet<>();
 
     /**
      * ctor
@@ -135,15 +136,14 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     }
 
     /**
-     * check if a position is inside the area
+     * check if a physical is inside the area
      *
-     * @param p_position position
+     * @param p_physical physical
      * @return boolean
      */
-    public boolean isInside( final DoubleMatrix1D p_position )
+    public boolean isInside( final IBaseObject<?> p_physical )
     {
-        return ( Math.abs( m_position.get( 0 ) - p_position.get( 0 ) + p_position.get( 2 ) / 2 ) < m_position.get( 2 ) )
-            && ( Math.abs( m_position.get( 1 ) - p_position.get( 1 ) + p_position.get( 3 ) / 2 ) < m_position.get( 3 ) );
+        return CEnvironment.COLLISIONDETECTOR.detect( m_convex.get(), m_transform, p_physical.convex(), p_physical.transform() );
     }
 
     /**
@@ -153,20 +153,25 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
      */
     public void addPhysical( final IBaseObject<?> p_physical )
     {
-        if ( this.isInside( p_physical.position() ) )
+        if ( this.isInside( p_physical ) && !m_physicals.contains( p_physical ) )
         {
-            m_physical.add( p_physical );
+            m_physicals.add( p_physical );
             this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "addphysical", CRawTerm.from( p_physical ) ) ) );
+            p_physical.enterarea( this );
         }
     }
 
     @Override
     public CArea call() throws Exception
     {
-        m_physical.removeAll(
-            m_physical.stream()
-                .filter( i -> !this.isInside( i.position() ) )
-                .peek( i -> this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) ) )
+        m_physicals.removeAll(
+            m_physicals.stream()
+                .filter( i -> !this.isInside( i ) )
+                .peek( i ->
+                {
+                    this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "removephysical", CRawTerm.from( i ) ) ) );
+                    i.leavearea( this );
+                } )
                 .collect( Collectors.toSet() )
         );
         return super.call();

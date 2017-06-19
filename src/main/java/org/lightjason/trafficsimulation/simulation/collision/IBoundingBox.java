@@ -43,7 +43,7 @@ public interface IBoundingBox
 
     /**
      * get the transformation matrix of the object
-     * @return
+     * @return transform
      */
     Transform transform();
 

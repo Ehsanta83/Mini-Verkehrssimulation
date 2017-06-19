@@ -47,7 +47,7 @@ public final class CPedestrian extends IBasePedestrian<CPedestrian>
     /**
      * serial id
      */
-    private static final long serialVersionUID = 6328468258424626083L;
+    private static final long serialVersionUID = 452962400252339396L;
     /**
      * literal functor
      */

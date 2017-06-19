@@ -47,11 +47,14 @@ import org.lightjason.agentspeak.language.ILiteral;
 import org.lightjason.agentspeak.language.execution.IVariableBuilder;
 import org.lightjason.agentspeak.language.fuzzy.operator.IFuzzyBundle;
 import org.lightjason.agentspeak.language.instantiable.plan.IPlan;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.agentspeak.language.instantiable.rule.IRule;
 import org.lightjason.agentspeak.language.unify.IUnifier;
 import org.lightjason.trafficsimulation.simulation.collision.IBoundingBox;
 import org.lightjason.trafficsimulation.simulation.environment.CEnvironment;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 import org.lightjason.trafficsimulation.ui.CHTTPServer;
 
 import javax.annotation.Nonnull;
@@ -76,7 +79,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     /**
      * serial id
      */
-    private static final long serialVersionUID = -5112452275211959224L;
+    private static final long serialVersionUID = -4567702787492881529L;
     /**
      * the convex of the object
      */
@@ -208,6 +211,35 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     }
 
     /**
+     * will be called, when the object enters an area
+     *
+     * @param p_area area
+     * @todo should this method define in an interface? if yes which one? IBoundingBox?
+     */
+    public void enterarea( final CArea p_area )
+    {
+        this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "enterarea", CRawTerm.from( p_area ) ) ) );
+    }
+
+    /**
+     * will be called, when the object leaves an area
+     *
+     * @param p_area area
+     * @todo should this method define in an interface? if yes which one? IBoundingBox?
+     */
+    public void leavearea( final CArea p_area )
+    {
+        this.trigger( CTrigger.from( ITrigger.EType.ADDGOAL, CLiteral.from( "leavearea", CRawTerm.from( p_area ) ) ) );
+    }
+
+    @IAgentActionFilter
+    @IAgentActionName( name = "boundingbox/resize" )
+    private void resizeboundingbox( final int p_percent )
+    {
+        this.resizeconvex( Math.abs( p_percent ) );
+    }
+
+    /**
      * get a stream of cells from position
      * @param p_position position
      * @return cells
@@ -225,15 +257,6 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
             (int) ( p_position.get( 1 ) + 0.5 + p_object.radius() )
         );*/
     }
-
-
-    @IAgentActionFilter
-    @IAgentActionName( name = "boundingbox/resize" )
-    private void resizeboundingbox( final int p_percent )
-    {
-        this.resizeconvex( Math.abs( p_percent ) );
-    }
-
 
     /**
      * environment beliefbase
