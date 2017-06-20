@@ -125,12 +125,9 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @Override
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
-        return new ArrayList<DoubleMatrix1D>()
-            {
-                {
-                    add( p_end );
-                }
-            };
+        final List<DoubleMatrix1D> l_route = new ArrayList<>();
+        l_route.add( p_end );
+        return l_route;
         //return m_routing.route( m_objectgrid, p_start, p_end );
     }
 
@@ -245,6 +242,19 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     }
 
     /**
+     * add an object to the environment
+     * @param p_object object
+     * @todo implementing if another object is in this position and if the object is more than one cell
+     */
+    @Override
+    public void addobject( final IBaseObject<?> p_object )
+    {
+        m_objectgrid.setQuick( (int) p_object.position().getQuick( 0 ), (int) p_object.position().getQuick( 1 ), p_object );
+        m_objects.put( p_object.name(), p_object );
+
+    }
+
+    /**
      * add an area to the environment
      *
      * @param p_file asl file
@@ -287,19 +297,6 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     @IAgentActionName( name = "env/area/remove" )
     private void removearea()
     {
-    }
-
-    /**
-     * add an object to the environment
-     * @param p_object object
-     * @todo implementing if another object is in this position and if the object is more than one cell
-     */
-    @Override
-    public void addobject( final IBaseObject<?> p_object )
-    {
-        m_objectgrid.setQuick( (int) p_object.position().getQuick( 0 ), (int) p_object.position().getQuick( 1 ), p_object );
-        m_objects.put( p_object.name(), p_object );
-
     }
 
     /**
