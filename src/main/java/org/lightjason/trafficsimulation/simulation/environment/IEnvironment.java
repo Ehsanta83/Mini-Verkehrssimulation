@@ -26,8 +26,10 @@ package org.lightjason.trafficsimulation.simulation.environment;
 import cern.colt.matrix.DoubleMatrix1D;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.IObject;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 
@@ -95,4 +97,11 @@ public interface IEnvironment extends IObject<IEnvironment>
      */
     void addobject( final IBaseObject<?> p_object );
 
+    /**
+     * get areas
+     * just for test
+     *
+     * @return areas
+     */
+    Map<String, CArea> areas();
 }

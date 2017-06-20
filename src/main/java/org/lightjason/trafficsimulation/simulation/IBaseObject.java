@@ -89,7 +89,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
      */
     protected Transform m_transform = new Transform();
     /**
-     * current position of the agent
+     * center position
      */
     protected final DoubleMatrix1D m_position;
     /**

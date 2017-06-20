@@ -24,7 +24,6 @@
 package org.lightjason.trafficsimulation.simulation.movable;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +33,6 @@ import org.lightjason.trafficsimulation.ui.CVehicleSprite;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -45,39 +42,7 @@ import java.util.stream.Stream;
  */
 public final class TestCViewMoveable extends IBaseViewTest
 {
-    /**
-     * window screen width
-     */
-    private static final int WINDOWWIDTH = 1600;
-    /**
-     * window screen height
-     */
-    private static final int WINDOWHEIGHT = 1200;
-    /**
-     * grid width (column)
-     */
-    private static final int ENVWIDTH = 50;
-    /**
-     * grid height (rows)
-     */
-    private static final int ENVHEIGHT = 50;
-    /**
-     * cell size
-     */
-    private static final int ENVCELL = 10;
-    /**
-     * screen reference
-     */
-    private static CScreen s_screen;
-    /**
-     * pedestrians
-     */
-    private List<CPedestrianSprite> m_pedestrians = new ArrayList<>();
 
-    /**
-     * vehicles
-     */
-    private List<CVehicleSprite> m_vehicles = new ArrayList<>();
 
     /**
      * initialize pedestrian
@@ -120,41 +85,11 @@ public final class TestCViewMoveable extends IBaseViewTest
      * show moving
      */
     @Test
-    public final void showmoving()
+    public final void test()
     {
         Assume.assumeNotNull( s_screen );
         Stream.concat( m_pedestrians.stream(), m_vehicles.stream() ).forEach( s_screen::spriteadd );
-        IntStream.rangeClosed( 0, 100 ).forEach(  i ->
-        {
-            Stream.concat( m_pedestrians.stream(), m_vehicles.stream() ).forEach( j ->
-            {
-                try
-                {
-
-                    j.call();
-                    System.out.println( j.raw().position() );
-
-
-                }
-                catch ( final Exception l_exception )
-                {
-                    l_exception.printStackTrace();
-                    Assert.assertTrue( false );
-                }
-            }
-            );
-            try
-            {
-                Thread.sleep( 500 );
-            }
-            catch ( final InterruptedException l_exception )
-            {
-                l_exception.printStackTrace();
-            }
-        }
-        );
-
-
+        callagents( 100, 500 );
     }
 
 

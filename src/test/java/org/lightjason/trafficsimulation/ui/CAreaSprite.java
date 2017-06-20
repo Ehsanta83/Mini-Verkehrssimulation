@@ -28,14 +28,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import org.lightjason.trafficsimulation.simulation.movable.CVehicle;
+import org.lightjason.trafficsimulation.simulation.virtual.CArea;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * vehicle sprite
+ * area sprite
  */
-public final class CVehicleSprite extends IBaseSprite<CVehicle>
+public final class CAreaSprite extends IBaseSprite<CArea>
 {
     /**
      * texture
@@ -47,13 +47,13 @@ public final class CVehicleSprite extends IBaseSprite<CVehicle>
      *
      * @param p_wrapping wrapping object
      */
-    public CVehicleSprite( final CVehicle p_wrapping )
+    public CAreaSprite( final CArea p_wrapping )
     {
         super( p_wrapping );
     }
 
     @Override
-    public final ISprite<CVehicle> call() throws Exception
+    public final ISprite<CArea> call() throws Exception
     {
         m_wrapping.call();
         this.spriteposition( m_sprite.get(), m_wrapping.position() );
@@ -68,9 +68,9 @@ public final class CVehicleSprite extends IBaseSprite<CVehicle>
      */
     private Texture texture( final int p_cellsize )
     {
-        final Pixmap l_pixmap = new Pixmap( p_cellsize * m_wrapping.length(), p_cellsize, Pixmap.Format.RGBA8888 );
-        l_pixmap.setColor( Color.GREEN );
-        l_pixmap.fillRectangle( 0, 0, p_cellsize * m_wrapping.length(), p_cellsize );
+        final Pixmap l_pixmap = new Pixmap( p_cellsize * 2, p_cellsize, Pixmap.Format.RGBA8888 );
+        l_pixmap.setColor( Color.LIGHT_GRAY );
+        l_pixmap.fillRectangle( 0, 0, p_cellsize * 2, p_cellsize );
 
         final Texture l_texture = new Texture( l_pixmap );
         l_pixmap.dispose();
@@ -78,15 +78,17 @@ public final class CVehicleSprite extends IBaseSprite<CVehicle>
     }
 
     @Override
-    public final synchronized ISprite<CVehicle> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
+    public final synchronized ISprite<CArea> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit )
     {
         if ( ( !m_texture.compareAndSet( null, this.texture( p_cellsize ) ) )
             || ( !m_sprite.compareAndSet( null, new Sprite( m_texture.get() ) ) )
             )
             return this;
 
-        m_sprite.get().setSize( p_cellsize * m_wrapping.length(), p_cellsize );
-        m_sprite.get().setOrigin( -( m_wrapping.length() / 2 ), -0.5f );
+        m_sprite.get().setSize( p_cellsize * m_wrapping.length(), p_cellsize * m_wrapping.width() );
+        m_sprite.get().setOrigin( -( m_wrapping.length() / 2 ), -( m_wrapping.width() / 2 ) );
+            //m_sprite.get().setOrigin( (float) m_wrapping.position().get( 0 ), (float) m_wrapping.position().get( 1 ) );
+        //m_sprite.get().setOriginCenter();
         m_sprite.get().setScale( p_unit );
 
         this.spriteposition( m_sprite.get(), m_wrapping.position() );

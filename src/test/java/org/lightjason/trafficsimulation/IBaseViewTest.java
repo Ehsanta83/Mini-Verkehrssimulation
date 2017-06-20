@@ -41,11 +41,17 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
+import org.junit.Assert;
+import org.lightjason.trafficsimulation.ui.CAreaSprite;
+import org.lightjason.trafficsimulation.ui.CPedestrianSprite;
+import org.lightjason.trafficsimulation.ui.CVehicleSprite;
 import org.lightjason.trafficsimulation.ui.ISprite;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -57,6 +63,44 @@ import java.util.stream.Stream;
  */
 public abstract class IBaseViewTest extends IBaseTest
 {
+    /**
+     * window screen width
+     */
+    protected static final int WINDOWWIDTH = 1600;
+    /**
+     * window screen height
+     */
+    protected static final int WINDOWHEIGHT = 1200;
+    /**
+     * grid width (column)
+     */
+    protected static final int ENVWIDTH = 50;
+    /**
+     * grid height (rows)
+     */
+    protected static final int ENVHEIGHT = 50;
+    /**
+     * cell size
+     */
+    protected static final int ENVCELL = 10;
+    /**
+     * screen reference
+     */
+    protected static CScreen s_screen;
+    /**
+     * pedestrians
+     */
+    protected List<CPedestrianSprite> m_pedestrians = new ArrayList<>();
+
+    /**
+     * vehicles
+     */
+    protected List<CVehicleSprite> m_vehicles = new ArrayList<>();
+
+    /**
+     * areas
+     */
+    protected List<CAreaSprite> m_areas = new ArrayList<>();
 
     /**
      * executes the screen
@@ -102,6 +146,43 @@ public abstract class IBaseViewTest extends IBaseTest
         final CScreen l_screen = new CScreen( p_cellrows, p_cellcolumns, p_cellsize, p_zoomspeed, p_dragspeed );
         new LwjglApplication( l_screen, l_config );
         return l_screen;
+    }
+
+    /**
+     * call agents
+     *
+     * @param p_cycles cycles count
+     * @param p_delay delay between cycles in millisecond
+     */
+    protected void callagents( final int p_cycles, final int p_delay )
+    {
+        IntStream.range( 0, p_cycles ).forEach(  i ->
+            {
+                Stream.concat( Stream.concat( m_areas.stream(), m_vehicles.stream() ), m_pedestrians.stream() ).forEach( j ->
+                    {
+                        try
+                        {
+                            j.call();
+                            //System.out.println( j.raw().position() );
+                        }
+                        catch ( final Exception l_exception )
+                        {
+                            l_exception.printStackTrace();
+                            Assert.assertTrue( false );
+                        }
+                    }
+                );
+                try
+                {
+                    Thread.sleep( p_delay );
+                }
+                catch ( final InterruptedException l_exception )
+                {
+                    l_exception.printStackTrace();
+                }
+            }
+        );
+
     }
 
 

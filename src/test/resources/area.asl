@@ -26,3 +26,11 @@
 +!main
     <-  generic/print("hello area")
 .
+
++!addphysical( Physical )
+    <- generic/print("area: physical in: ", Physical )
+.
+
++!removephysical( Physical )
+    <- generic/print("area: physical out: ", Physical )
+.

@@ -193,6 +193,26 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
     }
 
     /**
+     * get the lenght of the area
+     *
+     * @return length
+     */
+    public int length()
+    {
+        return m_length;
+    }
+
+    /**
+     * get the width of the area
+     *
+     * @return width
+     */
+    public int width()
+    {
+        return m_width;
+    }
+
+    /**
      * generator class
      *
      * @bug environment position setter must be refactored
@@ -221,8 +241,8 @@ public final class CArea extends IBaseObject<CArea> implements IVirtual<CArea>
                 m_environment,
                 MessageFormat.format( "{0} {1}", FUNCTOR, COUNTER.getAndIncrement() ),
                 new DenseDoubleMatrix1D( ( (List<CRawTerm<?>>) p_data[0] ).stream().mapToDouble( i -> Double.valueOf( i.toString() ) ).toArray() ),
-                (int) p_data[1],
-                (int) p_data[2],
+                (int) (long) p_data[1],
+                (int) (long) p_data[2],
                 (boolean) p_data[3],
                 (String) p_data[4],
                 (List<CRawTerm<?>>) p_data[5]

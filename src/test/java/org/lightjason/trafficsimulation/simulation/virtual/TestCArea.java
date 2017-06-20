@@ -23,23 +23,70 @@
 
 package org.lightjason.trafficsimulation.simulation.virtual;
 
-import org.lightjason.trafficsimulation.IBaseTest;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
+import org.lightjason.trafficsimulation.IBaseViewTest;
+import org.lightjason.trafficsimulation.simulation.EObjectFactory;
+import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
+import org.lightjason.trafficsimulation.ui.CAreaSprite;
+import org.lightjason.trafficsimulation.ui.CPedestrianSprite;
 
+import java.util.stream.Stream;
 
 
 /**
  * test area
  */
-public final class TestCArea extends IBaseTest
+public final class TestCArea extends IBaseViewTest
 {
+    /**
+     * initilize
+     *
+     * @throws Exception on initialize environment error
+     */
+    @Before
+    public final void initialize() throws Exception
+    {
+        this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
+        m_environment.call();
+        m_pedestrians.add(
+            new CPedestrianSprite(
+                this.generate(
+                    "src/test/resources/pedestrian.asl",
+                    EObjectFactory.PEDESTRIAN,
+                    new DenseDoubleMatrix1D( new double[]{1, 25} ),
+                    0.5
+                )
+            )
+        );
+        m_environment.areas().forEach( ( p_name, p_area ) ->
+        {
+            m_areas.add( new CAreaSprite( p_area ) );
+        }
+        );
+    }
+
+    /**
+     * test
+     */
+    @Test
+    public final void test()
+    {
+        Assume.assumeNotNull( s_screen );
+        Stream.concat( Stream.concat( m_areas.stream(), m_vehicles.stream() ), m_pedestrians.stream() ).forEach( s_screen::spriteadd );
+        callagents( 100, 1000 );
+    }
 
     /**
      * test call
      *
      * @param p_args command-line arguments
      */
-    public static void main( final String p_args )
+    public static void main( final String[] p_args )
     {
+        s_screen = screen( WINDOWWIDTH, WINDOWHEIGHT, ENVWIDTH, ENVHEIGHT, ENVCELL );
         new TestCArea().invoketest();
     }
 

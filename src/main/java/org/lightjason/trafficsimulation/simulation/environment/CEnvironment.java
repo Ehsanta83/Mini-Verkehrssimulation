@@ -299,6 +299,12 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     {
     }
 
+    @Override
+    public Map<String, CArea> areas()
+    {
+        return m_areas;
+    }
+
     /**
      * generator of the environment
      */

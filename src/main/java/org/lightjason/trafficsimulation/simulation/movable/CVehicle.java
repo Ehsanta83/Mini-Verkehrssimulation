@@ -86,6 +86,7 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
     )
     {
         super( p_configuration, p_environment, FUNCTOR, p_name, p_position, Geometry.createRectangle( p_length + 2, 3 ) );
+        m_length = p_length;
     }
 
     @Override
@@ -120,6 +121,16 @@ public final class CVehicle extends IBaseMoveable<CVehicle>
         if ( ( (Rectangle) m_convex.get() ).getWidth() * p_percent / 100 > m_length )
             throw new RuntimeException( "The bounding box cannot be smaller than the object." );
         m_convex.set( Geometry.createRectangle( ( (Rectangle) m_convex.get() ).getWidth() * p_percent / 100, 1 ) );
+    }
+
+    /**
+     * get length of the vehicle
+     *
+     * @return length
+     */
+    public int length()
+    {
+        return m_length;
     }
 
 

@@ -78,3 +78,10 @@
         agent/sleep(T)
 .
 
++!enterarea( Area )
+    <- generic/print("pedestrian: enter area: ", Area )
+.
+
++!leavearea( Area )
+    <- generic/print("pedestrian: leave area: ", Area )
+.
