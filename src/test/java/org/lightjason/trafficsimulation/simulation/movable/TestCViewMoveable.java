@@ -29,8 +29,8 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.trafficsimulation.IBaseViewTest;
-import org.lightjason.trafficsimulation.gdx.CPedestrianSprite;
-import org.lightjason.trafficsimulation.gdx.CVehicleSprite;
+import org.lightjason.trafficsimulation.ui.CPedestrianSprite;
+import org.lightjason.trafficsimulation.ui.CVehicleSprite;
 import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 

@@ -21,7 +21,7 @@
  * @endcond
  */
 
-package org.lightjason.trafficsimulation.gdx;
+package org.lightjason.trafficsimulation.ui;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

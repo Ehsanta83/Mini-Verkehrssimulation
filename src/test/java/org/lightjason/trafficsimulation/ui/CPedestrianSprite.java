@@ -21,7 +21,7 @@
  * @endcond
  */
 
-package org.lightjason.trafficsimulation.gdx;
+package org.lightjason.trafficsimulation.ui;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import com.badlogic.gdx.graphics.Color;
