@@ -42,6 +42,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
+import org.lightjason.trafficsimulation.gdx.ISprite;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -106,79 +107,6 @@ public abstract class IBaseViewTest extends IBaseTest
         return l_screen;
     }
 
-
-
-    /**
-     * interface for visualization
-     */
-    protected interface ISprite<T>
-    {
-
-        /**
-         * initialize the sprite
-         *
-         * @param p_rows number of rows
-         * @param p_columns number of columns
-         * @param p_cellsize cellsize
-         * @param p_unit unit scale
-         * @return self reference
-         */
-        ISprite<T> spriteinitialize( final int p_rows, final int p_columns, final int p_cellsize, final float p_unit );
-
-        /**
-         * returns sprite object
-         *
-         * @return sprite
-         */
-        Sprite sprite();
-
-        /**
-         * returns the wrap data structure
-         *
-         * @return inner object
-         */
-        T raw();
-    }
-
-
-
-    /**
-     * sprite wrapper object
-     */
-    protected abstract class IBaseSprite<T> implements ISprite<T>, Callable<ISprite<T>>
-    {
-        /**
-         * sprite object
-         */
-        protected AtomicReference<Sprite> m_sprite = new AtomicReference<>();
-        /**
-         * wrapping object
-         */
-        protected final T m_wrapping;
-
-        /**
-         * ctor
-         *
-         * @param p_wrapping wrapping object
-         */
-        protected IBaseSprite( final T p_wrapping )
-        {
-            m_wrapping = p_wrapping;
-        }
-
-
-        @Override
-        public final Sprite sprite()
-        {
-            return m_sprite.get();
-        }
-
-        @Override
-        public final T raw()
-        {
-            return m_wrapping;
-        }
-    }
 
 
     /**
