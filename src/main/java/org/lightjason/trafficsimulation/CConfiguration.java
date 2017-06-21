@@ -23,18 +23,9 @@
 
 package org.lightjason.trafficsimulation;
 
-import org.lightjason.agentspeak.agent.IAgent;
-import org.lightjason.agentspeak.beliefbase.IBeliefbase;
+import org.lightjason.agentspeak.beliefbase.view.CViewMap;
 import org.lightjason.agentspeak.beliefbase.view.IView;
-import org.lightjason.agentspeak.beliefbase.view.IViewGenerator;
-import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.common.IPath;
-import org.lightjason.agentspeak.language.CLiteral;
-import org.lightjason.agentspeak.language.CRawTerm;
-import org.lightjason.agentspeak.language.ILiteral;
-import org.lightjason.agentspeak.language.ITerm;
-import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
-import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nonnull;
@@ -50,10 +41,8 @@ import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,6 +59,10 @@ public final class CConfiguration
      * singleton instance
      */
     public static final CConfiguration INSTANCE = new CConfiguration();
+    /**
+     * name of the beliefbase
+     */
+    private static final String BELIEFBASE = "config";
     /**
      * map with configuration data
      */
@@ -264,9 +257,9 @@ public final class CConfiguration
      * @param p_parent parent view
      * @return new view
      */
-    public final IView<IEnvironment> view( final IView<IEnvironment> p_parent )
+    public final IView view( final IView p_parent )
     {
-        return new CView( p_parent );
+        return new CViewMap( BELIEFBASE, m_configuration, p_parent );
     }
 
 
@@ -310,249 +303,6 @@ public final class CConfiguration
                                    ? mapstream( (Map<String, Object>) i.getValue(), p_prefix +  IPath.DEFAULTSEPERATOR + i.getKey() )
                                    : Stream.of( new AbstractMap.SimpleImmutableEntry<>( p_prefix +  IPath.DEFAULTSEPERATOR + i.getKey(), i.getValue() ) )
                     );
-    }
-
-
-
-    /**
-     * view of the configuration
-     * @todo literal stream with type configuration
-     */
-    private final class CView implements IView<IEnvironment>
-    {
-        /**
-         * name of the view
-         */
-        private static final String NAME = "config";
-        /**
-         * parent name
-         */
-        private final IView<IEnvironment> m_parent;
-
-        /**
-         * ctor
-         *
-         * @param p_parent parent view
-         */
-        CView( final IView<IEnvironment> p_parent )
-        {
-            m_parent = p_parent;
-        }
-
-        @Override
-        public final int hashCode()
-        {
-            return NAME.hashCode();
-        }
-
-        @Override
-        public final boolean equals( final Object p_object )
-        {
-            return ( p_object != null ) && ( p_object instanceof IView<?> ) && ( p_object.hashCode() == this.hashCode() );
-        }
-
-        @Nonnull
-        @Override
-        @SuppressWarnings( "unchecked" )
-        public final <N extends IAgent<?>> IView<N> raw()
-        {
-            return (IView<N>) this;
-        }
-
-        @Override
-        @SafeVarargs
-        public final Stream<IView<IEnvironment>> walk( @Nonnull final IPath p_path, @Nullable final IViewGenerator<IEnvironment>... p_generator )
-        {
-            return Stream.of( this );
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> generate( @Nonnull final IViewGenerator<IEnvironment> p_generator, @Nonnull final IPath... p_paths )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final Stream<IView<IEnvironment>> root()
-        {
-            return Stream.concat(
-                Stream.of( this ),
-                Stream.of( this.parent() ).filter( Objects::nonNull )
-            );
-        }
-
-        @Nonnull
-        @Override
-        @SuppressWarnings( "unchecked" )
-        public final IBeliefbase<IEnvironment> beliefbase()
-        {
-            return IBeliefbase.EMPY.raw();
-        }
-
-        @Nonnull
-        @Override
-        public final IPath path()
-        {
-            final IPath l_path = new CPath();
-            this.root().forEach( i -> l_path.pushfront( i.name() ) );
-            return l_path;
-        }
-
-        @Nonnull
-        @Override
-        public final String name()
-        {
-            return NAME;
-        }
-
-        @Nullable
-        @Override
-        public final IView<IEnvironment> parent()
-        {
-            return m_parent;
-        }
-
-        @Override
-        public final boolean hasParent()
-        {
-            return m_parent != null;
-        }
-
-        @Nonnull
-        @Override
-        public final Stream<ITrigger> trigger()
-        {
-            return Stream.empty();
-        }
-
-        @Nonnull
-        @Override
-        public final Stream<ILiteral> stream( final IPath... p_path )
-        {
-            return ( p_path == null ) || ( p_path.length == 0 )
-                   ? mapstream( m_configuration, this.name() ).map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) )
-                   : Arrays.stream( p_path ).flatMap( i -> recursivedescent( m_configuration, 0, i.stream().toArray( String[]::new ) ) )
-                                            .map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) );
-        }
-
-
-        @SuppressWarnings( "unchecked" )
-        private Stream<ITerm> toterm( final Object p_value )
-        {
-            if ( p_value instanceof Collection<?> )
-                return ( (Collection<Object>) p_value ).stream().flatMap( this::toterm );
-
-            if ( p_value instanceof Map<?, ?> )
-                return ( (Map<String, Object>) p_value ).entrySet().stream().map( i -> CLiteral.from( i.getKey(), this.toterm( i.getValue() ) ) );
-
-            if ( p_value instanceof Integer )
-                return Stream.of( CRawTerm.from( ( (Number) p_value ).longValue() ) );
-
-            return Stream.of( CRawTerm.from( p_value ) );
-        }
-
-
-        @Nonnull
-        @Override
-        public final Stream<ILiteral> stream( final boolean p_negated, final IPath... p_path )
-        {
-            return Stream.empty();
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> clear( @Nullable final IPath... p_path )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> add( @Nonnull final Stream<ILiteral> p_literal )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> add( @Nullable final ILiteral... p_literal )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        @SafeVarargs
-        public final IView<IEnvironment> add( @Nonnull final IView<IEnvironment>... p_view )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        @SafeVarargs
-        public final IView<IEnvironment> add( @Nonnull final IPath p_path, @Nonnull final IView<IEnvironment>... p_view )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> remove( @Nonnull final Stream<ILiteral> p_literal )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> remove( @Nonnull final ILiteral... p_literal )
-        {
-            return this;
-        }
-
-        @Nonnull
-        @Override
-        public final IView<IEnvironment> remove( @Nonnull final IView<IEnvironment> p_view )
-        {
-            return this;
-        }
-
-        @Override
-        public final boolean containsLiteral( @Nonnull final IPath p_path )
-        {
-            final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
-            return ( l_value != null ) && ( !( l_value instanceof Map<?, ?> ) );
-        }
-
-        @Override
-        public final boolean containsView( @Nonnull final IPath p_path )
-        {
-            final Object l_value = recursivedescent( m_configuration, 0, p_path.stream().toArray( String[]::new ) );
-            return ( l_value != null ) && ( l_value instanceof Map<?, ?> );
-        }
-
-        @Override
-        public final boolean empty()
-        {
-            return m_configuration.isEmpty();
-        }
-
-        @Override
-        public final int size()
-        {
-            return 0;
-        }
-
-
-        @Nonnull
-        @Override
-        public final IEnvironment update( @Nonnull final IEnvironment p_agent )
-        {
-            return p_agent;
-        }
-
     }
 
 }

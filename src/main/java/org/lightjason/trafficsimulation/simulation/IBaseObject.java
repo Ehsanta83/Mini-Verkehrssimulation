@@ -87,7 +87,7 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
     /**
      * reference to external beliefbase
      */
-    private final IView<T> m_external;
+    private final IView m_external;
 
 
     /**
@@ -252,11 +252,10 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
 
             @Nonnull
             @Override
-            @SuppressWarnings( "unchecked" )
-            public final IView<T> beliefbase()
+            public final IView beliefbase()
             {
-                final IView<T> l_view = new CBeliefbasePersistent<T>( new CMultiStorage<>() ).create( BELIEFBASEROOTNAME );
-                l_view.add( new CBeliefbasePersistent<T>( new CSingleStorage<ILiteral, IView<T>, T>() ).create( "extern", l_view ) );
+                final IView l_view = new CBeliefbasePersistent( new CMultiStorage<>() ).create( BELIEFBASEROOTNAME );
+                l_view.add( new CBeliefbasePersistent( new CSingleStorage<>() ).create( "extern", l_view ) );
 
                 // add initial beliefs and clear initial beliefbase trigger
                 m_initialbeliefs.parallelStream().forEach( i -> l_view.add( i.shallowcopy() ) );
