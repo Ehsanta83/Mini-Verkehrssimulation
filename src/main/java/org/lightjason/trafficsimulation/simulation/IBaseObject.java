@@ -27,7 +27,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lightjason.agentspeak.action.IAction;
 import org.lightjason.agentspeak.agent.IBaseAgent;
-import org.lightjason.agentspeak.beliefbase.CBeliefbasePersistent;
+import org.lightjason.agentspeak.beliefbase.CBeliefbase;
 import org.lightjason.agentspeak.beliefbase.IBeliefbaseOnDemand;
 import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
 import org.lightjason.agentspeak.beliefbase.storage.CSingleStorage;
@@ -254,8 +254,8 @@ public abstract class IBaseObject<T extends IObject<?>> extends IBaseAgent<T> im
             @Override
             public final IView beliefbase()
             {
-                final IView l_view = new CBeliefbasePersistent( new CMultiStorage<>() ).create( BELIEFBASEROOTNAME );
-                l_view.add( new CBeliefbasePersistent( new CSingleStorage<>() ).create( "extern", l_view ) );
+                final IView l_view = new CBeliefbase( new CMultiStorage<>() ).create( BELIEFBASEROOTNAME );
+                l_view.add( new CBeliefbase( new CSingleStorage<>() ).create( "extern", l_view ) );
 
                 // add initial beliefs and clear initial beliefbase trigger
                 m_initialbeliefs.parallelStream().forEach( i -> l_view.add( i.shallowcopy() ) );
