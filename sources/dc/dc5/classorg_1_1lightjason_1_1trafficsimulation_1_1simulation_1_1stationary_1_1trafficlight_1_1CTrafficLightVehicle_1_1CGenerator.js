@@ -1,0 +1,6 @@
+var classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTrafficLightVehicle_1_1CGenerator =
+[
+    [ "CGenerator", "dc/dc5/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTrafficLightVehicle_1_1CGenerator.htm#aa70dd3bf8cda2cb202e1c351581bb070", null ],
+    [ "generate", "dc/dc5/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTrafficLightVehicle_1_1CGenerator.htm#a7fa5522a17429e574c73cacb0648b237", null ],
+    [ "resetcount", "dc/dc5/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTrafficLightVehicle_1_1CGenerator.htm#a53118678a262f98f8b8bfff7e5e1787e", null ]
+];

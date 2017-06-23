@@ -1,0 +1,6 @@
+var classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTraf57597f79e966c65addca59c0281cfa21 =
+[
+    [ "CGenerator", "d2/d46/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTraf57597f79e966c65addca59c0281cfa21.htm#a4b15674740135be7e049b1ae43e105e0", null ],
+    [ "generate", "d2/d46/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTraf57597f79e966c65addca59c0281cfa21.htm#ac93af3f9bf45075de0d78198093cec4d", null ],
+    [ "resetcount", "d2/d46/classorg_1_1lightjason_1_1trafficsimulation_1_1simulation_1_1stationary_1_1trafficlight_1_1CTraf57597f79e966c65addca59c0281cfa21.htm#a9cb5acd5278f48a0bf24afcb7c778661", null ]
+];
