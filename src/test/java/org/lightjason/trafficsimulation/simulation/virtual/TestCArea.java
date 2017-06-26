@@ -32,6 +32,7 @@ import org.lightjason.trafficsimulation.simulation.EObjectFactory;
 import org.lightjason.trafficsimulation.simulation.algorithm.routing.ERoutingFactory;
 import org.lightjason.trafficsimulation.ui.CAreaSprite;
 import org.lightjason.trafficsimulation.ui.CPedestrianSprite;
+import org.lightjason.trafficsimulation.ui.CVehicleSprite;
 
 import java.util.stream.Stream;
 
@@ -51,13 +52,13 @@ public final class TestCArea extends IBaseViewTest
     {
         this.initializeenvironment( ENVWIDTH, ENVHEIGHT, ENVCELL, ERoutingFactory.JPSPLUS.get() );
         m_environment.call();
-        m_pedestrians.add(
-            new CPedestrianSprite(
+        m_vehicles.add(
+            new CVehicleSprite(
                 this.generate(
-                    "src/test/resources/pedestrian.asl",
-                    EObjectFactory.PEDESTRIAN,
+                    "src/test/resources/vehicle.asl",
+                    EObjectFactory.VEHICLE,
                     new DenseDoubleMatrix1D( new double[]{1, 25} ),
-                    0.5
+                    2
                 )
             )
         );
@@ -75,7 +76,7 @@ public final class TestCArea extends IBaseViewTest
     public final void test()
     {
         Assume.assumeNotNull( s_screen );
-        Stream.concat( Stream.concat( m_areas.stream(), m_vehicles.stream() ), m_pedestrians.stream() ).forEach( s_screen::spriteadd );
+        Stream.concat(  m_areas.stream(), Stream.concat( m_pedestrians.stream(), m_vehicles.stream() ) ).forEach( s_screen::spriteadd );
         callagents( 100, 1000 );
     }
 

@@ -25,9 +25,21 @@
 
 +!main
     <-  generic/print("hello vehicle");
-    route/set/start( 25, 25 );
-    !movement/forward
+    route/set/start( 22, 49 );
+    !movement/forward;
+    !drive
 .
+
++!drive
+    <- increasespeed( 1 );
+    !drive
+.
+
+-!drive
+    <- decreasespeed( 1 );
+    !drive
+.
+
 
 // move straight forward into the direction of the goal-position
 +!movement/forward
@@ -76,6 +88,22 @@
         T = math/min( T, 5 );
         generic/print( "move right fails in cycle [", Cycle, "] wait [", T,"] cycles" );
         agent/sleep(T)
+.
+
+// is called if current position = goal-position
+// the agent is walking to the next position
++!position/achieve(P)
+    <-
+        generic/print( "position [", P, "] achieved in cycle [", Cycle, "]" );
+        route/next
+.
+
++!enterarea( Area )
+    <- generic/print("vehicle: enter area: ", Area )
+.
+
++!leavearea( Area )
+    <- generic/print("vehicle: leave area: ", Area )
 .
 
 +!vehicle( speed(S), type(T), visibility(V), vehiclestrafficlightcolor(Vtl), pedestrianstrafficlightcolor(Ptl) )

@@ -31,6 +31,10 @@ import org.lightjason.agentspeak.action.binding.IAgentAction;
 import org.lightjason.agentspeak.action.binding.IAgentActionFilter;
 import org.lightjason.agentspeak.action.binding.IAgentActionName;
 import org.lightjason.agentspeak.configuration.IAgentConfiguration;
+import org.lightjason.agentspeak.language.CLiteral;
+import org.lightjason.agentspeak.language.CRawTerm;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.CTrigger;
+import org.lightjason.agentspeak.language.instantiable.plan.trigger.ITrigger;
 import org.lightjason.trafficsimulation.simulation.IBaseObject;
 import org.lightjason.trafficsimulation.simulation.environment.EDirection;
 import org.lightjason.trafficsimulation.simulation.environment.IEnvironment;
@@ -85,7 +89,22 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
         super( p_configuration, p_environment, p_functor, p_name, p_position, p_convex );
     }
 
+    @Override
+    public T call() throws Exception
+    {
+        super.call();
 
+        if ( this.goal().get( 0 ) == m_position.get( 0 ) && this.goal().get( 1 ) == m_position.get( 1 ) )
+            this.trigger(
+                CTrigger.from(
+                    ITrigger.EType.ADDGOAL,
+                    CLiteral.from( "position/achieve", Stream.of( CRawTerm.from( this.goal() ) ) )
+                )
+            );
+
+
+        return this.raw();
+    }
     /**
      * move forward into goal direction
      */
@@ -144,6 +163,33 @@ public abstract class IBaseMoveable<T extends IBaseMoveable<?>> extends IBaseObj
     protected final void moveforwardleft()
     {
         this.move( EDirection.FORWARDLEFT );
+    }
+
+    /**
+     * increase speed
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "increasespeed" )
+    protected final void increasespeed( final Number i)
+    {
+        //just for test: max speed 4
+        if ( m_speed.get() < 4 )
+        {
+            m_speed.set( m_speed.get() + i.intValue() );
+        }
+    }
+
+    /**
+     * decrease speed
+     */
+    @IAgentActionFilter
+    @IAgentActionName( name = "decreasespeed" )
+    protected final void decreasespeed( final Number i)
+    {
+        if ( m_speed.get() < 0 )
+        {
+            m_speed.set( m_speed.get() - i.intValue() );
+        }
     }
 
     /**

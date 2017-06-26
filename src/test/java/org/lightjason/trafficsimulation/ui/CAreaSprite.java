@@ -69,7 +69,7 @@ public final class CAreaSprite extends IBaseSprite<CArea>
     private Texture texture( final int p_cellsize )
     {
         final Pixmap l_pixmap = new Pixmap( p_cellsize * 2, p_cellsize, Pixmap.Format.RGBA8888 );
-        l_pixmap.setColor( Color.LIGHT_GRAY );
+        l_pixmap.setColor( 0, 0, 0, 0.3f );
         l_pixmap.fillRectangle( 0, 0, p_cellsize * 2, p_cellsize );
 
         final Texture l_texture = new Texture( l_pixmap );

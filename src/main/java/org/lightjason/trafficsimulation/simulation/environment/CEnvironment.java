@@ -126,6 +126,7 @@ public final class CEnvironment extends IBaseAgent<IEnvironment> implements IEnv
     public final List<DoubleMatrix1D> route( final DoubleMatrix1D p_start, final DoubleMatrix1D p_end )
     {
         final List<DoubleMatrix1D> l_route = new ArrayList<>();
+        l_route.add( new DenseDoubleMatrix1D( new double[]{22, 25} ) );
         l_route.add( p_end );
         return l_route;
         //return m_routing.route( m_objectgrid, p_start, p_end );

@@ -69,7 +69,7 @@ public final class CVehicleSprite extends IBaseSprite<CVehicle>
     private Texture texture( final int p_cellsize )
     {
         final Pixmap l_pixmap = new Pixmap( p_cellsize * m_wrapping.length(), p_cellsize, Pixmap.Format.RGBA8888 );
-        l_pixmap.setColor( Color.GREEN );
+        l_pixmap.setColor( Color.BLUE );
         l_pixmap.fillRectangle( 0, 0, p_cellsize * m_wrapping.length(), p_cellsize );
 
         final Texture l_texture = new Texture( l_pixmap );
